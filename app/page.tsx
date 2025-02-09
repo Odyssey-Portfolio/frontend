@@ -5,15 +5,19 @@ import IconWithContent, {
 } from "@/_components/IconWithContent";
 import { COLOR_PRIMARY, COLOR_SECONDARY } from "@/_constants/Colors";
 
+import NumberedTitleContent from "@/_components/NumberedTitleContent";
 import ParagraphRenderer from "@/_components/ParagraphRenderer";
 import { CONTENT_LIFESTORY } from "@/_constants/Content";
+import {
+  DUMMYTEXT_LOREMIPSUM,
+  DUMMYTEXT_LOREMIPSUMSHORT,
+} from "@/_constants/DummyText";
 import {
   CalendarDaysIcon,
   EnvelopeOpenIcon,
   MapPinIcon,
   UserIcon,
 } from "@heroicons/react/16/solid";
-import { LOREM_IPSUM } from "../_constants/DummyText";
 import {
   FONT_LEXEND,
   FONT_POPPINS,
@@ -30,6 +34,7 @@ export default function HomePage() {
       <AvatarAndBio />
       <AboutMe />
       <MyLifeStory />
+      <FutureGoals />
     </div>
   );
 }
@@ -59,7 +64,7 @@ function AvatarAndBio() {
       <div className={roundedImageClassname}>
         <RoundedImage src={dummyImage} height={300} width={200} />
       </div>
-      <p className={bioClassname}>{LOREM_IPSUM}</p>
+      <p className={bioClassname}>{DUMMYTEXT_LOREMIPSUM}</p>
     </div>
   );
 }
@@ -98,13 +103,40 @@ function AboutMe() {
 
 function MyLifeStory() {
   const headingClassname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING2}`;
-  const aboutMeClassname = `flex flex-col w-4/5 items-center space-y-4`;  
+  const aboutMeClassname = `flex flex-col w-4/5 items-center space-y-4`;
   return (
     <div className={aboutMeClassname}>
       <h1 className={headingClassname} style={{ color: COLOR_PRIMARY }}>
-        A (not so) long time ago...
+        My Software development Story
       </h1>
       <ParagraphRenderer paragraph={CONTENT_LIFESTORY} />
+    </div>
+  );
+}
+
+function FutureGoals() {
+  const headingClassname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING2}`;
+  const aboutMeClassname = `flex flex-col w-4/5 items-center space-y-4`;
+  const numberedTitleContentClassname = `flex flex-row grid grid-cols-12`;
+  const numbers = [0, 1, 2, 3];
+  return (
+    <div className={aboutMeClassname}>
+      <h1 className={headingClassname} style={{ color: COLOR_PRIMARY }}>
+        And the next steps?
+      </h1>
+      <div className={numberedTitleContentClassname}>
+        {numbers.map((number, key) => {
+          return (
+            <div className={"col-span-6 p-4"} key={key}>
+              <NumberedTitleContent
+                number={number + 1}
+                title="Dummy Title"
+                description={DUMMYTEXT_LOREMIPSUMSHORT}
+              />
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
