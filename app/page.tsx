@@ -5,10 +5,13 @@ import IconWithContent, {
 } from "@/_components/IconWithContent";
 import { COLOR_PRIMARY, COLOR_SECONDARY } from "@/_constants/Colors";
 
+import ParagraphRenderer from "@/_components/ParagraphRenderer";
+import { CONTENT_LIFESTORY } from "@/_constants/Content";
 import {
   CalendarDaysIcon,
   EnvelopeOpenIcon,
   MapPinIcon,
+  UserIcon,
 } from "@heroicons/react/16/solid";
 import { LOREM_IPSUM } from "../_constants/DummyText";
 import {
@@ -20,12 +23,13 @@ import {
 } from "../_constants/Fonts";
 
 export default function HomePage() {
-  const aboutMeClassname = `flex flex-col m-12 items-center justify-center space-y-4`;
+  const aboutMeClassname = `flex flex-col m-12 items-center justify-center space-y-10`;
   return (
     <div className={aboutMeClassname}>
       <WelcomeText />
       <AvatarAndBio />
       <AboutMe />
+      <MyLifeStory />
     </div>
   );
 }
@@ -40,7 +44,7 @@ function WelcomeText() {
         Howdey hey! I'm Anh.
       </h1>
       <h6 className={h2Classname} style={{ color: COLOR_SECONDARY }}>
-        Or Andy, just to be concise.
+        Or you can call me Andy!
       </h6>
     </div>
   );
@@ -61,9 +65,10 @@ function AvatarAndBio() {
 }
 function AboutMe() {
   const headingClassname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING2}`;
-  const aboutMeClassname = `flex flex-col w-4/5 items-center space-y-4`;
-  const iconWithContentClassname = `space-y-4`;
+  const aboutMeClassname = `flex flex-col w-4/5 items-center space-y-3`;
+  const iconWithContentClassname = `space-y-2`;
   const information: IconWithContentType[] = [
+    { icon: <UserIcon />, content: "Đào Việt Anh (Andy)" },
     { icon: <CalendarDaysIcon />, content: "March 06, 2003" },
     {
       icon: <EnvelopeOpenIcon />,
@@ -87,6 +92,19 @@ function AboutMe() {
           );
         })}
       </div>
+    </div>
+  );
+}
+
+function MyLifeStory() {
+  const headingClassname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING2}`;
+  const aboutMeClassname = `flex flex-col w-4/5 items-center space-y-4`;  
+  return (
+    <div className={aboutMeClassname}>
+      <h1 className={headingClassname} style={{ color: COLOR_PRIMARY }}>
+        A (not so) long time ago...
+      </h1>
+      <ParagraphRenderer paragraph={CONTENT_LIFESTORY} />
     </div>
   );
 }
