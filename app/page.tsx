@@ -5,11 +5,16 @@ import IconWithContent, {
 } from "@/_components/IconWithContent";
 import { COLOR_PRIMARY, COLOR_SECONDARY } from "@/_constants/Colors";
 
+import ImageButtonWithModal from "@/_components/ImageButtonWithModal";
 import NumberedTitleContent from "@/_components/NumberedTitleContent";
 import ParagraphRenderer from "@/_components/ParagraphRenderer";
-import { CONTENT_LIFESTORY } from "@/_constants/Content";
 import {
-  DUMMYTEXT_LOREMIPSUM,
+  CONTENT_HOBBIES,
+  CONTENT_LIFESTORY,
+  CONTENT_SHORTINTRO,
+} from "@/_constants/Content";
+import {
+  DUMMYTEXT_IMAGE,
   DUMMYTEXT_LOREMIPSUMSHORT,
 } from "@/_constants/DummyText";
 import {
@@ -20,21 +25,21 @@ import {
 } from "@heroicons/react/16/solid";
 import {
   FONT_LEXEND,
-  FONT_POPPINS,
   FONTSTYLE_HEADING1,
   FONTSTYLE_HEADING2,
   FONTSTYLE_SUBTEXT1,
 } from "../_constants/Fonts";
 
 export default function HomePage() {
-  const aboutMeClassname = `flex flex-col m-12 items-center justify-center space-y-10`;
+  const homepageClassname = `flex flex-col m-12 items-center justify-center space-y-10`;
   return (
-    <div className={aboutMeClassname}>
+    <div className={homepageClassname}>
       <WelcomeText />
       <AvatarAndBio />
       <AboutMe />
       <MyLifeStory />
       <FutureGoals />
+      <Hobbies />
     </div>
   );
 }
@@ -57,14 +62,15 @@ function WelcomeText() {
 function AvatarAndBio() {
   const avatarAndBioClassname = `flex flex-row w-4/5 grid grid-cols-12 items-center`;
   const roundedImageClassname = `col-span-4`;
-  const bioClassname = `${FONT_POPPINS.className} text-lg/8 grid col-span-8`;
-  const dummyImage = `https://i.pinimg.com/736x/85/a8/6b/85a86b60879d179538179b27e126a18f.jpg`;
+  const bioClassname = `grid col-span-8`;
   return (
     <div className={avatarAndBioClassname}>
       <div className={roundedImageClassname}>
-        <RoundedImage src={dummyImage} height={300} width={200} />
+        <RoundedImage src={DUMMYTEXT_IMAGE} height={300} width={200} />
       </div>
-      <p className={bioClassname}>{DUMMYTEXT_LOREMIPSUM}</p>
+      <div className={bioClassname}>
+        <ParagraphRenderer paragraph={CONTENT_SHORTINTRO} />
+      </div>
     </div>
   );
 }
@@ -116,22 +122,49 @@ function MyLifeStory() {
 
 function FutureGoals() {
   const headingClassname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING2}`;
-  const aboutMeClassname = `flex flex-col w-4/5 items-center space-y-4`;
-  const numberedTitleContentClassname = `flex flex-row grid grid-cols-12`;
+  const futureGoalsClassname = `flex flex-col w-4/5 items-center space-y-4`;
+  const numberedTitleContent = `flex flex-row grid grid-cols-12`;
   const numbers = [0, 1, 2, 3];
   return (
-    <div className={aboutMeClassname}>
+    <div className={futureGoalsClassname}>
       <h1 className={headingClassname} style={{ color: COLOR_PRIMARY }}>
         And the next steps?
       </h1>
-      <div className={numberedTitleContentClassname}>
+      <div className={numberedTitleContent}>
         {numbers.map((number, key) => {
           return (
             <div className={"col-span-6 p-4"} key={key}>
               <NumberedTitleContent
-                number={number + 1}
+                number={key + 1}
                 title="Dummy Title"
                 description={DUMMYTEXT_LOREMIPSUMSHORT}
+              />
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function Hobbies() {
+  const headingClassname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING2}`;
+  const hobbiesClassname = `flex flex-col w-4/5 items-center space-y-4`;
+  const imageButtonWithModalClassname = `flex flex-row grid grid-cols-12`;
+
+  return (
+    <div className={hobbiesClassname}>
+      <h1 className={headingClassname} style={{ color: COLOR_PRIMARY }}>
+        Time for some hobbiez!
+      </h1>
+      <div className={imageButtonWithModalClassname}>
+        {CONTENT_HOBBIES.map((hobby, key) => {
+          return (
+            <div className={"col-span-4 p-4"} key={key}>
+              <ImageButtonWithModal
+                image={hobby.image}
+                title={hobby.title}
+                htmlContent={hobby.htmlContent}
               />
             </div>
           );
