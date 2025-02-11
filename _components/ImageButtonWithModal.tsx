@@ -16,7 +16,7 @@ interface ImageButtonWithModalProps {
 }
 export default function ImageButtonWithModal(props: ImageButtonWithModalProps) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>();
-  const imageButtonWithModalClassname = `w-64 h-40 rounded-lg overflow-hidden shadow-lg transition-all duration-300 hover:scale-105`;
+  const imageButtonWithModalClassname = `relative w-64 h-40 rounded-lg overflow-hidden shadow-lg transition-all duration-300 hover:scale-105`;
   const overlayTextClassname = `absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 opacity-0 transition-all duration-300 hover:bg-opacity-50 hover:opacity-100`;
   return (
     <div>

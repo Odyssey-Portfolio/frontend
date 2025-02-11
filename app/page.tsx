@@ -45,7 +45,7 @@ export default function HomePage() {
 }
 
 function WelcomeText() {
-  const welcomeClassname = `text-center space-y-2`;
+  const welcomeClassname = `text-center space-y-2 mt-12`;
   const h1Classname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING1}`;
   const h2Classname = `${FONT_LEXEND.className} ${FONTSTYLE_SUBTEXT1}`;
   return (
