@@ -1,9 +1,10 @@
 import { ImageButtonWithModalType } from "@/_components/ImageButtonWithModal";
-import { DUMMYTEXT_IMAGE } from "./DummyText";
-import { FONT_POPPINS, FONTSTYLE_PARAGRAPH1 } from "./Fonts";
+import { NumberedTitleContentType } from '../_components/NumberedTitleContent';
+import { DUMMYTEXT_IMAGE } from "../_constants/DummyText";
+import { FONT_POPPINS, FONTSTYLE_PARAGRAPH1 } from "../_constants/Fonts";
 
 export const CONTENT_SHORTINTRO = `As of now, I am a Consultant at Netcompany Vietnam for almost half a year, maintaining React applications based on customers requirements.
-Although I can wrap my head around most domains in the IT industry, be it Back-end, DevOps, I decide to stick to front-end development for now, as it gives me joy and motivation to satisfy my desires.`
+Although I can wrap my head around most domains in the IT industry, be it Back-end, DevOps, I decide to stick to front-end development for now, as it feels like home to me.`
 
 export const CONTENT_LIFESTORY = `Since High School, I have always dreamt of creating software products that better our lives. My journey started with Python - a simple yet powerful language which allowed me to create simple apps, like a calculator, a Pomodoro Timer, and so on.
 Shortly after entering the University, I got to know awesome tech geeks, as thanks to them, I had learnt more about different technologies, for example, API, Containerzation..., and apply them in some of my personal projects.
@@ -12,11 +13,12 @@ Hence, I would love to put into good use my perseverance, and some other soft sk
 
 export const CONTENT_BADMINTON = `
 <div>
-    <div className='mb-5'>
+    <div className='mb-12 flex flex-col items-center'>
         <img 
-            src="https://english.cdn.zeenews.com/sites/default/files/2023/05/02/1193507-everything-about-badminton.png?im=Resize=(1200,900)" 
-            alt="Badminton players in action" 
-            class="w-full h-auto rounded-lg shadow-lg"
+            src="https://english.cdn.zeenews.com/sites/default/files/2023/05/02/1193507-everything-about-badminton.png"                        
+            width="500"            
+            alt="Badminton players in action"
+            class="rounded-lg shadow-lg"
         />
     </div>
     <div className='${FONT_POPPINS.className} ${FONTSTYLE_PARAGRAPH1}'>
@@ -27,11 +29,12 @@ export const CONTENT_BADMINTON = `
 </div>
 `
 export const CONTENT_MOTORCYCLETRIPS = `<div>
-    <div className='mb-5'>
+    <div className='mb-12 flex flex-col items-center'>
         <img 
             src="https://english.cdn.zeenews.com/sites/default/files/2023/05/02/1193507-everything-about-badminton.png?im=Resize=(1200,900)" 
-            alt="Badminton players in action" 
-            class="w-full h-auto rounded-lg shadow-lg"
+            alt="Badminton players in action"
+            width="500"
+            class="rounded-lg shadow-lg"
         />
     </div>
     <div className='${FONT_POPPINS.className} ${FONTSTYLE_PARAGRAPH1}'>
@@ -44,11 +47,12 @@ export const CONTENT_MOTORCYCLETRIPS = `<div>
 `
 
 export const CONTENT_COFFEE = `<div>
-    <div className='mb-5'>
+    <div className='mb-12 flex flex-col items-center'>
         <img 
             src="https://english.cdn.zeenews.com/sites/default/files/2023/05/02/1193507-everything-about-badminton.png?im=Resize=(1200,900)" 
-            alt="Badminton players in action" 
-            class="w-full h-auto rounded-lg shadow-lg"
+            alt="Badminton players in action"
+            width="500"
+            class="rounded-lg shadow-lg"
         />
     </div>
     <div className='${FONT_POPPINS.className} ${FONTSTYLE_PARAGRAPH1}'>
@@ -59,6 +63,12 @@ export const CONTENT_COFFEE = `<div>
 </div>
 `
 
+export const CONTENT_FUTUREGOALS: NumberedTitleContentType[] = [
+    { title: "Improve my expertise", description: "With solid knowledge of a specific domain, I believe we can create long-term values, and tackle complex challenges with more ease. Hence, I've always been trying to be open about new concepts, ideas, and setting myself up to correct past mistakes" },
+    { title: "Expand professional connection", description: "For me, professional connection is something that shouldn't be overlooked. Simply put, I just can't imagine who I am right now, and will be in the future, if it were not for the supportive buddies that I have made for the past few years." },
+    { title: "Share knowledge with everyone", description: "Whenever I can help someone understand a complex subject, and achieve their goals, I feel a great sense of joy and motivation. Thus, I have been learning, and trying to ELI5 things to myself, until I can fully imagine its nature. Wait... ELI5 huh? Sounds like a great idea, so stay tuned!" },
+    { title: "Become my true self",description:"The idea of a low-key person, with simple outlook who is silently dealing with major businesses has been on my radar for some time"},
+]
 
 export const CONTENT_HOBBIES: ImageButtonWithModalType[] = [
     {

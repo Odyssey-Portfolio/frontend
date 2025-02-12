@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 export interface ParagraphRendererProps {
   paragraph: string;
+  lineHeight?: number;
 }
 export default function ParagraphRenderer(props: ParagraphRendererProps) {
   const [chunks, setChunks] = useState<string[]>();
@@ -19,7 +20,7 @@ export default function ParagraphRenderer(props: ParagraphRendererProps) {
         chunks.map((chunk, index) => (
           <div
             className={chunkClassname}
-            style={{ color: COLOR_SECONDARY }}
+            style={{ color: COLOR_SECONDARY, lineHeight: props.lineHeight }}
             key={index}
           >
             {chunk}

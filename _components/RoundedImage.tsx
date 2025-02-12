@@ -11,7 +11,6 @@ export default function RoundedImage(props: RoundedImageProps) {
       className={avatarClassname}
       src={props.src}
       alt="avatar"
-      objectFit="contain"
       width={props.width}
       height={props.height}
     />
