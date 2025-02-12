@@ -1,6 +1,6 @@
 "use client"; //ONLY FOR NEXT.JS: Lets the client render this component, instead of the server.
 import { COLOR_SECONDARY } from "@/_constants/Colors";
-import { FONT_POPPINS } from "@/_constants/Fonts";
+import { FONT_POPPINS, FONTSTYLE_PARAGRAPH1 } from "@/_constants/Fonts";
 import { useEffect, useState } from "react";
 
 export interface ParagraphRendererProps {
@@ -8,7 +8,7 @@ export interface ParagraphRendererProps {
 }
 export default function ParagraphRenderer(props: ParagraphRendererProps) {
   const [chunks, setChunks] = useState<string[]>();
-  const chunkClassname = `${FONT_POPPINS.className} text-lg/8 grid col-span-8`;
+  const chunkClassname = `${FONT_POPPINS.className} ${FONTSTYLE_PARAGRAPH1} grid col-span-8`;
   useEffect(() => {
     setChunks(props.paragraph.split("\n"));
   }, [props.paragraph]); // Runs when paragraph changes

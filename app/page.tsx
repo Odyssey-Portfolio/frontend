@@ -28,6 +28,7 @@ import {
   FONTSTYLE_HEADING1,
   FONTSTYLE_HEADING2,
   FONTSTYLE_SUBTEXT1,
+  FONTSTYLE_SUBTEXT2,
 } from "../_constants/Fonts";
 
 export default function HomePage() {
@@ -150,12 +151,16 @@ function FutureGoals() {
 function Hobbies() {
   const headingClassname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING2}`;
   const hobbiesClassname = `flex flex-col w-4/5 items-center space-y-4`;
+  const subtextClassname = `${FONT_LEXEND.className} ${FONTSTYLE_SUBTEXT2}`;
   const imageButtonWithModalClassname = `flex flex-row grid grid-cols-12`;
 
   return (
     <div className={hobbiesClassname}>
       <h1 className={headingClassname} style={{ color: COLOR_PRIMARY }}>
-        Time for some hobbiez!
+        It's hobbies time!
+      </h1>
+      <h1 className={subtextClassname} style={{ color: COLOR_SECONDARY }}>
+        If you share any of these with me, let's connect!
       </h1>
       <div className={imageButtonWithModalClassname}>
         {CONTENT_HOBBIES.map((hobby, key) => {

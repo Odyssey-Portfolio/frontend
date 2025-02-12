@@ -20,6 +20,10 @@ export default function NavBar() {
       route: "/work-experience",
     },
     {
+      name: "Blogs",
+      route: "/work-experience",
+    },
+    {
       name: "Pet Projects",
       route: "/",
     },

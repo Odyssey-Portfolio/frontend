@@ -26,7 +26,7 @@ export default function ImageButtonWithModal(props: ImageButtonWithModalProps) {
       >
         <Image src={props.image} alt="avatar" width={500} height={100} />
         <div className={overlayTextClassname}>
-          <span className="text-white font-semibold text-lg">
+          <span className="text-white font-semibold text-lg cursor-default">
             {props.title}
           </span>
         </div>
@@ -61,10 +61,10 @@ function Modal(props: ModalProps) {
         className="fixed inset-0 bg-gray-500/50 transition-opacity"
         aria-hidden="true"
       ></div>
-      <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-        <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-          <div className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-            <div className="flex flex-row bg-gray-50 items-center justify-between px-4 py-3 sm:flex sm:flex-row sm:px-6">
+      <div className="fixed inset-0 z-10 w-screen">
+        <div className="flex items-end justify-center lg:items-center sm:p-0">
+          <div className="relative rounded-lg bg-white text-left shadow-xl transition-all w-9/12 h-5/6">
+            <div className="flex flex-row rounded-t-lg bg-gray-50 items-center justify-between px-4 py-3 sm:flex sm:flex-row sm:px-6">
               <div className={`${FONT_LEXEND.className} ${FONTSTYLE_SUBTEXT3}`}>
                 {props.title}
               </div>
@@ -76,7 +76,9 @@ function Modal(props: ModalProps) {
                 Close
               </button>
             </div>
-            <div className="m-5">{parse(props.htmlContent)}</div>
+            <div className="m-5 overflow-y-scroll h-96">
+              {parse(props.htmlContent)}
+            </div>
           </div>
         </div>
       </div>
