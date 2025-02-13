@@ -31,16 +31,16 @@ export const CONTENT_BADMINTON = `
 export const CONTENT_MOTORCYCLETRIPS = `<div>
     <div className='mb-12 flex flex-col items-center'>
         <img 
-            src="https://english.cdn.zeenews.com/sites/default/files/2023/05/02/1193507-everything-about-badminton.png?im=Resize=(1200,900)" 
-            alt="Badminton players in action"
+            src="https://www.motorcyclenews.com/wp-images/5035/sinnis-terrain-125-01.jpg" 
+            alt="Motorcycle with terrain"
             width="500"
             class="rounded-lg shadow-lg"
         />
     </div>
     <div className='${FONT_POPPINS.className} ${FONTSTYLE_PARAGRAPH1}'>
         Long before I began engaging in motorcycle trips, I once had a time taking bicycle trips around my hometown. The feeling of taking in fresh sea breeze, or having a wide vision of surrounding scenery, while slowly pedaling, … it’s indescribable. <br/><br/>
-        I believe such days have also molded me into someone who loves to derive joy from taking motorbike trips around HCMC during my free time. <br/><br/>
-        I have been thinking about, but feeling a bit hesitant about taking long trips to different provinces in the country. Well, safety issues accounts for the majority of such hesitation. <br/><br/>
+        I believe such days have also molded me into someone who derives joy from taking motorbike trips around HCMC during my free time. <br/><br/>
+        I have been thinking about taking long trips to different provinces in the country. But, safety issues explains why I'm still hesitant to take such trips. <br/><br/>
 
     <div>
 </div>

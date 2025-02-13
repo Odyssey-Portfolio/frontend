@@ -8,8 +8,8 @@ type NavbarItem = {
 };
 
 export default function NavBar() {
-  const navbarClassname =
-    "fixed left-1/2 transform -translate-x-1/2 top-5 bg-white/30 backdrop-blur-lg shadow-lg rounded-xl px-6 py-3 flex gap-6 items-center";
+  const navbarClassname = `fixed left-1/2 transform -translate-x-1/2 top-5 bg-white/30 backdrop-blur-lg
+     shadow-lg rounded-xl px-6 py-3 flex gap-4 items-center z-20`;
   const navbarItems: NavbarItem[] = [
     {
       name: "Home",
@@ -20,15 +20,19 @@ export default function NavBar() {
       route: "/work-experience",
     },
     {
+      name: "Projects",
+      route: "/projects",
+    },
+    {
       name: "Blogs",
       route: "/work-experience",
     },
     {
-      name: "Pet Projects",
+      name: "Contact Me!",
       route: "/",
     },
     {
-      name: "Contact Me!",
+      name: "ELI5 Stories",
       route: "/",
     },
   ];

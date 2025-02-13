@@ -16,8 +16,13 @@ interface ImageButtonWithModalProps {
 }
 export default function ImageButtonWithModal(props: ImageButtonWithModalProps) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>();
-  const imageButtonWithModalClassname = `relative w-64 h-40 rounded-lg overflow-hidden shadow-lg transition-all duration-300 hover:scale-105`;
-  const overlayTextClassname = `absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 opacity-0 transition-all duration-300 hover:bg-opacity-50 hover:opacity-100`;
+  const imageButtonWithModalClassname = `relative w-64 h-40 rounded-lg 
+                                        overflow-hidden shadow-lg transition-all
+                                        duration-300 hover:scale-105`;
+  const overlayTextClassname = `absolute inset-0 flex items-center 
+                                justify-center bg-black bg-opacity-0 opacity-0
+                                transition-all duration-300 hover:bg-opacity-50
+                                hover:opacity-100`;
   return (
     <div>
       <div
@@ -58,13 +63,13 @@ function Modal(props: ModalProps) {
       aria-modal="true"
     >
       <div
-        className="fixed inset-0 bg-gray-500/50 transition-opacity"
+        className="fixed inset-0 bg-gray-500/50 transition-opacity z-30"
         aria-hidden="true"
       ></div>
-      <div className="fixed inset-0 z-10 w-screen">
-        <div className="flex justify-center sm:p-0">
-          <div className="relative rounded-lg bg-white text-left shadow-xl transition-all w-8/12 h-2/3">
-            <div className="flex flex-row rounded-t-lg bg-gray-50 items-center justify-between px-4 py-3 sm:flex sm:flex-row sm:px-6">
+      <div className="fixed inset-0 z-40 w-screen flex items-center justify-center">
+        <div className="flex justify-center sm:p-0 h-5/6">
+          <div className="relative rounded-lg bg-white text-left shadow-xl transition-all w-8/12">
+            <div className=" flex flex-row rounded-t-lg bg-gray-50 items-center justify-between px-4 py-3 sm:flex sm:flex-row sm:px-6">
               <div className={`${FONT_LEXEND.className} ${FONTSTYLE_SUBTEXT3}`}>
                 {props.title}
               </div>
@@ -76,7 +81,7 @@ function Modal(props: ModalProps) {
                 Close
               </button>
             </div>
-            <div className="m-5 overflow-y-scroll h-96">
+            <div className="m-5 overflow-y-scroll h-5/6">
               {parse(props.htmlContent)}
             </div>
           </div>

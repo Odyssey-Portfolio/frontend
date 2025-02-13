@@ -8,15 +8,13 @@ import { COLOR_PRIMARY, COLOR_SECONDARY } from "@/_constants/Colors";
 import ImageButtonWithModal from "@/_components/ImageButtonWithModal";
 import NumberedTitleContent from "@/_components/NumberedTitleContent";
 import ParagraphRenderer from "@/_components/ParagraphRenderer";
+import { DUMMYTEXT_IMAGE } from "@/_constants/DummyText";
 import {
+  CONTENT_FUTUREGOALS,
   CONTENT_HOBBIES,
   CONTENT_LIFESTORY,
   CONTENT_SHORTINTRO,
-} from "@/_constants/Content";
-import {
-  DUMMYTEXT_IMAGE,
-  DUMMYTEXT_LOREMIPSUMSHORT,
-} from "@/_constants/DummyText";
+} from "@/_contents/Home";
 import {
   CalendarDaysIcon,
   EnvelopeOpenIcon,
@@ -32,7 +30,7 @@ import {
 } from "../_constants/Fonts";
 
 export default function HomePage() {
-  const homepageClassname = `flex flex-col m-12 items-center justify-center space-y-10`;
+  const homepageClassname = `flex flex-col mt-32 mx-12 mb-12 items-center justify-between space-y-20`;
   return (
     <div className={homepageClassname}>
       <WelcomeText />
@@ -46,7 +44,7 @@ export default function HomePage() {
 }
 
 function WelcomeText() {
-  const welcomeClassname = `text-center space-y-2 mt-12`;
+  const welcomeClassname = `text-center space-y-2`;
   const h1Classname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING1}`;
   const h2Classname = `${FONT_LEXEND.className} ${FONTSTYLE_SUBTEXT1}`;
   return (
@@ -70,7 +68,7 @@ function AvatarAndBio() {
         <RoundedImage src={DUMMYTEXT_IMAGE} height={300} width={200} />
       </div>
       <div className={bioClassname}>
-        <ParagraphRenderer paragraph={CONTENT_SHORTINTRO} />
+        <ParagraphRenderer paragraph={CONTENT_SHORTINTRO} lineHeight={2.2} />
       </div>
     </div>
   );
@@ -116,7 +114,7 @@ function MyLifeStory() {
       <h1 className={headingClassname} style={{ color: COLOR_PRIMARY }}>
         My Software development Story
       </h1>
-      <ParagraphRenderer paragraph={CONTENT_LIFESTORY} />
+      <ParagraphRenderer paragraph={CONTENT_LIFESTORY} lineHeight={2.2} />
     </div>
   );
 }
@@ -125,20 +123,20 @@ function FutureGoals() {
   const headingClassname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING2}`;
   const futureGoalsClassname = `flex flex-col w-4/5 items-center space-y-4`;
   const numberedTitleContent = `flex flex-row grid grid-cols-12`;
-  const numbers = [0, 1, 2, 3];
   return (
     <div className={futureGoalsClassname}>
       <h1 className={headingClassname} style={{ color: COLOR_PRIMARY }}>
         And the next steps?
       </h1>
       <div className={numberedTitleContent}>
-        {numbers.map((number, key) => {
+        {CONTENT_FUTUREGOALS.map((goal, key) => {
           return (
             <div className={"col-span-6 p-4"} key={key}>
               <NumberedTitleContent
                 number={key + 1}
-                title="Dummy Title"
-                description={DUMMYTEXT_LOREMIPSUMSHORT}
+                title={goal.title}
+                description={goal.description}
+                lineHeight={2.2}
               />
             </div>
           );
