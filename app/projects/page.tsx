@@ -8,13 +8,18 @@ import {
 } from "@/_constants/Fonts";
 
 export default function ProjectsPage() {
-  const projectPageClassname = `flex flex-col mt-32 mx-24 mb-12 
-  items-center justify-between space-y-20`;
+  const projectPageClassname = `flex flex-col mt-32 mx-24 mb-12   
+                                items-center justify-between space-y-20`;
+  const timelineClassname = `fixed top-1/2 transform -translate-y-1/2 right-2`;
   return (
-    <div className={projectPageClassname}>
-      <HeadingText />
-      <ProjectList />
-      <ScrollableTimeline />
+    <div>
+      <div className={projectPageClassname}>
+        <HeadingText />
+        <ProjectList />
+      </div>
+      <div className={timelineClassname}>
+        <ScrollableTimeline />
+      </div>
     </div>
   );
 }
