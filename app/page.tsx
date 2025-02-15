@@ -5,6 +5,7 @@ import IconWithContent, {
 } from "@/_components/IconWithContent";
 import { COLOR_PRIMARY, COLOR_SECONDARY } from "@/_constants/Colors";
 
+import FM_Reveal from "@/_components/FM_Reveal";
 import ImageButtonWithModal from "@/_components/ImageButtonWithModal";
 import NumberedTitleContent from "@/_components/NumberedTitleContent";
 import ParagraphRenderer from "@/_components/ParagraphRenderer";
@@ -32,13 +33,25 @@ import {
 export default function HomePage() {
   const homepageClassname = `flex flex-col mt-32 mx-12 mb-12 items-center justify-between space-y-20`;
   return (
-    <div className={homepageClassname}>
-      <WelcomeText />
-      <AvatarAndBio />
-      <AboutMe />
-      <MyLifeStory />
-      <FutureGoals />
-      <Hobbies />
+    <div>
+      <FM_Reveal className={homepageClassname}>
+        <>
+          <WelcomeText />
+          <AvatarAndBio />
+        </>
+      </FM_Reveal>
+      <FM_Reveal className={homepageClassname}>
+        <AboutMe />
+      </FM_Reveal>
+      <FM_Reveal className={homepageClassname}>
+        <MyLifeStory />
+      </FM_Reveal>
+      <FM_Reveal className={homepageClassname}>
+        <FutureGoals />
+      </FM_Reveal>
+      <FM_Reveal className={homepageClassname}>
+        <Hobbies />
+      </FM_Reveal>
     </div>
   );
 }
@@ -61,7 +74,7 @@ function WelcomeText() {
 function AvatarAndBio() {
   const avatarAndBioClassname = `flex flex-row w-4/5 grid grid-cols-12 items-center`;
   const roundedImageClassname = `col-span-4`;
-  const bioClassname = `grid col-span-8`;
+  const bioClassname = `col-span-8`;
   return (
     <div className={avatarAndBioClassname}>
       <div className={roundedImageClassname}>

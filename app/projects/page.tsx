@@ -41,7 +41,7 @@ function HeadingText() {
 }
 function ProjectList() {
   const projectListClassname = `grid grid-cols-3 w-full gap-5`;
-  const numbers = [0, 1, 2, 3, 4, 5];
+  const numbers = [0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5];
   return (
     <div className={projectListClassname}>
       {numbers.map((number, key) => {

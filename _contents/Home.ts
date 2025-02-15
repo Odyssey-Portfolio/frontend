@@ -1,15 +1,15 @@
 import { ImageButtonWithModalType } from "@/_components/ImageButtonWithModal";
-import { NumberedTitleContentType } from '../_components/NumberedTitleContent';
+import { NumberedTitleContentType } from "../_components/NumberedTitleContent";
 import { DUMMYTEXT_IMAGE } from "../_constants/DummyText";
 import { FONT_POPPINS, FONTSTYLE_PARAGRAPH1 } from "../_constants/Fonts";
 
-export const CONTENT_SHORTINTRO = `As of now, I am a Consultant at Netcompany Vietnam for almost half a year, maintaining React applications based on customers requirements.
-Although I can wrap my head around most domains in the IT industry, be it Back-end, DevOps, I decide to stick to front-end development for now, as it feels like home to me.`
+export const CONTENT_SHORTINTRO = `As of now, I am a Consultant at Netcompany Vietnam for almost half a year, maintaining React applications based on customers requirements. 
+Although I can wrap my head around most domains in the IT industry, be it Back-end, DevOps, I decide to stick to front-end development for now, as it feels like home to me.`;
 
 export const CONTENT_LIFESTORY = `Since High School, I have always dreamt of creating software products that better our lives. My journey started with Python - a simple yet powerful language which allowed me to create simple apps, like a calculator, a Pomodoro Timer, and so on.
 Shortly after entering the University, I got to know awesome tech geeks, as thanks to them, I had learnt more about different technologies, for example, API, Containerzation..., and apply them in some of my personal projects.
 Throughout such a journey, there were times when I felt like giving up halfway. But the joy of seeing your brainchildren up and running as expected has propelled me forward.
-Hence, I would love to put into good use my perseverance, and some other soft skills, including concise communication, teamwork, open-mindedness.`
+Hence, I would love to put into good use my perseverance, and some other soft skills, including concise communication, teamwork, open-mindedness.`;
 
 export const CONTENT_BADMINTON = `
 <div>
@@ -27,7 +27,7 @@ export const CONTENT_BADMINTON = `
         And until now, I still decide to stick to this badass sport, as it helps me improve qualities that, I believe, no other alternatives can do, including agility, stamina, and sportsmanship.
     <div>
 </div>
-`
+`;
 export const CONTENT_MOTORCYCLETRIPS = `<div>
     <div className='mb-12 flex flex-col items-center'>
         <img 
@@ -44,7 +44,7 @@ export const CONTENT_MOTORCYCLETRIPS = `<div>
 
     <div>
 </div>
-`
+`;
 
 export const CONTENT_COFFEE = `<div>
     <div className='mb-12 flex flex-col items-center'>
@@ -61,29 +61,45 @@ export const CONTENT_COFFEE = `<div>
         And definitely, one of my future goals/dreams is to work on a laptop, by the window, with a cup of coffee, and in front of me would be a garden of some kind. <br/><br/>
     <div>
 </div>
-`
+`;
 
 export const CONTENT_FUTUREGOALS: NumberedTitleContentType[] = [
-    { title: "Improve my expertise", description: "With solid knowledge of a specific domain, I believe we can create long-term values, and tackle complex challenges with more ease. Hence, I've always been trying to be open about new concepts, ideas, and setting myself up to correct past mistakes" },
-    { title: "Expand professional connection", description: "For me, professional connection is something that shouldn't be overlooked. Simply put, I just can't imagine who I am right now, and will be in the future, if it were not for the supportive buddies that I have made for the past few years." },
-    { title: "Share knowledge with everyone", description: "Whenever I can help someone understand a complex subject, and achieve their goals, I feel a great sense of joy and motivation. Thus, I have been learning, and trying to ELI5 things to myself, until I can fully imagine its nature. Wait... ELI5 huh? Sounds like a great idea, so stay tuned!" },
-    { title: "Become my true self",description:"The idea of a low-key person, with simple outlook who is silently dealing with major businesses has been on my radar for some time"},
-]
+  {
+    title: "Improve my expertise",
+    description:
+      "With solid knowledge of a specific domain, I believe we can create long-term values, and tackle complex challenges with more ease. Hence, I've always been trying to be open about new concepts, ideas, and setting myself up to correct past mistakes",
+  },
+  {
+    title: "Expand professional connection",
+    description:
+      "For me, professional connection is something that shouldn't be overlooked. Simply put, I just can't imagine who I am right now, and will be in the future, if it were not for the supportive buddies that I have made for the past few years.",
+  },
+  {
+    title: "Share knowledge with everyone",
+    description:
+      "Whenever I can help someone understand a complex subject, and achieve their goals, I feel a great sense of joy and motivation. Thus, I have been learning, and trying to ELI5 things to myself, until I can fully imagine its nature. Wait... ELI5 huh? Sounds like a great idea, so stay tuned!",
+  },
+  {
+    title: "Become my true self",
+    description:
+      "The idea of a low-key person, with simple outlook who is silently dealing with major businesses has been on my radar for some time",
+  },
+];
 
 export const CONTENT_HOBBIES: ImageButtonWithModalType[] = [
-    {
-      image: DUMMYTEXT_IMAGE,
-      title: "Badminton",
-      htmlContent: CONTENT_BADMINTON,
-    },
-    {
-      image: DUMMYTEXT_IMAGE,
-      title: "Motorcycle Trips",
-      htmlContent: CONTENT_MOTORCYCLETRIPS,
-    },
-    {
-      image: DUMMYTEXT_IMAGE,
-      title: "Coffee",
-      htmlContent: CONTENT_COFFEE,
-    },
-  ];
+  {
+    image: DUMMYTEXT_IMAGE,
+    title: "Badminton",
+    htmlContent: CONTENT_BADMINTON,
+  },
+  {
+    image: DUMMYTEXT_IMAGE,
+    title: "Motorcycle Trips",
+    htmlContent: CONTENT_MOTORCYCLETRIPS,
+  },
+  {
+    image: DUMMYTEXT_IMAGE,
+    title: "Coffee",
+    htmlContent: CONTENT_COFFEE,
+  },
+];

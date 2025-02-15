@@ -43,7 +43,7 @@ export default function ScrollableTimeline() {
     <motion.div
       variants={variants}
       initial="hidden"
-      animate={isVisible ? "visible" : "visible"}
+      animate={isVisible ? "visible" : "hidden"}
     >
       <div className={wrapperClassname}>
         <YearIndicator scrollPercentage={scrollPercentage} />
