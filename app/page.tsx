@@ -9,7 +9,6 @@ import FM_Reveal from "@/_components/FM_Reveal";
 import ImageButtonWithModal from "@/_components/ImageButtonWithModal";
 import NumberedTitleContent from "@/_components/NumberedTitleContent";
 import ParagraphRenderer from "@/_components/ParagraphRenderer";
-import { DUMMYTEXT_IMAGE } from "@/_constants/DummyText";
 import {
   CONTENT_FUTUREGOALS,
   CONTENT_HOBBIES,
@@ -78,7 +77,7 @@ function AvatarAndBio() {
   return (
     <div className={avatarAndBioClassname}>
       <div className={roundedImageClassname}>
-        <RoundedImage src={DUMMYTEXT_IMAGE} height={300} width={200} />
+        <RoundedImage src={`/my-profile-pic.jpg`} height={300} width={200} />
       </div>
       <div className={bioClassname}>
         <ParagraphRenderer paragraph={CONTENT_SHORTINTRO} lineHeight={2.2} />

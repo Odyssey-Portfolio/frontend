@@ -1,6 +1,5 @@
 import { ImageButtonWithModalType } from "@/_components/ImageButtonWithModal";
 import { NumberedTitleContentType } from "../_components/NumberedTitleContent";
-import { DUMMYTEXT_IMAGE } from "../_constants/DummyText";
 import { FONT_POPPINS, FONTSTYLE_PARAGRAPH1 } from "../_constants/Fonts";
 
 export const CONTENT_SHORTINTRO = `As of now, I am a Consultant at Netcompany Vietnam for almost half a year, maintaining React applications based on customers requirements. 
@@ -49,7 +48,7 @@ export const CONTENT_MOTORCYCLETRIPS = `<div>
 export const CONTENT_COFFEE = `<div>
     <div className='mb-12 flex flex-col items-center'>
         <img 
-            src="https://english.cdn.zeenews.com/sites/default/files/2023/05/02/1193507-everything-about-badminton.png?im=Resize=(1200,900)" 
+            src="/coffee.jpg" 
             alt="Badminton players in action"
             width="500"
             class="rounded-lg shadow-lg"
@@ -88,17 +87,17 @@ export const CONTENT_FUTUREGOALS: NumberedTitleContentType[] = [
 
 export const CONTENT_HOBBIES: ImageButtonWithModalType[] = [
   {
-    image: DUMMYTEXT_IMAGE,
+    image: "/badminton.jpg",
     title: "Badminton",
     htmlContent: CONTENT_BADMINTON,
   },
   {
-    image: DUMMYTEXT_IMAGE,
+    image: "/mtb-touring.jpg",
     title: "Motorcycle Trips",
     htmlContent: CONTENT_MOTORCYCLETRIPS,
   },
   {
-    image: DUMMYTEXT_IMAGE,
+    image: "/coffee.jpg",
     title: "Coffee",
     htmlContent: CONTENT_COFFEE,
   },
