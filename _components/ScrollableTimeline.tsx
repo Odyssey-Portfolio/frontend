@@ -18,7 +18,7 @@ export default function ScrollableTimeline() {
   const wrapperClassname = "flex flex-row h-96";
   const scrollableTimelineClassname = `flex flex-col-reverse relative 
                                 rounded-3xl bg-white
-                                border-2 w-8`;
+                                border-2 w-5`;
   const innerTimelineClassname = `w-full rounded-3xl flex-reverse`;
   const [isVisible, setIsVisible] = useState(false);
   let hideTimeout: NodeJS.Timeout;

@@ -6,6 +6,7 @@ import {
   FONTSTYLE_HEADING1,
   FONTSTYLE_SUBTEXT1,
 } from "@/_constants/Fonts";
+import { CONTENT_PROJECTS } from "@/_contents/Projects";
 
 export default function ProjectsPage() {
   const projectPageClassname = `flex flex-col mt-32 mx-24 mb-12   
@@ -41,11 +42,21 @@ function HeadingText() {
 }
 function ProjectList() {
   const projectListClassname = `grid grid-cols-3 w-full gap-5`;
-  const numbers = [0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5];
+
   return (
     <div className={projectListClassname}>
-      {numbers.map((number, key) => {
-        return <ProjectCard key={key} />;
+      {CONTENT_PROJECTS.map((project, key) => {
+        return (
+          <ProjectCard
+            key={key}
+            name={project.name}
+            description={project.description}
+            duration={project.duration}
+            image={project.image}
+            stack={project.stack}
+            github={project.github}
+          />
+        );
       })}
     </div>
   );

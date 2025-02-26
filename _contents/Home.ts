@@ -66,22 +66,22 @@ export const CONTENT_FUTUREGOALS: NumberedTitleContentType[] = [
   {
     title: "Improve my expertise",
     description:
-      "With solid knowledge of a specific domain, I believe we can create long-term values, and tackle complex challenges with more ease. Hence, I've always been trying to be open about new concepts, ideas, and setting myself up to correct past mistakes",
+      "With solid knowledge of a specific domain, I believe we can create long-term values, and tackle complex challenges with more ease. Hence, I've been open to new ideas, and challenges.",
   },
   {
     title: "Expand professional connection",
     description:
-      "For me, professional connection is something that shouldn't be overlooked. Simply put, I just can't imagine who I am right now, and will be in the future, if it were not for the supportive buddies that I have made for the past few years.",
+      "For me, professional connection is something that shouldn't be overlooked. Simply put, I can't imagine who I am now, if it were not for the supportive buddies that I had made along the way.",
   },
   {
     title: "Share knowledge with everyone",
     description:
-      "Whenever I can help someone understand a complex subject, and achieve their goals, I feel a great sense of joy and motivation. Thus, I have been learning, and trying to ELI5 things to myself, until I can fully imagine its nature. Wait... ELI5 huh? Sounds like a great idea, so stay tuned!",
+      "Honestly, I feel highly motivated when I can wrap my head around complex topics, and share them with everyone. With that said, stay tuned for ELI5 Stories!",
   },
   {
-    title: "Become my true self",
+    title: "Become the best version of myself",
     description:
-      "The idea of a low-key person, with simple outlook who is silently dealing with major businesses has been on my radar for some time",
+      "I believe that by doing what I'm best at and truly enjoy, I can achieve not only the skills for the future, but also most importantly, happiness.",
   },
 ];
 

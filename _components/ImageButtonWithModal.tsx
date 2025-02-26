@@ -69,7 +69,10 @@ function Modal(props: ModalProps) {
       <div className="fixed inset-0 z-40 w-screen flex items-center justify-center">
         <div className="flex justify-center sm:p-0 h-5/6">
           <div className="relative rounded-lg bg-white text-left shadow-xl transition-all w-8/12">
-            <div className=" flex flex-row rounded-t-lg bg-gray-50 items-center justify-between px-4 py-3 sm:flex sm:flex-row sm:px-6">
+            <div
+              className=" flex flex-row rounded-t-lg bg-gray-50 items-center 
+                            justify-between px-4 py-3 sm:flex sm:flex-row sm:px-6"
+            >
               <div className={`${FONT_LEXEND.className} ${FONTSTYLE_SUBTEXT3}`}>
                 {props.title}
               </div>

@@ -132,9 +132,9 @@ function MyLifeStory() {
 }
 
 function FutureGoals() {
-  const headingClassname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING2}`;
+  const headingClassname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING2} mb-5`;
   const futureGoalsClassname = `flex flex-col w-4/5 items-center space-y-4`;
-  const numberedTitleContent = `flex flex-row grid grid-cols-12`;
+  const numberedTitleContent = `flex flex-row grid grid-cols-12 gap-12`;
   return (
     <div className={futureGoalsClassname}>
       <h1 className={headingClassname} style={{ color: COLOR_PRIMARY }}>
@@ -143,7 +143,7 @@ function FutureGoals() {
       <div className={numberedTitleContent}>
         {CONTENT_FUTUREGOALS.map((goal, key) => {
           return (
-            <div className={"col-span-6 p-4"} key={key}>
+            <div className={"col-span-6"} key={key}>
               <NumberedTitleContent
                 number={key + 1}
                 title={goal.title}
