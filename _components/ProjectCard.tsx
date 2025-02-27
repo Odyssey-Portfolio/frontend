@@ -12,7 +12,6 @@ import {
 } from "@/_constants/Fonts";
 import { CalendarIcon, InformationCircleIcon } from "@heroicons/react/16/solid";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { ReactNode, useState } from "react";
 
 export interface ProjectCardProps {
@@ -22,6 +21,7 @@ export interface ProjectCardProps {
   description: string;
   stack: string;
   github: string;
+  imagePadding?: number;
 }
 export default function ProjectCard(props: ProjectCardProps) {
   const projectCardClassname = `relative rounded-lg flex flex-col `;
@@ -50,18 +50,15 @@ function TopSection(props: ProjectCardProps) {
 }
 
 function ProjectImage(props: ProjectCardProps) {
-  const [isOverlayShown, setIsOverlayShown] = useState(false);
   return (
     <div style={{ width: "100%", height: "14rem" }}>
       <Image
-        src={"/badminton.jpg"}
+        src={props.image ? props.image : "/coffee.jpg"}
         alt="avatar"
         width={0}
         height={0}
         sizes="100vh"
         style={{ height: "100%", width: "100%" }}
-        onMouseEnter={() => setIsOverlayShown(true)}
-        onMouseLeave={() => setIsOverlayShown(false)}
       />
     </div>
   );
@@ -104,18 +101,20 @@ function Actions(props: ProjectCardProps) {
   const [buttonTextColor, setButtonTextColor] = useState<string | undefined>(
     undefined
   );
+  const [githubImage, setGithubImage] = useState<string>("/github.png");
   const actionsWrapperClassname = `flex flex-row p-5`;
   const githubButtonClassname = `flex flex-row space-x-2 p-2 rounded-l-lg 
-                                 rounded-r-lg border-2
+                                 rounded-r-lg border-2 justify-center
                                  items-center w-full`;
-  const navigator = useRouter();
   const handleOnMouseDown = () => {
     setButtonBackgroundColor(COLOR_PRIMARY);
     setButtonTextColor(COLOR_WHITE);
+    setGithubImage("/github-inverted.png");
   };
   const handleOnMouseUp = () => {
     setButtonBackgroundColor(undefined);
     setButtonTextColor(COLOR_BLACK_1);
+    setGithubImage("/github.png");
     window.open(props.github, "_blank");
   };
   return (
@@ -129,7 +128,7 @@ function Actions(props: ProjectCardProps) {
           backgroundColor: buttonBackgroundColor,
         }}
       >
-        <Image src="/github.png" alt="avatar" width={100} height={200} />
+        <Image src={githubImage} alt="avatar" width={50} height={0} />
         <span
           className={`${FONT_LEXEND.className} ${FONTSTYLE_PARAGRAPH1} cursor-pointer select-none`}
           style={{ color: buttonTextColor }}
