@@ -24,7 +24,7 @@ export interface ProjectCardProps {
   imagePadding?: number;
 }
 export default function ProjectCard(props: ProjectCardProps) {
-  const projectCardClassname = `relative rounded-lg flex flex-col `;
+  const projectCardClassname = `relative rounded-lg flex flex-col h-full`;
   return (
     <div
       className={projectCardClassname}
@@ -58,7 +58,12 @@ function ProjectImage(props: ProjectCardProps) {
         width={0}
         height={0}
         sizes="100vh"
-        style={{ height: "100%", width: "100%" }}
+        style={{
+          height: "100%",
+          width: "100%",
+          padding: "2rem",
+          borderRadius: 25,
+        }}
       />
     </div>
   );
@@ -70,7 +75,7 @@ type ProjectDescriptionItem = {
 };
 
 function ProjectDescription(props: ProjectCardProps) {
-  const paragraphClassname = `${FONT_POPPINS.className} col-span-10 font-bold`;
+  const paragraphClassname = `${FONT_POPPINS.className} col-span-10`;
   const iconClassname = `col-span-2 w-12 h-12`;
   const projectDescriptionClassname = `flex flex-col p-5`;
   const descriptionItemClassname = `flex flex-row grid grid-cols-12 items-center space-x-3`;

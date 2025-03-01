@@ -5,7 +5,7 @@ import IconWithContent, {
 } from "@/_components/IconWithContent";
 import { COLOR_PRIMARY, COLOR_SECONDARY } from "@/_constants/Colors";
 
-import FM_Reveal from "@/_components/FM_Reveal";
+import FM_Reveal from "@/_components/FramerMotion/FM_Reveal";
 import ImageButtonWithModal from "@/_components/ImageButtonWithModal";
 import NumberedTitleContent from "@/_components/NumberedTitleContent";
 import ParagraphRenderer from "@/_components/ParagraphRenderer";

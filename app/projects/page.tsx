@@ -1,3 +1,4 @@
+import FM_Reveal from "@/_components/FramerMotion/FM_Reveal";
 import ProjectCard from "@/_components/ProjectCard";
 import ScrollableTimeline from "@/_components/ScrollableTimeline";
 import { COLOR_PRIMARY, COLOR_SECONDARY } from "@/_constants/Colors";
@@ -30,32 +31,35 @@ function HeadingText() {
   const h1Classname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING1}`;
   const h2Classname = `${FONT_LEXEND.className} ${FONTSTYLE_SUBTEXT1}`;
   return (
-    <div className={headingTextClassname}>
-      <h1 className={h1Classname} style={{ color: COLOR_PRIMARY }}>
-        Projects
-      </h1>
-      <h6 className={h2Classname} style={{ color: COLOR_SECONDARY }}>
-        A list of projects...
-      </h6>
-    </div>
+    <FM_Reveal className={headingTextClassname}>
+      <>
+        <h1 className={h1Classname} style={{ color: COLOR_PRIMARY }}>
+          Projects
+        </h1>
+        <h6 className={h2Classname} style={{ color: COLOR_SECONDARY }}>
+          A list of projects...
+        </h6>
+      </>
+    </FM_Reveal>
   );
 }
 function ProjectList() {
   const projectListClassname = `grid grid-cols-3 w-full gap-5`;
-
   return (
     <div className={projectListClassname}>
       {CONTENT_PROJECTS.map((project, key) => {
         return (
-          <ProjectCard
-            key={key}
-            name={project.name}
-            description={project.description}
-            duration={project.duration}
-            image={project.image}
-            stack={project.stack}
-            github={project.github}
-          />
+          <FM_Reveal className="h-full">
+            <ProjectCard
+              key={key}
+              name={project.name}
+              description={project.description}
+              duration={project.duration}
+              image={project.image}
+              stack={project.stack}
+              github={project.github}
+            />
+          </FM_Reveal>
         );
       })}
     </div>
