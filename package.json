@@ -10,6 +10,9 @@
   },
   "dependencies": {
     "@heroicons/react": "2.2.0",
+    "@tiptap/pm": "2.11.5",
+    "@tiptap/react": "2.11.5",
+    "@tiptap/starter-kit": "2.11.5",
     "heroicons": "2.2.0",
     "html-react-parser": "5.2.2",
     "motion": "12.4.2",

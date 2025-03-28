@@ -3,7 +3,7 @@ import {
   FONT_LEXEND,
   FONT_POPPINS,
   FONT_POPPINS2,
-  FONTSTYLE_HEADING3,
+  FONTSTYLE_HEADING1,
   FONTSTYLE_SUBTEXT1,
   FONTSTYLE_SUBTEXT2,
 } from "@/_constants/Fonts";
@@ -38,8 +38,8 @@ export default function WorkExprienceCard(props: WorkExperienceCardProps) {
     1,
     props.targetScale,
   ]);
-  const workExperienceCardClassname = `sticky top-[12rem] relative rounded-lg w-[56rem] h-[32rem]
-                                        overflow-hidden shadow-lg mb-12`;
+  const workExperienceCardClassname = `sticky top-[5rem] relative rounded-lg w-[60rem] h-[32rem]
+                                        overflow-hidden shadow-lg mb-24`;
   const overlayTextClassname = `absolute inset-0 flex items-center p-5
                                 justify-center bg-black bg-opacity-0 opacity-0
                                  bg-opacity-70
@@ -50,7 +50,7 @@ export default function WorkExprienceCard(props: WorkExperienceCardProps) {
       className={workExperienceCardClassname}
       style={{
         scale: cardScale,
-        top: `calc(-10% + ${props.index * 2}rem)`,
+        top: `calc(10% + ${props.index * 2}rem)`,
       }}
     >
       <>
@@ -65,7 +65,7 @@ export default function WorkExprienceCard(props: WorkExperienceCardProps) {
 
 function Description(props: WorkExperienceCardProps) {
   const descriptionClassname = `flex flex-col text-white select-none cursor-default space-y-16`;
-  const companyNameClassname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING3}`;
+  const companyNameClassname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING1}`;
 
   const jobTitleClassname = `${FONT_POPPINS.className} ${FONTSTYLE_SUBTEXT1}`;
   const yearsClassname = `${FONT_POPPINS2.className} ${FONTSTYLE_SUBTEXT2}`;

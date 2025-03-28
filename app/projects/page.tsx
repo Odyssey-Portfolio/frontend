@@ -49,15 +49,9 @@ function ProjectList() {
     <div className={projectListClassname}>
       {CONTENT_PROJECTS.map((project, key) => {
         return (
-          <FM_Reveal className="h-full">
-            <ProjectCard
-              key={key}
-              name={project.name}
-              description={project.description}
-              duration={project.duration}
-              image={project.image}
-              stack={project.stack}
-              github={project.github}
+          <FM_Reveal className="h-full" key={key}>
+            <ProjectCard              
+              {...project}              
             />
           </FM_Reveal>
         );

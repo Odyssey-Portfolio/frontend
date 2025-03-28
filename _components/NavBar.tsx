@@ -43,16 +43,12 @@ export default function NavBar() {
     },
     {
       name: "Blogs",
-      route: "/work-experience",
+      route: "/blogs",
     },
     {
       name: "Contact Me!",
       route: "/",
-    },
-    {
-      name: "ELI5 Stories",
-      route: "/",
-    },
+    },    
   ];
 
   return (
