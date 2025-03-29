@@ -21,6 +21,7 @@ export default function ExpandOnFocusButton(props: ExpandOnFocusButtonProps) {
     <div
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={props.action}
       className={`${baseClassname} ${
         isHovered ? focusClassname : nonFocusClassname
       }`}

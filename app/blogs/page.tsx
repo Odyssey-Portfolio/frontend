@@ -1,3 +1,5 @@
+"use client";
+import CreatePostModal from "@/_components/CreatePostModal";
 import ExpandOnFocusButton from "@/_components/ExpandOnFocusButton";
 import FM_Reveal from "@/_components/FramerMotion/FM_Reveal";
 import SearchBar from "@/_components/SearchBar";
@@ -7,7 +9,8 @@ import {
   FONTSTYLE_HEADING1,
   FONTSTYLE_SUBTEXT1,
 } from "@/_constants/Fonts";
-import { PencilIcon } from "@heroicons/react/16/solid";
+import { FunnelIcon, PencilIcon } from "@heroicons/react/16/solid";
+import { useState } from "react";
 import { ExpandOnFocusButtonProps } from "../../_components/ExpandOnFocusButton";
 
 export default function BlogsPage() {
@@ -42,19 +45,32 @@ function HeadingText() {
 function BlogList() {
   const blogListClassname = `flex flex-row justify-center  w-full gap-5`;
   const buttonGrids = `flex flex-row items-center gap-5 relative`;
+  const [isCreatePostModalShown, setIsCreatePostModalShown] = useState(false);
   const featureButtons: ExpandOnFocusButtonProps[] = [
     {
-      icon: <PencilIcon />,
-      label: "New Post",
+      icon: <FunnelIcon />,
+      label: "Filter by...",
     },
     {
       icon: <PencilIcon />,
       label: "New Post",
+      action: () => {
+        setIsCreatePostModalShown(true);
+      },
     },
   ];
+  const showContent = (content: string) => {
+    console.log("Current content: ", content);
+  };
   return (
     <div className={blogListClassname}>
       <SearchBar />
+      {isCreatePostModalShown == true && (
+        <CreatePostModal
+          closeAction={() => setIsCreatePostModalShown(false)}
+          onChange={showContent}
+        />
+      )}
       <div className={buttonGrids}>
         {featureButtons.map((btn, key) => {
           return <ExpandOnFocusButton key={key} {...btn} />;
