@@ -1,3 +1,4 @@
+import NavBar from "@/_components/NavBar";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -22,11 +23,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const navbarClassname = "flex flex-row justify-center";
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <div className={navbarClassname}>
+          <NavBar />
+        </div>
         {children}
       </body>
     </html>
