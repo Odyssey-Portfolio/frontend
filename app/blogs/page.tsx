@@ -1,9 +1,11 @@
 "use client";
+import BlogCard from "@/_components/BlogCard";
 import CreatePostModal from "@/_components/CreatePostModal";
 import ExpandOnFocusButton from "@/_components/ExpandOnFocusButton";
 import FM_Reveal from "@/_components/FramerMotion/FM_Reveal";
 import SearchBar from "@/_components/SearchBar";
 import { COLOR_PRIMARY, COLOR_SECONDARY } from "@/_constants/Colors";
+import { DUMMYTEXT_LOREMIPSUMSHORT } from "@/_constants/DummyText";
 import {
   FONT_LEXEND,
   FONTSTYLE_HEADING1,
@@ -20,6 +22,7 @@ export default function BlogsPage() {
   return (
     <div className={blogPageClassname}>
       <HeadingText />
+      <BlogPageActions />
       <BlogList />
     </div>
   );
@@ -42,7 +45,7 @@ function HeadingText() {
     </FM_Reveal>
   );
 }
-function BlogList() {
+function BlogPageActions() {
   const blogListClassname = `flex flex-row justify-center  w-full gap-5`;
   const buttonGrids = `flex flex-row items-center gap-5 relative`;
   const [isCreatePostModalShown, setIsCreatePostModalShown] = useState(false);
@@ -76,6 +79,26 @@ function BlogList() {
           return <ExpandOnFocusButton key={key} {...btn} />;
         })}
       </div>
+    </div>
+  );
+}
+
+function BlogList() {
+  const arr = [0, 1, 2, 3, 4];
+  const blogListClassname = `grid grid-cols-3 gap-5`;
+  return (
+    <div className={blogListClassname}>
+      {arr.map((ar, key) => {
+        return (
+          <BlogCard
+            key={key}
+            title="Lorem ipsum"
+            subtitle={DUMMYTEXT_LOREMIPSUMSHORT}
+            image="/mtb-touring.jpg"
+            url="asasas"
+          />
+        );
+      })}
     </div>
   );
 }
