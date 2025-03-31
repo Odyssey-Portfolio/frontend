@@ -1,6 +1,6 @@
 "use client";
 import BlogCard from "@/_components/BlogCard";
-import CreatePostModal from "@/_components/CreatePostModal";
+import CreateBlogModal from "@/_components/CreateBlogModal";
 import ExpandOnFocusButton from "@/_components/ExpandOnFocusButton";
 import FM_Reveal from "@/_components/FramerMotion/FM_Reveal";
 import SearchBar from "@/_components/SearchBar";
@@ -48,7 +48,7 @@ function HeadingText() {
 function BlogPageActions() {
   const blogListClassname = `flex flex-row justify-center  w-full gap-5`;
   const buttonGrids = `flex flex-row items-center gap-5 relative`;
-  const [isCreatePostModalShown, setIsCreatePostModalShown] = useState(false);
+  const [isCreateBlogModalShown, setIsCreateBlogModalShown] = useState(false);
   const featureButtons: ExpandOnFocusButtonProps[] = [
     {
       icon: <FunnelIcon />,
@@ -58,7 +58,7 @@ function BlogPageActions() {
       icon: <PencilIcon />,
       label: "New Post",
       action: () => {
-        setIsCreatePostModalShown(true);
+        setIsCreateBlogModalShown(true);
       },
     },
   ];
@@ -68,9 +68,9 @@ function BlogPageActions() {
   return (
     <div className={blogListClassname}>
       <SearchBar />
-      {isCreatePostModalShown == true && (
-        <CreatePostModal
-          closeAction={() => setIsCreatePostModalShown(false)}
+      {isCreateBlogModalShown == true && (
+        <CreateBlogModal
+          closeAction={() => setIsCreateBlogModalShown(false)}
           onChange={showContent}
         />
       )}
