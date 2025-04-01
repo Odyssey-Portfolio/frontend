@@ -11,8 +11,10 @@ import {
   FONTSTYLE_HEADING1,
   FONTSTYLE_SUBTEXT1,
 } from "@/_constants/Fonts";
+import { selectVisiblity } from "@/_redux/createBlogModal/createBlogModalSelector";
+import { setVisibility } from "@/_redux/createBlogModal/createBlogModalSlice";
 import { FunnelIcon, PencilIcon } from "@heroicons/react/16/solid";
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { ExpandOnFocusButtonProps } from "../../_components/ExpandOnFocusButton";
 
 export default function BlogsPage() {
@@ -47,8 +49,10 @@ function HeadingText() {
 }
 function BlogPageActions() {
   const blogListClassname = `flex flex-row justify-center  w-full gap-5`;
-  const buttonGrids = `flex flex-row items-center gap-5 relative`;
-  const [isCreateBlogModalShown, setIsCreateBlogModalShown] = useState(false);
+  const buttonGrids = `flex flex-row items-center gap-5 relative`;  
+  
+  const modalVisibility = useSelector(selectVisiblity)
+  const dispatch = useDispatch()
   const featureButtons: ExpandOnFocusButtonProps[] = [
     {
       icon: <FunnelIcon />,
@@ -57,28 +61,21 @@ function BlogPageActions() {
     {
       icon: <PencilIcon />,
       label: "New Post",
-      action: () => {
-        setIsCreateBlogModalShown(true);
-      },
+      action: () => dispatch(setVisibility(true))
     },
-  ];
-  const showContent = (content: string) => {
-    console.log("Current content: ", content);
-  };
+  ];  
   return (
     <div className={blogListClassname}>
-      <SearchBar />
-      {isCreateBlogModalShown == true && (
-        <CreateBlogModal
-          closeAction={() => setIsCreateBlogModalShown(false)}
-          onChange={showContent}
-        />
-      )}
+      <SearchBar />   
       <div className={buttonGrids}>
         {featureButtons.map((btn, key) => {
           return <ExpandOnFocusButton key={key} {...btn} />;
         })}
       </div>
+      {modalVisibility == true && (
+        <CreateBlogModal          
+        />
+      )}
     </div>
   );
 }
