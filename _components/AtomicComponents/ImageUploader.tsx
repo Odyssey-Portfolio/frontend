@@ -5,7 +5,7 @@ import { useState } from "react";
 
 interface ImageUploaderProps {
   label?: string;
-  onChange?: (imageString: string | null) => void;
+  onChange?: (imageString: File | null) => void;
 }
 
 export default function ImageUploader({ label, onChange }: ImageUploaderProps) {
@@ -16,7 +16,7 @@ export default function ImageUploader({ label, onChange }: ImageUploaderProps) {
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setImage(imageUrl);
-      onChange?.(imageUrl);
+      onChange?.(file);
     }
   };
 

@@ -1,8 +1,12 @@
 import { COLOR_WHITE } from "@/_constants/Colors";
 import { FONT_LEXEND, FONTSTYLE_SUBTEXT3 } from "@/_constants/Fonts";
+import { CreateBlog } from "@/_models/CreateBlog";
 import {
-  setVisibility
+  setIsLoading,
+  setVisibility,
 } from "@/_redux/createBlogModal/createBlogModalSlice";
+import { createBlogThunk } from "@/_redux/createBlogModal/createBlogModalThunk";
+import { AppDispatch } from "@/_redux/store";
 import { Toggle } from "@radix-ui/react-toggle";
 import Highlight from "@tiptap/extension-highlight";
 import TextAlign from "@tiptap/extension-text-align";
@@ -22,12 +26,7 @@ import {
   Strikethrough,
   Text,
 } from "lucide-react";
-import {
-  FieldValues,
-  FormProvider,
-  useForm,
-  useFormContext,
-} from "react-hook-form";
+import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import Button, { ButtonVariants } from "./AtomicComponents/Button";
 import ImageUploader from "./AtomicComponents/ImageUploader";
@@ -38,9 +37,12 @@ export default function CreateBlogModal() {
                               flex flex-col justify-center items-center`;
   const modalClassname = `z-40 w-8/12 h-96 rounded-lg px-4 py-3 flex flex-col 
                           space-y-5`;
+  const dispatch = useDispatch<AppDispatch>();
   const methods = useForm<CreateBlog>();
-  const onSubmit = (data: FieldValues) => {
-    console.log("current forms: ", data);
+  const onSubmit = () => {
+    const newBlog = methods.getValues();
+    dispatch(setIsLoading(true));
+    dispatch(createBlogThunk(newBlog));
   };
   return (
     <div className={backdropClassname}>
@@ -58,7 +60,7 @@ export default function CreateBlogModal() {
 }
 
 interface HeaderSectionProps {
-  onSubmit: (data: FieldValues) => void;
+  onSubmit: () => void;
 }
 function HeaderSection(props: HeaderSectionProps) {
   const headerClassname = ` flex flex-row justify-between items-center`;
@@ -114,7 +116,7 @@ function MetadataEditor() {
 }
 
 function MainEditor() {
-  const editorClassname = `flex flex-col space-y-2`;  
+  const editorClassname = `flex flex-col space-y-2`;
   const { setValue } = useFormContext();
   const editor = useEditor({
     extensions: [
@@ -127,6 +129,7 @@ function MainEditor() {
         HTMLAttributes: { class: "hover:bg-red-500" },
       }),
     ],
+    immediatelyRender: false,
     editorProps: {
       attributes: {
         class:
@@ -134,7 +137,7 @@ function MainEditor() {
       },
     },
     onUpdate: ({ editor }) => {
-      setValue("content",editor.getHTML());
+      setValue("content", editor.getHTML());
     },
   });
 

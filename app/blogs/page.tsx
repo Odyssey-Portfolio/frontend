@@ -3,6 +3,7 @@ import BlogCard from "@/_components/BlogCard";
 import CreateBlogModal from "@/_components/CreateBlogModal";
 import ExpandOnFocusButton from "@/_components/ExpandOnFocusButton";
 import FM_Reveal from "@/_components/FramerMotion/FM_Reveal";
+import LoadingOverlay from "@/_components/LoadingOverlay";
 import SearchBar from "@/_components/SearchBar";
 import { COLOR_PRIMARY, COLOR_SECONDARY } from "@/_constants/Colors";
 import { DUMMYTEXT_LOREMIPSUMSHORT } from "@/_constants/DummyText";
@@ -11,7 +12,10 @@ import {
   FONTSTYLE_HEADING1,
   FONTSTYLE_SUBTEXT1,
 } from "@/_constants/Fonts";
-import { selectVisiblity } from "@/_redux/createBlogModal/createBlogModalSelector";
+import {
+  selectIsLoading,
+  selectVisiblity,
+} from "@/_redux/createBlogModal/createBlogModalSelector";
 import { setVisibility } from "@/_redux/createBlogModal/createBlogModalSlice";
 import { FunnelIcon, PencilIcon } from "@heroicons/react/16/solid";
 import { useDispatch, useSelector } from "react-redux";
@@ -49,10 +53,9 @@ function HeadingText() {
 }
 function BlogPageActions() {
   const blogListClassname = `flex flex-row justify-center  w-full gap-5`;
-  const buttonGrids = `flex flex-row items-center gap-5 relative`;  
-  
-  const modalVisibility = useSelector(selectVisiblity)
-  const dispatch = useDispatch()
+  const buttonGrids = `flex flex-row items-center gap-5 relative`;
+  const modalVisibility = useSelector(selectVisiblity);
+  const dispatch = useDispatch();
   const featureButtons: ExpandOnFocusButtonProps[] = [
     {
       icon: <FunnelIcon />,
@@ -61,21 +64,18 @@ function BlogPageActions() {
     {
       icon: <PencilIcon />,
       label: "New Post",
-      action: () => dispatch(setVisibility(true))
+      action: () => dispatch(setVisibility(true)),
     },
-  ];  
+  ];
   return (
     <div className={blogListClassname}>
-      <SearchBar />   
+      <SearchBar />
       <div className={buttonGrids}>
         {featureButtons.map((btn, key) => {
           return <ExpandOnFocusButton key={key} {...btn} />;
         })}
       </div>
-      {modalVisibility == true && (
-        <CreateBlogModal          
-        />
-      )}
+      {modalVisibility == true && <CreateBlogModal />}
     </div>
   );
 }
@@ -83,6 +83,7 @@ function BlogPageActions() {
 function BlogList() {
   const arr = [0, 1, 2, 3, 4];
   const blogListClassname = `grid grid-cols-3 gap-5`;
+  const isLoading = useSelector(selectIsLoading);
   return (
     <div className={blogListClassname}>
       {arr.map((ar, key) => {
@@ -96,6 +97,7 @@ function BlogList() {
           />
         );
       })}
+      {isLoading && <LoadingOverlay />}
     </div>
   );
 }

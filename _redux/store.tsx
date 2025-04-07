@@ -1,8 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import createBlogModalReducer from './createBlogModal/createBlogModalSlice';
+import createBlogModalReducer from "./createBlogModal/createBlogModalSlice";
+import getBlogsReducer from "./getBlogs/getBlogsSlice";
 export const store = configureStore({
   reducer: {
-    createBlogModal: createBlogModalReducer, 
+    createBlogModal: createBlogModalReducer,
+    getBlogs: getBlogsReducer,
   },
 });
 
