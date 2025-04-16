@@ -1,8 +1,8 @@
 "use client";
 import { FONT_LEXEND, FONTSTYLE_SUBTEXT3 } from "@/_constants/Fonts";
-import parse from "html-react-parser";
 import Image from "next/image";
 import { useState } from "react";
+import ParagraphRenderer from "./ParagraphRenderer";
 
 export type ImageButtonWithModalType = {
   image: string;
@@ -85,7 +85,7 @@ function Modal(props: ModalProps) {
               </button>
             </div>
             <div className="m-5 overflow-y-scroll h-5/6">
-              {parse(props.htmlContent)}
+              <ParagraphRenderer isHtml paragraph={props.htmlContent} />
             </div>
           </div>
         </div>

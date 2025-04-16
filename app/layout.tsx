@@ -1,4 +1,5 @@
 import NavBar from "@/_components/NavBar";
+import { Providers } from "@/_redux/Providers";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -26,14 +27,16 @@ export default function RootLayout({
   const navbarClassname = "flex flex-row justify-center";
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <div className={navbarClassname}>
-          <NavBar />
-        </div>
-        {children}
-      </body>
+      <Providers>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          <div className={navbarClassname}>
+            <NavBar />
+          </div>
+          {children}
+        </body>
+      </Providers>
     </html>
   );
 }

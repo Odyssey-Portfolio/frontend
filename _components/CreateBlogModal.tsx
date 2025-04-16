@@ -1,5 +1,12 @@
 import { COLOR_WHITE } from "@/_constants/Colors";
 import { FONT_LEXEND, FONTSTYLE_SUBTEXT3 } from "@/_constants/Fonts";
+import { CreateBlog } from "@/_models/CreateBlog";
+import {
+  setIsLoading,
+  setVisibility,
+} from "@/_redux/createBlogModal/createBlogModalSlice";
+import { createBlogThunk } from "@/_redux/createBlogModal/createBlogModalThunk";
+import { AppDispatch } from "@/_redux/store";
 import { Toggle } from "@radix-ui/react-toggle";
 import Highlight from "@tiptap/extension-highlight";
 import TextAlign from "@tiptap/extension-text-align";
@@ -19,47 +26,98 @@ import {
   Strikethrough,
   Text,
 } from "lucide-react";
+import { FormProvider, useForm, useFormContext } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import Button, { ButtonVariants } from "./AtomicComponents/Button";
+import ImageUploader from "./AtomicComponents/ImageUploader";
+import TextInput from "./AtomicComponents/TextInput";
 
-interface CreatePostModalProps {
-  closeAction: () => void;
-  onChange: (content: string) => void;
-}
-export default function CreatePostModal(props: CreatePostModalProps) {
+export default function CreateBlogModal() {
   const backdropClassname = `fixed inset-0 bg-gray-500/50 transition-opacity z-30 
                               flex flex-col justify-center items-center`;
-  const modalClassname = `z-40 w-8/12 h-9/12 rounded-lg px-4 py-3 flex flex-col space-y-5`;
-
+  const modalClassname = `z-40 w-8/12 h-96 rounded-lg px-4 py-3 flex flex-col 
+                          space-y-5`;
+  const dispatch = useDispatch<AppDispatch>();
+  const methods = useForm<CreateBlog>();
+  const onSubmit = () => {
+    const newBlog = methods.getValues();
+    dispatch(setIsLoading(true));
+    dispatch(createBlogThunk(newBlog));
+  };
   return (
     <div className={backdropClassname}>
-      <div className={modalClassname} style={{ backgroundColor: COLOR_WHITE }}>
-        <HeaderSection {...props} />
-        <EditorSection {...props} />
+      <FormProvider {...methods}>
+        <div
+          className={modalClassname}
+          style={{ backgroundColor: COLOR_WHITE }}
+        >
+          <HeaderSection onSubmit={onSubmit} />
+          <EditorSection />
+        </div>
+      </FormProvider>
+    </div>
+  );
+}
+
+interface HeaderSectionProps {
+  onSubmit: () => void;
+}
+function HeaderSection(props: HeaderSectionProps) {
+  const headerClassname = ` flex flex-row justify-between items-center`;
+  const titleClassname = `${FONT_LEXEND.className} ${FONTSTYLE_SUBTEXT3}`;
+  const buttonGroupClassname = `flex flex-row space-x-2 items-center`;
+
+  const { handleSubmit } = useFormContext();
+  const dispatch = useDispatch();
+
+  return (
+    <div className={headerClassname}>
+      <div className={titleClassname}>Create a Post</div>
+      <div className={buttonGroupClassname}>
+        <Button label="Submit" onClick={handleSubmit(props.onSubmit)} />
+        <Button
+          label="Close"
+          variant={ButtonVariants.DANGER}
+          onClick={() => dispatch(setVisibility(false))}
+        />
       </div>
     </div>
   );
 }
-function HeaderSection(props: CreatePostModalProps) {
-  const headerClassname = ` flex flex-row justify-between items-center`;
-  const titleClassname = `${FONT_LEXEND.className} ${FONTSTYLE_SUBTEXT3}`;
-  const closeBtnClassname = `inline-flex w-full justify-center rounded-md bg-red-600 px-3 
-                              py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-500 
-                              sm:ml-3 sm:w-auto`;
+
+function EditorSection() {
+  const editorSectionClassname = `space-y-3 overflow-y-scroll`;
   return (
-    <div className={headerClassname}>
-      <div className={titleClassname}>Create a Post</div>
-      <button
-        type="button"
-        className={closeBtnClassname}
-        onClick={props.closeAction}
-      >
-        Close
-      </button>
+    <div className={editorSectionClassname}>
+      <MetadataEditor />
+      <MainEditor />
     </div>
   );
 }
 
-function EditorSection(props: CreatePostModalProps) {
+function MetadataEditor() {
+  const metadataContainerClassname = `grid grid-cols-12 space-x-2`;
+  const textInputContainerClassname = `col-span-9 space-y-3`;
+  const imageUploaderContainerClassname = `col-span-3`;
+  const { register, setValue } = useFormContext();
+  return (
+    <div className={metadataContainerClassname}>
+      <div className={imageUploaderContainerClassname}>
+        <ImageUploader
+          onChange={(imageString) => setValue("image", imageString)}
+        />
+      </div>
+      <div className={textInputContainerClassname}>
+        <TextInput label="Title" {...register("title")} />
+        <TextInput label="Description" {...register("description")} />
+      </div>
+    </div>
+  );
+}
+
+function MainEditor() {
   const editorClassname = `flex flex-col space-y-2`;
+  const { setValue } = useFormContext();
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -71,6 +129,7 @@ function EditorSection(props: CreatePostModalProps) {
         HTMLAttributes: { class: "hover:bg-red-500" },
       }),
     ],
+    immediatelyRender: false,
     editorProps: {
       attributes: {
         class:
@@ -78,9 +137,10 @@ function EditorSection(props: CreatePostModalProps) {
       },
     },
     onUpdate: ({ editor }) => {
-      props.onChange(editor.getHTML());
+      setValue("content", editor.getHTML());
     },
   });
+
   return (
     <div className={editorClassname}>
       <MenuBar editor={editor} />

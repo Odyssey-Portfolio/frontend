@@ -2,13 +2,13 @@
 import {
   COLOR_BLACK_1,
   COLOR_PRIMARY,
-  COLOR_PRIMARY_LIGHT,
-  COLOR_WHITE,
+  COLOR_WHITE
 } from "@/_constants/Colors";
 import {
   FONT_LEXEND,
   FONT_POPPINS,
   FONTSTYLE_PARAGRAPH1,
+  FONTSTYLE_SUBTEXT3
 } from "@/_constants/Fonts";
 import { CalendarIcon, InformationCircleIcon } from "@heroicons/react/16/solid";
 import Image from "next/image";
@@ -28,10 +28,10 @@ export default function ProjectCard(props: ProjectCardProps) {
   return (
     <div
       className={projectCardClassname}
-      style={{ backgroundColor: COLOR_PRIMARY_LIGHT }}
+      // style={{ backgroundColor: COLOR_PRIMARY_LIGHT }}
     >
-      <TopSection {...props} />
       <ProjectImage {...props} />
+      <TopSection {...props} />      
       <Actions {...props} />
       <ProjectDescription {...props} />
     </div>
@@ -41,7 +41,7 @@ export default function ProjectCard(props: ProjectCardProps) {
 function TopSection(props: ProjectCardProps) {
   const topSectionClassname = `p-5 flex flex-row items-center space-x-5 justify-center`;
   const projectIconClassname = `w-16`;
-  const projectNameClassname = `${FONT_LEXEND.className} font-bold cursor-default`;
+  const projectNameClassname = `${FONT_LEXEND.className} ${FONTSTYLE_SUBTEXT3} font-bold cursor-default`;
   return (
     <div className={topSectionClassname}>
       <div className={projectNameClassname}>{props.name}</div>
