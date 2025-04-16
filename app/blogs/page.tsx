@@ -6,25 +6,31 @@ import FM_Reveal from "@/_components/FramerMotion/FM_Reveal";
 import LoadingOverlay from "@/_components/LoadingOverlay";
 import SearchBar from "@/_components/SearchBar";
 import { COLOR_PRIMARY, COLOR_SECONDARY } from "@/_constants/Colors";
-import { DUMMYTEXT_LOREMIPSUMSHORT } from "@/_constants/DummyText";
 import {
   FONT_LEXEND,
   FONTSTYLE_HEADING1,
   FONTSTYLE_SUBTEXT1,
 } from "@/_constants/Fonts";
 import {
-  selectIsLoading,
+  selectIsLoading as selectIsCreatingBlog,
   selectVisiblity,
 } from "@/_redux/createBlogModal/createBlogModalSelector";
 import { setVisibility } from "@/_redux/createBlogModal/createBlogModalSlice";
+import {
+  selectBlogs,
+  selectIsLoading as selectIsGettingBlogs,
+  selectSearchParams,
+} from "@/_redux/getBlogs/getBlogsSelector";
+import { getBlogsThunk } from "@/_redux/getBlogs/getBlogsThunk";
+import { AppDispatch } from "@/_redux/store";
 import { FunnelIcon, PencilIcon } from "@heroicons/react/16/solid";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ExpandOnFocusButtonProps } from "../../_components/ExpandOnFocusButton";
 
 export default function BlogsPage() {
   const blogPageClassname = `flex flex-col mt-32 mx-24 mb-12   
                                 items-center justify-between space-y-20`;
-  const timelineClassname = `fixed top-1/2 transform -translate-y-1/2 right-2`;
   return (
     <div className={blogPageClassname}>
       <HeadingText />
@@ -81,23 +87,22 @@ function BlogPageActions() {
 }
 
 function BlogList() {
-  const arr = [0, 1, 2, 3, 4];
   const blogListClassname = `grid grid-cols-3 gap-5`;
-  const isLoading = useSelector(selectIsLoading);
+  const blogs = useSelector(selectBlogs);
+  const dispatch = useDispatch<AppDispatch>();
+  const isCreatingBlog = useSelector(selectIsCreatingBlog);
+  const isGettingBlogs = useSelector(selectIsGettingBlogs);
+  const searchParams = useSelector(selectSearchParams);
+  useEffect(() => {
+    dispatch(getBlogsThunk(searchParams));
+  }, []);
+
   return (
     <div className={blogListClassname}>
-      {arr.map((ar, key) => {
-        return (
-          <BlogCard
-            key={key}
-            title="Lorem ipsum"
-            subtitle={DUMMYTEXT_LOREMIPSUMSHORT}
-            image="/mtb-touring.jpg"
-            url="asasas"
-          />
-        );
+      {blogs.map((blog, key) => {
+        return <BlogCard key={key} isImageB64 blog={blog} />;
       })}
-      {isLoading && <LoadingOverlay />}
+      {(isCreatingBlog || isGettingBlogs) && <LoadingOverlay />}
     </div>
   );
 }

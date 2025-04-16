@@ -33,6 +33,7 @@ const getBlogsSlice = createSlice({
       })
       .addCase(getBlogsThunk.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.blogs = action.payload.returnData as GetBlog[];
       });
   },
 });

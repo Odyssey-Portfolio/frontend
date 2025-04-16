@@ -1,18 +1,21 @@
 import { COLOR_PRIMARY } from "@/_constants/Colors";
 import {
-    FONT_LEXEND,
-    FONT_POPPINS,
-    FONTSTYLE_PARAGRAPH1,
-    FONTSTYLE_SUBTEXT2,
+  FONT_LEXEND,
+  FONT_POPPINS,
+  FONTSTYLE_PARAGRAPH1,
+  FONTSTYLE_SUBTEXT2,
 } from "@/_constants/Fonts";
+import { GetBlog } from "@/_models/GetBlog";
+import { setBlogDetails } from "@/_redux/blogDetailsPage/blogDetailsPageActions";
+import { AppDispatch } from "@/_redux/store";
 import { BookOpenIcon } from "@heroicons/react/16/solid";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
 
 interface BlogCardProps {
-  image: string;
-  title: string;
-  subtitle: string;
-  url: string;
+  blog: GetBlog;
+  isImageB64: boolean;
 }
 export default function BlogCard(props: BlogCardProps) {
   const blogCardClassname = `relative rounded-lg flex flex-col h-full`;
@@ -22,7 +25,11 @@ export default function BlogCard(props: BlogCardProps) {
     <div className={blogCardClassname}>
       <div className={imageClassname}>
         <Image
-          src={props.image}
+          src={
+            props.isImageB64
+              ? decodeURIComponent(props.blog.image)
+              : props.blog.image
+          }
           alt="avatar"
           width={0}
           height={0}
@@ -47,20 +54,21 @@ function TitleSection(props: BlogCardProps) {
   const subtitleClassname = `${FONT_POPPINS.className}`;
   return (
     <>
-      <div className={titleClassname}>
-        {props.title}
-      </div>
-      <div className={subtitleClassname}>{props.subtitle}</div>
+      <div className={titleClassname}>{props.blog.title}</div>
+      <div className={subtitleClassname}>{props.blog.description}</div>
     </>
   );
 }
 
 function GoToBlogSection(props: BlogCardProps) {
   const goToBlogClassname = `flex flex-row space-x-2 items-center cursor-default select-none`;
-  const iconClassname = `col-span-2 w-12 h-12`;
+  const iconClassname = `col-span-2 w-12 h-12 cursor-default`;
   const labelClassname = `${FONT_POPPINS.className} ${FONTSTYLE_PARAGRAPH1}`;
+  const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
   const goToBlog = () => {
-    console.log("blogUrl", props.url);
+    dispatch(setBlogDetails(props.blog));
+    router.push(`/blogs/${props.blog.id}`);
   };
   return (
     <div

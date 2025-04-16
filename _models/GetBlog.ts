@@ -1,7 +1,7 @@
 export interface GetBlog {
-  Id: string;
-  Image: string;
-  Title: string;
-  Content: string;
-  Description: string;
+  id: string;
+  image: string;
+  title: string;
+  content: string;
+  description: string;
 }

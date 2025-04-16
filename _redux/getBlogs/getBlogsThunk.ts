@@ -4,12 +4,14 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const getBlogsThunk = createAsyncThunk(
   "getBlogs/get",
-  async (blog: GetBlogsParams, { rejectWithValue }) => {
+  async (params: GetBlogsParams, thunkAPI) => {
     try {
-      const response = await getBlogs(blog);
+      const response = await getBlogs(params);
       return response.data;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data || "Something went wrong");
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Something went wrong"
+      );
     }
   }
 );
