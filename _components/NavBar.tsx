@@ -3,6 +3,7 @@ import { COLOR_PRIMARY, COLOR_SECONDARY } from "@/_constants/Colors";
 import { FONT_LEXEND } from "@/_constants/Fonts";
 import { motion } from "motion/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 type NavbarItem = {
   name: string;
@@ -48,11 +49,11 @@ export default function NavBar() {
     {
       name: "Contact Me!",
       route: "/",
-    },    
+    },
   ];
 
   return (
-    <motion.nav
+    <motion.div
       className={navbarClassname}
       animate={{ y: isVisible ? 0 : -100, opacity: isVisible ? 1 : 0 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
@@ -85,6 +86,23 @@ export default function NavBar() {
           </motion.div>
         );
       })}
-    </motion.nav>
+      <LoginButton />
+    </motion.div>
+  );
+}
+
+function LoginButton() {
+  const buttonContainerClassname = "flex items-center space-x-4";
+  const router = useRouter();
+  return (
+    <div className={buttonContainerClassname}>
+      <button
+        className="px-6 py-2 text-white font-semibold rounded-xl shadow-md transition"
+        style={{ background: COLOR_PRIMARY }}
+        onClick={() => router.push("/login")}
+      >
+        Login
+      </button>
+    </div>
   );
 }
