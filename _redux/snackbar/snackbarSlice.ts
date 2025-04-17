@@ -1,7 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+export type SnackbarType = "info" | "success" | "error";
+export interface SnackbarMessage {
+  id: string;
+  message: string;
+  type?: SnackbarType;
+  duration?: number;
+}
+
 interface SnackbarState {
-  messages: string[];
+  messages: SnackbarMessage[];
 }
 
 const initialState: SnackbarState = {
@@ -12,11 +20,13 @@ const snackbarSlice = createSlice({
   name: "snackbar",
   initialState,
   reducers: {
-    pushMessage: (state, action: PayloadAction<string>) => {
+    pushMessage: (state, action: PayloadAction<SnackbarMessage>) => {
       state.messages.push(action.payload);
     },
-    popMessage: (state) => {
-      state.messages.pop();
+    removeMessage: (state, action: PayloadAction<string>) => {
+      state.messages = state.messages.filter(
+        (msg) => msg.id !== action.payload
+      );
     },
   },
 });

@@ -7,7 +7,7 @@ export const loginThunk = createAsyncThunk(
   async (fields: LoginFormFields, thunkAPI) => {
     try {
       const response = await login(fields);
-      return response;
+      return response.data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(
         error.response?.data || "Something went wrong"

@@ -1,3 +1,4 @@
+import { ApiResponse } from "@/_models/ApiResponse";
 import { LoginFormFields } from "@/_models/AuthFormFields";
 import { createSlice } from "@reduxjs/toolkit";
 import { loginThunk } from "./authThunk";
@@ -5,19 +6,23 @@ import { loginThunk } from "./authThunk";
 interface AuthState {
   loginFormFields: LoginFormFields | undefined;
   isLoading: boolean;
-  isSuccessful: boolean;
+  data: ApiResponse | undefined;
 }
 
 const initialState: AuthState = {
   loginFormFields: undefined,
   isLoading: false,
-  isSuccessful: false,
+  data: undefined,
 };
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    clearAuthData: (state) => {
+      state.data = initialState.data;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(loginThunk.pending, (state) => {
@@ -25,12 +30,14 @@ const authSlice = createSlice({
       })
       .addCase(loginThunk.fulfilled, (state, action) => {
         state.isLoading = false;
-        const response = action.payload;
-
-        console.log("Current token: ", response.data.returnData);
+        state.data = action.payload as ApiResponse;
+      })
+      .addCase(loginThunk.rejected, (state, action) => {
+        state.isLoading = false;
+        state.data = action.payload as ApiResponse;
       });
   },
 });
 
-// export const { setBlogDetails } = authSlice.actions;
+export const { clearAuthData } = authSlice.actions;
 export default authSlice.reducer;

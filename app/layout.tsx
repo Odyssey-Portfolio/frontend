@@ -3,6 +3,7 @@ import { Providers } from "@/_redux/Providers";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import SnackbarList from "@/_components/Snackbars";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,6 +36,7 @@ export default function RootLayout({
             <NavBar />
           </div>
           {children}
+          <SnackbarList />
         </body>
       </Providers>
     </html>

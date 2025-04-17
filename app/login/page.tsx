@@ -8,10 +8,15 @@ import {
   FONTSTYLE_HEADING1,
   FONTSTYLE_SUBTEXT1,
 } from "@/_constants/Fonts";
+import { BAD_REQUEST, SUCCESS } from "@/_constants/ResponseCodes";
 import { LoginFormFields } from "@/_models/AuthFormFields";
-import { selectIsLoading } from "@/_redux/auth/authSelector";
+import { selectAuthData, selectIsLoading } from "@/_redux/auth/authSelector";
+import { clearAuthData } from "@/_redux/auth/authSlice";
 import { loginThunk } from "@/_redux/auth/authThunk";
+import { setSnackbarMessage } from "@/_redux/snackbar/snackbarActions";
 import { AppDispatch } from "@/_redux/store";
+import { nanoid } from "@reduxjs/toolkit";
+import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -48,11 +53,32 @@ function LoginForm() {
   const loginFormClassname = "space-y-5 w-96";
   const methods = useForm<LoginFormFields>();
   const dispatch = useDispatch<AppDispatch>();
+
   const isLoading = useSelector(selectIsLoading);
+  const authData = useSelector(selectAuthData);
   const onSubmit = (data: LoginFormFields) => {
     console.log("Login data submitted:", data);
     dispatch(loginThunk(data));
   };
+
+  useEffect(() => {
+    if (
+      (authData && authData.statusCode === SUCCESS) ||
+      (authData && authData.statusCode === BAD_REQUEST)
+    ) {
+      dispatch(
+        setSnackbarMessage({
+          id: nanoid(),
+          message: authData.message,
+          type: authData.statusCode === SUCCESS ? "success" : "error",
+        })
+      );
+    }
+    return () => {
+      dispatch(clearAuthData());
+    };
+  }, [authData]);
+
   return (
     <FormProvider {...methods}>
       <div className={loginFormClassname}>
