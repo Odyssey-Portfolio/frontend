@@ -29,6 +29,9 @@ const createBlogModalSlice = createSlice({
       })
       .addCase(createBlogThunk.fulfilled, (state, action) => {
         state.isLoading = false;
+      })
+      .addCase(createBlogThunk.rejected, (state, action) => {
+        state.isLoading = false;
       });
   },
 });
