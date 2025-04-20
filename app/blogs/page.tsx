@@ -1,10 +1,12 @@
 "use client";
+import Authorizer from "@/_components/Authorizer";
 import BlogCard from "@/_components/BlogCard";
 import CreateBlogModal from "@/_components/CreateBlogModal";
 import ExpandOnFocusButton from "@/_components/ExpandOnFocusButton";
 import FM_Reveal from "@/_components/FramerMotion/FM_Reveal";
 import LoadingOverlay from "@/_components/LoadingOverlay";
 import SearchBar from "@/_components/SearchBar";
+import { ROLE_ADMIN } from "@/_constants/Auth";
 import { COLOR_PRIMARY, COLOR_SECONDARY } from "@/_constants/Colors";
 import {
   FONT_LEXEND,
@@ -26,7 +28,6 @@ import { AppDispatch } from "@/_redux/store";
 import { FunnelIcon, PencilIcon } from "@heroicons/react/16/solid";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { ExpandOnFocusButtonProps } from "../../_components/ExpandOnFocusButton";
 
 export default function BlogsPage() {
   const blogPageClassname = `flex flex-col mt-32 mx-24 mb-12   
@@ -57,12 +58,13 @@ function HeadingText() {
     </FM_Reveal>
   );
 }
+
 function BlogPageActions() {
   const blogListClassname = `flex flex-row justify-center  w-full gap-5`;
   const buttonGrids = `flex flex-row items-center gap-5 relative`;
   const modalVisibility = useSelector(selectVisiblity);
   const dispatch = useDispatch();
-  const featureButtons: ExpandOnFocusButtonProps[] = [
+  const featureButtons: any[] = [
     {
       icon: <FunnelIcon />,
       label: "Filter by...",
@@ -71,6 +73,7 @@ function BlogPageActions() {
       icon: <PencilIcon />,
       label: "New Post",
       action: () => dispatch(setVisibility(true)),
+      authorize: true,
     },
   ];
   return (
@@ -78,7 +81,25 @@ function BlogPageActions() {
       <SearchBar />
       <div className={buttonGrids}>
         {featureButtons.map((btn, key) => {
-          return <ExpandOnFocusButton key={key} {...btn} />;
+          if (btn.authorize)
+            return (
+              <Authorizer key={key} roles={[ROLE_ADMIN]}>
+                <ExpandOnFocusButton
+                  key={key}
+                  icon={btn.icon}
+                  label={btn.label}
+                  action={btn.action}
+                />
+              </Authorizer>
+            );
+          return (
+            <ExpandOnFocusButton
+              key={key}
+              icon={btn.icon}
+              label={btn.label}
+              action={btn.action}
+            />
+          );
         })}
       </div>
       {modalVisibility == true && <CreateBlogModal />}
