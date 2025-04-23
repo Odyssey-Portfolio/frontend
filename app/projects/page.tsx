@@ -1,6 +1,5 @@
 import FM_Reveal from "@/_components/FramerMotion/FM_Reveal";
 import ProjectCard from "@/_components/ProjectCard";
-import ScrollableTimeline from "@/_components/ScrollableTimeline";
 import { COLOR_PRIMARY, COLOR_SECONDARY } from "@/_constants/Colors";
 import {
   FONT_LEXEND,
@@ -19,9 +18,9 @@ export default function ProjectsPage() {
         <HeadingText />
         <ProjectList />
       </div>
-      <div className={timelineClassname}>
+      {/* <div className={timelineClassname}> //TODO: Implement year change on scroll
         <ScrollableTimeline />
-      </div>
+      </div> */}
     </div>
   );
 }
@@ -50,9 +49,7 @@ function ProjectList() {
       {CONTENT_PROJECTS.map((project, key) => {
         return (
           <FM_Reveal className="h-full" key={key}>
-            <ProjectCard              
-              {...project}              
-            />
+            <ProjectCard {...project} />
           </FM_Reveal>
         );
       })}

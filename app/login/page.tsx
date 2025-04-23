@@ -16,6 +16,7 @@ import { loginThunk } from "@/_redux/auth/authThunk";
 import { setSnackbarMessage } from "@/_redux/snackbar/snackbarActions";
 import { AppDispatch } from "@/_redux/store";
 import { nanoid } from "@reduxjs/toolkit";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -53,7 +54,7 @@ function LoginForm() {
   const loginFormClassname = "space-y-5 w-96";
   const methods = useForm<LoginFormFields>();
   const dispatch = useDispatch<AppDispatch>();
-
+  const router = useRouter();
   const isLoading = useSelector(selectIsLoading);
   const authData = useSelector(selectAuthData);
   const onSubmit = (data: LoginFormFields) => {
@@ -62,15 +63,21 @@ function LoginForm() {
   };
 
   useEffect(() => {
-    if (
-      (authData && authData.statusCode === SUCCESS) ||
-      (authData && authData.statusCode === BAD_REQUEST)
-    ) {
+    if (authData && authData.statusCode === SUCCESS) {
       dispatch(
         setSnackbarMessage({
           id: nanoid(),
           message: authData.message,
-          type: authData.statusCode === SUCCESS ? "success" : "error",
+          type: "success",
+        })
+      );
+      router.push("/");
+    } else if (authData && authData.statusCode === BAD_REQUEST) {
+      dispatch(
+        setSnackbarMessage({
+          id: nanoid(),
+          message: authData.message,
+          type: "error",
         })
       );
     }
