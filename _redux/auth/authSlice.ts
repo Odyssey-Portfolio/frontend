@@ -8,14 +8,14 @@ import { loginThunk } from "./authThunk";
 interface AuthState {
   loginFormFields: LoginFormFields | undefined;
   isLoading: boolean;
-  data: ApiResponse | undefined;
+  apiResponse: ApiResponse | undefined;
   // loggedInUser: LoggedInUser | undefined;
 }
 
 const initialState: AuthState = {
   loginFormFields: undefined,
   isLoading: false,
-  data: undefined,
+  apiResponse: undefined,
   // loggedInUser: undefined,
 };
 
@@ -24,7 +24,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     clearAuthData: (state) => {
-      state.data = initialState.data;
+      state.apiResponse = initialState.apiResponse;
     },
   },
   extraReducers: (builder) => {
@@ -34,14 +34,14 @@ const authSlice = createSlice({
       })
       .addCase(loginThunk.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.data = action.payload as ApiResponse;
+        state.apiResponse = action.payload as ApiResponse;
         // state.loggedInUser = action.payload.returnData as LoggedInUser;
         const loggedInUserString = serialize(action.payload.returnData);
         sessionStorage.setItem(LOGGED_IN_USER, loggedInUserString);
       })
       .addCase(loginThunk.rejected, (state, action) => {
         state.isLoading = false;
-        state.data = action.payload as ApiResponse;
+        state.apiResponse = action.payload as ApiResponse;
       });
   },
 });

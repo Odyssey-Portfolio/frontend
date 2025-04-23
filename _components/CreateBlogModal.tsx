@@ -1,18 +1,22 @@
 import { LOGGED_IN_USER } from "@/_constants/Auth";
 import { COLOR_WHITE } from "@/_constants/Colors";
 import { FONT_LEXEND, FONTSTYLE_SUBTEXT3 } from "@/_constants/Fonts";
+import { CREATED, UNAUTHORIZED } from "@/_constants/ResponseCodes";
 import { createBlogSchema } from "@/_constants/ValidationSchema";
 import { CreateBlog } from "@/_models/CreateBlog";
 import { LoggedInUser } from "@/_models/LoggedInUser";
+import { selectCreateBlogResponse } from "@/_redux/createBlogModal/createBlogModalSelector";
 import {
   setIsLoading,
   setVisibility,
 } from "@/_redux/createBlogModal/createBlogModalSlice";
 import { createBlogThunk } from "@/_redux/createBlogModal/createBlogModalThunk";
+import { setSnackbarMessage } from "@/_redux/snackbar/snackbarActions";
 import { AppDispatch } from "@/_redux/store";
 import { deserialize } from "@/utils/JsonUtils";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Toggle } from "@radix-ui/react-toggle";
+import { nanoid } from "@reduxjs/toolkit";
 import Highlight from "@tiptap/extension-highlight";
 import TextAlign from "@tiptap/extension-text-align";
 import { Editor, EditorContent, useEditor } from "@tiptap/react";
@@ -31,9 +35,11 @@ import {
   Strikethrough,
   Text,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Button, { ButtonVariants } from "./AtomicComponents/Button";
 import ImageUploader from "./AtomicComponents/ImageUploader";
 import TextInput from "./AtomicComponents/TextInput";
@@ -44,6 +50,8 @@ export default function CreateBlogModal() {
   const modalClassname = `z-40 w-8/12 h-96 rounded-lg px-4 py-3 flex flex-col 
                           space-y-5`;
   const dispatch = useDispatch<AppDispatch>();
+  const apiResponse = useSelector(selectCreateBlogResponse);
+  const router = useRouter();
   const methods = useForm<CreateBlog>({
     resolver: yupResolver<CreateBlog>(createBlogSchema),
   });
@@ -66,6 +74,27 @@ export default function CreateBlogModal() {
     dispatch(setIsLoading(true));
     dispatch(createBlogThunk(newBlog));
   };
+
+  useEffect(() => {
+    if (apiResponse && apiResponse.statusCode === UNAUTHORIZED)
+      dispatch(
+        setSnackbarMessage({
+          id: nanoid(),
+          message: apiResponse.message,
+          type: "error",
+        })
+      );
+    else if (apiResponse && apiResponse.statusCode === CREATED) {
+      dispatch(
+        setSnackbarMessage({
+          id: nanoid(),
+          message: apiResponse.message,
+          type: "success",
+        })
+      );
+      window.location.reload();
+    }
+  }, [apiResponse]);
 
   if (typeof window === "undefined") return null; // SSR-safe
   const modalRoot = document.body;

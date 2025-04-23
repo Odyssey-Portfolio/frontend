@@ -63,7 +63,8 @@ function BlogPageActions() {
   const blogListClassname = `flex flex-row justify-center  w-full gap-5`;
   const buttonGrids = `flex flex-row items-center gap-5 relative`;
   const modalVisibility = useSelector(selectVisiblity);
-  const dispatch = useDispatch();
+  const searchParams = useSelector(selectSearchParams);
+  const dispatch = useDispatch<AppDispatch>();
   const featureButtons: any[] = [
     // {
     //   icon: <FunnelIcon />,
@@ -76,9 +77,14 @@ function BlogPageActions() {
       authorize: true,
     },
   ];
+
+  const onSubmit = () => {
+    dispatch(getBlogsThunk(searchParams));
+  };
+
   return (
     <div className={blogListClassname}>
-      <SearchBar />
+      <SearchBar onSubmit={onSubmit} />
       <div className={buttonGrids}>
         {featureButtons.map((btn, key) => {
           if (btn.authorize)

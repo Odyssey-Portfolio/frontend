@@ -34,6 +34,7 @@ export default function NavBar() {
       name: "Home",
       route: "/",
     },
+
     {
       name: "Work Experience",
       route: "/work-experience",
@@ -46,10 +47,10 @@ export default function NavBar() {
       name: "Blogs",
       route: "/blogs",
     },
-    {
-      name: "Contact Me!",
-      route: "/",
-    },
+    // {
+    //   name: "Contact Me!",
+    //   route: "/",
+    // },
   ];
 
   return (
