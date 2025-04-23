@@ -2,6 +2,7 @@
 import { FONT_LEXEND, FONTSTYLE_SUBTEXT3 } from "@/_constants/Fonts";
 import Image from "next/image";
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import ParagraphRenderer from "./ParagraphRenderer";
 
 export type ImageButtonWithModalType = {
@@ -55,13 +56,11 @@ interface ModalProps {
   closeAction: () => void;
 }
 function Modal(props: ModalProps) {
-  return (
-    <div
-      className="relative z-10"
-      aria-labelledby="modal-title"
-      role="dialog"
-      aria-modal="true"
-    >
+  if (typeof window === "undefined") return null; // SSR-safe
+  const modalRoot = document.body;
+  if (!modalRoot) return null;
+  return createPortal(
+    <div aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div
         className="fixed inset-0 bg-gray-500/50 transition-opacity z-30"
         aria-hidden="true"
@@ -90,6 +89,7 @@ function Modal(props: ModalProps) {
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    modalRoot
   );
 }

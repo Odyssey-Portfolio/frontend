@@ -31,6 +31,7 @@ import {
   Strikethrough,
   Text,
 } from "lucide-react";
+import { createPortal } from "react-dom";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import Button, { ButtonVariants } from "./AtomicComponents/Button";
@@ -38,7 +39,7 @@ import ImageUploader from "./AtomicComponents/ImageUploader";
 import TextInput from "./AtomicComponents/TextInput";
 
 export default function CreateBlogModal() {
-  const backdropClassname = `fixed inset-0 bg-gray-500/50 transition-opacity z-30 
+  const backdropClassname = `fixed inset-0 bg-gray-500/50 transition-opacity 
                               flex flex-col justify-center items-center`;
   const modalClassname = `z-40 w-8/12 h-96 rounded-lg px-4 py-3 flex flex-col 
                           space-y-5`;
@@ -65,7 +66,11 @@ export default function CreateBlogModal() {
     dispatch(setIsLoading(true));
     dispatch(createBlogThunk(newBlog));
   };
-  return (
+
+  if (typeof window === "undefined") return null; // SSR-safe
+  const modalRoot = document.body;
+  if (!modalRoot) return null;
+  return createPortal(
     <div className={backdropClassname}>
       <FormProvider {...methods}>
         <div
@@ -76,7 +81,8 @@ export default function CreateBlogModal() {
           <EditorSection />
         </div>
       </FormProvider>
-    </div>
+    </div>,
+    modalRoot
   );
 }
 

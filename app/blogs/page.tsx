@@ -25,7 +25,7 @@ import {
 } from "@/_redux/getBlogs/getBlogsSelector";
 import { getBlogsThunk } from "@/_redux/getBlogs/getBlogsThunk";
 import { AppDispatch } from "@/_redux/store";
-import { FunnelIcon, PencilIcon } from "@heroicons/react/16/solid";
+import { PencilIcon } from "@heroicons/react/16/solid";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -65,10 +65,10 @@ function BlogPageActions() {
   const modalVisibility = useSelector(selectVisiblity);
   const dispatch = useDispatch();
   const featureButtons: any[] = [
-    {
-      icon: <FunnelIcon />,
-      label: "Filter by...",
-    },
+    // {
+    //   icon: <FunnelIcon />,
+    //   label: "Filter by...",
+    // },
     {
       icon: <PencilIcon />,
       label: "New Post",
