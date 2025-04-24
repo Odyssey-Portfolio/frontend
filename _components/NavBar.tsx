@@ -1,5 +1,9 @@
 "use client";
-import { COLOR_PRIMARY, COLOR_SECONDARY } from "@/_constants/Colors";
+import {
+  COLOR_PRIMARY,
+  COLOR_SECONDARY,
+  COLOR_WHITE,
+} from "@/_constants/Colors";
 import { FONT_LEXEND } from "@/_constants/Fonts";
 import { motion } from "motion/react";
 import Link from "next/link";
@@ -66,20 +70,20 @@ export default function NavBar() {
             key={key}
             className={highligherClassname}
             animate={{
-              borderWidth: isActive ? 2 : 0,
-              borderColor: COLOR_PRIMARY,
+              backgroundColor: isActive ? COLOR_PRIMARY : "transparent",
+              scale: isActive ? 1.05 : 1,
             }}
-            transition={{ stiffness: 100, damping: 10 }}
+            transition={{
+              type: "spring",
+              stiffness: 200,
+              damping: 20,
+              mass: 0.5,
+            }}
           >
             <Link
               href={item.route}
               className={navitemClassname}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.color = COLOR_PRIMARY)
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.color = COLOR_SECONDARY)
-              }
+              style={{ color: isActive ? COLOR_WHITE : COLOR_SECONDARY }}
               onClick={() => setSelectedItem(item.name)}
             >
               {item.name}
@@ -87,7 +91,7 @@ export default function NavBar() {
           </motion.div>
         );
       })}
-      <LoginButton />
+      {/* <LoginButton /> */}
     </motion.div>
   );
 }
