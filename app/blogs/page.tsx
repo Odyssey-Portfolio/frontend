@@ -1,7 +1,9 @@
 "use client";
+import Spinner from "@/_components/AtomicComponents/Spinner";
 import Authorizer from "@/_components/Authorizer";
 import BlogCard from "@/_components/BlogCard";
 import CreateBlogModal from "@/_components/CreateBlogModal";
+import EmptyList from "@/_components/EmptyList";
 import ExpandOnFocusButton from "@/_components/ExpandOnFocusButton";
 import FM_Reveal from "@/_components/FramerMotion/FM_Reveal";
 import LoadingOverlay from "@/_components/LoadingOverlay";
@@ -114,7 +116,8 @@ function BlogPageActions() {
 }
 
 function BlogList() {
-  const blogListClassname = `grid grid-cols-3 gap-5`;
+  const blogListClassname = `grid grid-cols-3`;
+  const emptyListClassname = `col-span-3`;
   const blogs = useSelector(selectBlogs);
   const dispatch = useDispatch<AppDispatch>();
   const isCreatingBlog = useSelector(selectIsCreatingBlog);
@@ -126,10 +129,17 @@ function BlogList() {
 
   return (
     <div className={blogListClassname}>
-      {blogs.map((blog, key) => {
-        return <BlogCard key={key} isImageB64 blog={blog} />;
-      })}
-      {(isCreatingBlog || isGettingBlogs) && <LoadingOverlay />}
+      {isGettingBlogs && <Spinner />}
+      {!isGettingBlogs && (!blogs || !blogs.length) ? (
+        <div className={emptyListClassname}>
+          <EmptyList />
+        </div>
+      ) : (
+        blogs.map((blog, key) => {
+          return <BlogCard key={key} isImageB64 blog={blog} />;
+        })
+      )}
+      {isCreatingBlog && <LoadingOverlay />}
     </div>
   );
 }

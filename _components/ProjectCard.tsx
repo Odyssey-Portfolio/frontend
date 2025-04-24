@@ -19,7 +19,6 @@ export interface ProjectCardProps {
   image: string;
   duration: string;
   description: string;
-  stack: string;
   github: string;
   imagePadding?: number;
   languages?: string[];
@@ -51,8 +50,12 @@ function TopSection(props: ProjectCardProps) {
 }
 
 function ProjectImage(props: ProjectCardProps) {
+  const projectImageWrapperClassname = `flex flex-row items-center justify-center`;
   return (
-    <div style={{ width: "100%", height: "14rem" }}>
+    <div
+      className={projectImageWrapperClassname}
+      style={{ width: "100%", height: "15rem" }}
+    >
       <Image
         src={props.image ? props.image : "/coffee.jpg"}
         alt="avatar"
@@ -60,10 +63,8 @@ function ProjectImage(props: ProjectCardProps) {
         height={0}
         sizes="100vh"
         style={{
-          height: "100%",
-          width: "100%",
+          width: "60%",
           padding: "2rem",
-          borderRadius: 25,
         }}
       />
     </div>
@@ -164,7 +165,7 @@ function Languages(props: ProjectCardProps) {
       <div className="col-span-2 w-12 h-12" style={{ color: COLOR_PRIMARY }}>
         <CodeBracketIcon />
       </div>
-      <div className="col-span-10 flex flex-wrap gap-3">
+      <div className="col-span-10 flex flex-wrap gap-5">
         {props.languages.map((lang, idx) => (
           <Image
             key={idx}
