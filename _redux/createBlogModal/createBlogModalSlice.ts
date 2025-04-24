@@ -24,6 +24,9 @@ const createBlogModalSlice = createSlice({
     setIsLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
     },
+    clearCreateBlogResponse: (state) => {
+      state.apiResponse = initialState.apiResponse;
+    },
   },
   extraReducers: (builder) => {
     builder

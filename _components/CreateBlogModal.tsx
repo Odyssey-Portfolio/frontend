@@ -5,6 +5,7 @@ import { CREATED, UNAUTHORIZED } from "@/_constants/ResponseCodes";
 import { createBlogSchema } from "@/_constants/ValidationSchema";
 import { CreateBlog } from "@/_models/CreateBlog";
 import { LoggedInUser } from "@/_models/LoggedInUser";
+import { clearCreateBlogResponse } from "@/_redux/createBlogModal/createBlogModalActions";
 import { selectCreateBlogResponse } from "@/_redux/createBlogModal/createBlogModalSelector";
 import {
   setIsLoading,
@@ -35,7 +36,6 @@ import {
   Strikethrough,
   Text,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
@@ -51,7 +51,6 @@ export default function CreateBlogModal() {
                           space-y-5`;
   const dispatch = useDispatch<AppDispatch>();
   const apiResponse = useSelector(selectCreateBlogResponse);
-  const router = useRouter();
   const methods = useForm<CreateBlog>({
     resolver: yupResolver<CreateBlog>(createBlogSchema),
   });
@@ -94,6 +93,9 @@ export default function CreateBlogModal() {
       );
       window.location.reload();
     }
+    return () => {
+      dispatch(clearCreateBlogResponse());
+    };
   }, [apiResponse]);
 
   if (typeof window === "undefined") return null; // SSR-safe
