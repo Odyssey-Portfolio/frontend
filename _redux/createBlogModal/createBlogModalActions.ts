@@ -6,3 +6,6 @@ export const setVisibility = createAction<boolean>(
 export const setIsLoading = createAction<boolean>(
   "createBlogModal/setIsLoading"
 );
+export const clearCreateBlogResponse = createAction(
+  "createBlogModal/clearCreateBlogResponse"
+);

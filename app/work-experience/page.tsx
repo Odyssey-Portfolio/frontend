@@ -5,7 +5,7 @@ import { COLOR_PRIMARY, COLOR_SECONDARY } from "@/_constants/Colors";
 import {
   FONT_LEXEND,
   FONTSTYLE_HEADING1,
-  FONTSTYLE_SUBTEXT1,
+  FONTSTYLE_SUBTEXT2,
 } from "@/_constants/Fonts";
 import { CONTENT_WORKEXPERIENCE } from "@/_contents/WorkExperience";
 import { useScroll } from "motion/react";
@@ -23,9 +23,9 @@ export default function WorkExperiencePage() {
 }
 
 function HeadingText() {
-  const headingTextClassname = `text-center space-y-2`;
+  const headingTextClassname = `text-center space-y-5`;
   const h1Classname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING1}`;
-  const h2Classname = `${FONT_LEXEND.className} ${FONTSTYLE_SUBTEXT1}`;
+  const h2Classname = `${FONT_LEXEND.className} ${FONTSTYLE_SUBTEXT2}`;
   return (
     <FM_Reveal className={headingTextClassname}>
       <>

@@ -1,5 +1,6 @@
 export interface CreateBlog {
-  image: File | undefined;
+  userId?: string;
+  image: File;
   title: string;
   description: string;
   content: string;

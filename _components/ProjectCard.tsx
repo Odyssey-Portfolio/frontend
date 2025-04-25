@@ -1,16 +1,16 @@
 "use client";
-import {
-  COLOR_BLACK_1,
-  COLOR_PRIMARY,
-  COLOR_WHITE
-} from "@/_constants/Colors";
+import { COLOR_BLACK_1, COLOR_PRIMARY, COLOR_WHITE } from "@/_constants/Colors";
 import {
   FONT_LEXEND,
   FONT_POPPINS,
   FONTSTYLE_PARAGRAPH1,
-  FONTSTYLE_SUBTEXT3
+  FONTSTYLE_SUBTEXT3,
 } from "@/_constants/Fonts";
-import { CalendarIcon, InformationCircleIcon } from "@heroicons/react/16/solid";
+import {
+  CalendarIcon,
+  CodeBracketIcon,
+  InformationCircleIcon,
+} from "@heroicons/react/16/solid";
 import Image from "next/image";
 import { ReactNode, useState } from "react";
 
@@ -19,9 +19,9 @@ export interface ProjectCardProps {
   image: string;
   duration: string;
   description: string;
-  stack: string;
   github: string;
   imagePadding?: number;
+  languages?: string[];
 }
 export default function ProjectCard(props: ProjectCardProps) {
   const projectCardClassname = `relative rounded-lg flex flex-col h-full`;
@@ -31,7 +31,7 @@ export default function ProjectCard(props: ProjectCardProps) {
       // style={{ backgroundColor: COLOR_PRIMARY_LIGHT }}
     >
       <ProjectImage {...props} />
-      <TopSection {...props} />      
+      <TopSection {...props} />
       <Actions {...props} />
       <ProjectDescription {...props} />
     </div>
@@ -50,8 +50,12 @@ function TopSection(props: ProjectCardProps) {
 }
 
 function ProjectImage(props: ProjectCardProps) {
+  const projectImageWrapperClassname = `flex flex-row items-center justify-center`;
   return (
-    <div style={{ width: "100%", height: "14rem" }}>
+    <div
+      className={projectImageWrapperClassname}
+      style={{ width: "100%", height: "15rem" }}
+    >
       <Image
         src={props.image ? props.image : "/coffee.jpg"}
         alt="avatar"
@@ -59,42 +63,10 @@ function ProjectImage(props: ProjectCardProps) {
         height={0}
         sizes="100vh"
         style={{
-          height: "100%",
-          width: "100%",
+          width: "60%",
           padding: "2rem",
-          borderRadius: 25,
         }}
       />
-    </div>
-  );
-}
-
-type ProjectDescriptionItem = {
-  icon: ReactNode;
-  description: string;
-};
-
-function ProjectDescription(props: ProjectCardProps) {
-  const paragraphClassname = `${FONT_POPPINS.className} col-span-10`;
-  const iconClassname = `col-span-2 w-12 h-12`;
-  const projectDescriptionClassname = `flex flex-col p-5`;
-  const descriptionItemClassname = `flex flex-row grid grid-cols-12 items-center space-x-3`;
-  const projectDescriptions: ProjectDescriptionItem[] = [
-    { icon: <InformationCircleIcon />, description: props.description },
-    { icon: <CalendarIcon />, description: props.duration },
-  ];
-  return (
-    <div className={projectDescriptionClassname}>
-      {projectDescriptions.map((desc, key) => {
-        return (
-          <div key={key} className={descriptionItemClassname}>
-            <div className={iconClassname} style={{ color: COLOR_PRIMARY }}>
-              {desc.icon}
-            </div>
-            <div className={paragraphClassname}>{desc.description}</div>
-          </div>
-        );
-      })}
     </div>
   );
 }
@@ -140,6 +112,70 @@ function Actions(props: ProjectCardProps) {
         >
           View on GitHub
         </span>
+      </div>
+    </div>
+  );
+}
+
+type ProjectDescriptionItem = {
+  icon: ReactNode;
+  description: string;
+};
+
+function ProjectDescription(props: ProjectCardProps) {
+  const [isHover, setIsHover] = useState<boolean>();
+  const projectDescriptionClassname = `flex flex-col p-5 justify-between gap-5`;
+  const descriptionItemClassname = `flex flex-row grid grid-cols-12 items-center space-x-3`;
+  const iconClassname = `col-span-2 w-12 h-12`;
+  const paragraphClassname = `${
+    FONT_POPPINS.className
+  } col-span-10 cursor-default ${isHover ? "" : "line-clamp-3"}`;
+
+  const projectDescriptions: ProjectDescriptionItem[] = [
+    { icon: <InformationCircleIcon />, description: props.description },
+    { icon: <CalendarIcon />, description: props.duration },
+  ];
+  return (
+    <div className={projectDescriptionClassname}>
+      {projectDescriptions.map((desc, key) => {
+        return (
+          <div key={key} className={descriptionItemClassname}>
+            <div className={iconClassname} style={{ color: COLOR_PRIMARY }}>
+              {desc.icon}
+            </div>
+            <div
+              className={paragraphClassname}
+              onMouseEnter={() => setIsHover(true)}
+              onMouseLeave={() => setIsHover(false)}
+            >
+              {desc.description}
+            </div>
+          </div>
+        );
+      })}
+      <Languages {...props} />
+    </div>
+  );
+}
+
+function Languages(props: ProjectCardProps) {
+  if (!props.languages || props.languages.length === 0) return null;
+  return (
+    <div className="flex-row grid grid-cols-12 items-center space-x-3">
+      <div className="col-span-2 w-12 h-12" style={{ color: COLOR_PRIMARY }}>
+        <CodeBracketIcon />
+      </div>
+      <div className="col-span-10 flex flex-wrap gap-5">
+        {props.languages.map((lang, idx) => (
+          <Image
+            key={idx}
+            src={`/languages/${lang}.svg`}
+            alt={`language-${idx}`}
+            width={40}
+            height={40}
+            className="object-contain"
+          />
+        ))}
       </div>
     </div>
   );

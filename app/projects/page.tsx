@@ -1,11 +1,10 @@
 import FM_Reveal from "@/_components/FramerMotion/FM_Reveal";
 import ProjectCard from "@/_components/ProjectCard";
-import ScrollableTimeline from "@/_components/ScrollableTimeline";
 import { COLOR_PRIMARY, COLOR_SECONDARY } from "@/_constants/Colors";
 import {
   FONT_LEXEND,
   FONTSTYLE_HEADING1,
-  FONTSTYLE_SUBTEXT1,
+  FONTSTYLE_SUBTEXT2,
 } from "@/_constants/Fonts";
 import { CONTENT_PROJECTS } from "@/_contents/Projects";
 
@@ -19,17 +18,17 @@ export default function ProjectsPage() {
         <HeadingText />
         <ProjectList />
       </div>
-      <div className={timelineClassname}>
+      {/* <div className={timelineClassname}> //TODO: Implement year change on scroll
         <ScrollableTimeline />
-      </div>
+      </div> */}
     </div>
   );
 }
 
 function HeadingText() {
-  const headingTextClassname = `text-center space-y-2`;
+  const headingTextClassname = `text-center space-y-5`;
   const h1Classname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING1}`;
-  const h2Classname = `${FONT_LEXEND.className} ${FONTSTYLE_SUBTEXT1}`;
+  const h2Classname = `${FONT_LEXEND.className} ${FONTSTYLE_SUBTEXT2} max-w-lg`;
   return (
     <FM_Reveal className={headingTextClassname}>
       <>
@@ -37,7 +36,7 @@ function HeadingText() {
           Projects
         </h1>
         <h6 className={h2Classname} style={{ color: COLOR_SECONDARY }}>
-          A list of projects...
+          Where lines of code define my Future Self
         </h6>
       </>
     </FM_Reveal>
@@ -50,9 +49,7 @@ function ProjectList() {
       {CONTENT_PROJECTS.map((project, key) => {
         return (
           <FM_Reveal className="h-full" key={key}>
-            <ProjectCard              
-              {...project}              
-            />
+            <ProjectCard {...project} />
           </FM_Reveal>
         );
       })}

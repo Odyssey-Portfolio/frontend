@@ -6,10 +6,16 @@ import { useState } from "react";
 interface ImageUploaderProps {
   label?: string;
   onChange?: (imageString: File | null) => void;
+  error?: string;
 }
 
-export default function ImageUploader({ label, onChange }: ImageUploaderProps) {
+export default function ImageUploader({
+  label,
+  onChange,
+  error,
+}: ImageUploaderProps) {
   const [image, setImage] = useState<string | null>(null);
+  const errorClassname = `text-red-500 text-sm font-bold`;
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -53,7 +59,11 @@ export default function ImageUploader({ label, onChange }: ImageUploaderProps) {
               className="absolute w-full h-full opacity-0 cursor-pointer"
               onChange={handleImageUpload}
             />
-            <p className="text-gray-500 text-sm">Click to upload an image</p>
+            {!error ? (
+              <p className="text-gray-500 text-sm">Click to upload an image</p>
+            ) : (
+              <div className={errorClassname}>{error}</div>
+            )}
           </>
         )}
       </div>

@@ -1,13 +1,23 @@
+import { LOGGED_IN_USER } from "@/_constants/Auth";
 import { COLOR_WHITE } from "@/_constants/Colors";
 import { FONT_LEXEND, FONTSTYLE_SUBTEXT3 } from "@/_constants/Fonts";
+import { CREATED, UNAUTHORIZED } from "@/_constants/ResponseCodes";
+import { createBlogSchema } from "@/_constants/ValidationSchema";
 import { CreateBlog } from "@/_models/CreateBlog";
+import { LoggedInUser } from "@/_models/LoggedInUser";
+import { clearCreateBlogResponse } from "@/_redux/createBlogModal/createBlogModalActions";
+import { selectCreateBlogResponse } from "@/_redux/createBlogModal/createBlogModalSelector";
 import {
   setIsLoading,
   setVisibility,
 } from "@/_redux/createBlogModal/createBlogModalSlice";
 import { createBlogThunk } from "@/_redux/createBlogModal/createBlogModalThunk";
+import { setSnackbarMessage } from "@/_redux/snackbar/snackbarActions";
 import { AppDispatch } from "@/_redux/store";
+import { deserialize } from "@/utils/JsonUtils";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Toggle } from "@radix-ui/react-toggle";
+import { nanoid } from "@reduxjs/toolkit";
 import Highlight from "@tiptap/extension-highlight";
 import TextAlign from "@tiptap/extension-text-align";
 import { Editor, EditorContent, useEditor } from "@tiptap/react";
@@ -26,25 +36,72 @@ import {
   Strikethrough,
   Text,
 } from "lucide-react";
+import { useEffect } from "react";
+import { createPortal } from "react-dom";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Button, { ButtonVariants } from "./AtomicComponents/Button";
 import ImageUploader from "./AtomicComponents/ImageUploader";
 import TextInput from "./AtomicComponents/TextInput";
 
 export default function CreateBlogModal() {
-  const backdropClassname = `fixed inset-0 bg-gray-500/50 transition-opacity z-30 
+  const backdropClassname = `fixed inset-0 bg-gray-500/50 transition-opacity 
                               flex flex-col justify-center items-center`;
   const modalClassname = `z-40 w-8/12 h-96 rounded-lg px-4 py-3 flex flex-col 
                           space-y-5`;
   const dispatch = useDispatch<AppDispatch>();
-  const methods = useForm<CreateBlog>();
+  const apiResponse = useSelector(selectCreateBlogResponse);
+  const methods = useForm<CreateBlog>({
+    resolver: yupResolver<CreateBlog>(createBlogSchema),
+  });
+
+  const getUserId = (): string => {
+    const loggedInUserFromSessionStorage =
+      sessionStorage.getItem(LOGGED_IN_USER);
+    if (loggedInUserFromSessionStorage) {
+      const loggedInUser = deserialize<LoggedInUser>(
+        loggedInUserFromSessionStorage
+      );
+      return loggedInUser.id;
+    }
+    return "";
+  };
+
   const onSubmit = () => {
     const newBlog = methods.getValues();
+    newBlog.userId = getUserId();
     dispatch(setIsLoading(true));
     dispatch(createBlogThunk(newBlog));
   };
-  return (
+
+  useEffect(() => {
+    if (apiResponse && apiResponse.statusCode === UNAUTHORIZED)
+      dispatch(
+        setSnackbarMessage({
+          id: nanoid(),
+          message: apiResponse.message,
+          type: "error",
+        })
+      );
+    else if (apiResponse && apiResponse.statusCode === CREATED) {
+      dispatch(
+        setSnackbarMessage({
+          id: nanoid(),
+          message: apiResponse.message,
+          type: "success",
+        })
+      );
+      window.location.reload();
+    }
+    return () => {
+      dispatch(clearCreateBlogResponse());
+    };
+  }, [apiResponse]);
+
+  if (typeof window === "undefined") return null; // SSR-safe
+  const modalRoot = document.body;
+  if (!modalRoot) return null;
+  return createPortal(
     <div className={backdropClassname}>
       <FormProvider {...methods}>
         <div
@@ -55,7 +112,8 @@ export default function CreateBlogModal() {
           <EditorSection />
         </div>
       </FormProvider>
-    </div>
+    </div>,
+    modalRoot
   );
 }
 
@@ -87,10 +145,13 @@ function HeaderSection(props: HeaderSectionProps) {
 
 function EditorSection() {
   const editorSectionClassname = `space-y-3 overflow-y-scroll`;
+  const {
+    formState: { errors },
+  } = useFormContext();
   return (
     <div className={editorSectionClassname}>
       <MetadataEditor />
-      <MainEditor />
+      <MainEditor error={errors["content"]?.message as string | undefined} />
     </div>
   );
 }
@@ -99,24 +160,41 @@ function MetadataEditor() {
   const metadataContainerClassname = `grid grid-cols-12 space-x-2`;
   const textInputContainerClassname = `col-span-9 space-y-3`;
   const imageUploaderContainerClassname = `col-span-3`;
-  const { register, setValue } = useFormContext();
+  const {
+    register,
+    setValue,
+    formState: { errors },
+  } = useFormContext();
   return (
     <div className={metadataContainerClassname}>
       <div className={imageUploaderContainerClassname}>
         <ImageUploader
           onChange={(imageString) => setValue("image", imageString)}
+          error={errors["image"]?.message as string | undefined}
         />
       </div>
       <div className={textInputContainerClassname}>
-        <TextInput label="Title" {...register("title")} />
-        <TextInput label="Description" {...register("description")} />
+        <TextInput
+          label="Title"
+          {...register("title")}
+          error={errors["title"]?.message as string | undefined}
+        />
+        <TextInput
+          label="Description"
+          {...register("description")}
+          error={errors["description"]?.message as string | undefined}
+        />
       </div>
     </div>
   );
 }
 
-function MainEditor() {
+interface MainEditorProps {
+  error?: string;
+}
+function MainEditor(props: MainEditorProps) {
   const editorClassname = `flex flex-col space-y-2`;
+  const errorClassname = `text-red-500 text-sm font-bold`;
   const { setValue } = useFormContext();
   const editor = useEditor({
     extensions: [
@@ -143,6 +221,7 @@ function MainEditor() {
 
   return (
     <div className={editorClassname}>
+      {props.error && <div className={errorClassname}>{props.error}</div>}
       <MenuBar editor={editor} />
       <EditorContent editor={editor} />
     </div>

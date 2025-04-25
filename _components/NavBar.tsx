@@ -1,8 +1,13 @@
 "use client";
-import { COLOR_PRIMARY, COLOR_SECONDARY } from "@/_constants/Colors";
+import {
+  COLOR_PRIMARY,
+  COLOR_SECONDARY,
+  COLOR_WHITE,
+} from "@/_constants/Colors";
 import { FONT_LEXEND } from "@/_constants/Fonts";
 import { motion } from "motion/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 type NavbarItem = {
   name: string;
@@ -33,6 +38,7 @@ export default function NavBar() {
       name: "Home",
       route: "/",
     },
+
     {
       name: "Work Experience",
       route: "/work-experience",
@@ -45,14 +51,14 @@ export default function NavBar() {
       name: "Blogs",
       route: "/blogs",
     },
-    {
-      name: "Contact Me!",
-      route: "/",
-    },    
+    // {
+    //   name: "Contact Me!",
+    //   route: "/",
+    // },
   ];
 
   return (
-    <motion.nav
+    <motion.div
       className={navbarClassname}
       animate={{ y: isVisible ? 0 : -100, opacity: isVisible ? 1 : 0 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
@@ -64,20 +70,20 @@ export default function NavBar() {
             key={key}
             className={highligherClassname}
             animate={{
-              borderWidth: isActive ? 2 : 0,
-              borderColor: COLOR_PRIMARY,
+              backgroundColor: isActive ? COLOR_PRIMARY : "transparent",
+              scale: isActive ? 1.05 : 1,
             }}
-            transition={{ stiffness: 100, damping: 10 }}
+            transition={{
+              type: "spring",
+              stiffness: 200,
+              damping: 20,
+              mass: 0.5,
+            }}
           >
             <Link
               href={item.route}
               className={navitemClassname}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.color = COLOR_PRIMARY)
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.color = COLOR_SECONDARY)
-              }
+              style={{ color: isActive ? COLOR_WHITE : COLOR_SECONDARY }}
               onClick={() => setSelectedItem(item.name)}
             >
               {item.name}
@@ -85,6 +91,23 @@ export default function NavBar() {
           </motion.div>
         );
       })}
-    </motion.nav>
+      {/* <LoginButton /> */}
+    </motion.div>
+  );
+}
+
+function LoginButton() {
+  const buttonContainerClassname = "flex items-center space-x-4";
+  const router = useRouter();
+  return (
+    <div className={buttonContainerClassname}>
+      <button
+        className="px-6 py-2 text-white font-semibold rounded-xl shadow-md transition"
+        style={{ background: COLOR_PRIMARY }}
+        onClick={() => router.push("/login")}
+      >
+        Login
+      </button>
+    </div>
   );
 }

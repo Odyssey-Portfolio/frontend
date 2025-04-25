@@ -1,14 +1,17 @@
+import { ApiResponse } from "@/_models/ApiResponse";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { createBlogThunk } from "./createBlogModalThunk";
 
 interface CreateBlogModalState {
   isLoading: boolean;
   isVisible: boolean;
+  apiResponse: ApiResponse | undefined;
 }
 
 const initialState: CreateBlogModalState = {
   isLoading: false,
   isVisible: false,
+  apiResponse: undefined,
 };
 
 const createBlogModalSlice = createSlice({
@@ -21,6 +24,9 @@ const createBlogModalSlice = createSlice({
     setIsLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
     },
+    clearCreateBlogResponse: (state) => {
+      state.apiResponse = initialState.apiResponse;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -29,6 +35,11 @@ const createBlogModalSlice = createSlice({
       })
       .addCase(createBlogThunk.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.apiResponse = action.payload as ApiResponse;
+      })
+      .addCase(createBlogThunk.rejected, (state, action) => {
+        state.isLoading = false;
+        state.apiResponse = action.payload as ApiResponse;
       });
   },
 });

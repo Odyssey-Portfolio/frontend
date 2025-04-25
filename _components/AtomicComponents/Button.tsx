@@ -7,6 +7,7 @@ export enum ButtonVariants {
 interface ButtonProps {
   label: string;
   variant?: ButtonVariants;
+  isLoading?: boolean;
   onClick?: () => void;
 }
 export default function Button(props: ButtonProps) {
@@ -24,7 +25,13 @@ export default function Button(props: ButtonProps) {
       style={variantStyles[props.variant ?? ButtonVariants.PRIMARY]}
       onClick={props.onClick}
     >
-      {props.label}
+      {props.isLoading ? <Spinner /> : <>{props.label}</>}
     </button>
+  );
+}
+
+function Spinner() {
+  return (
+    <span className="animate-spin inline-block w-5 h-5 border-2 border-white border-t-transparent rounded-full" />
   );
 }
