@@ -1,6 +1,6 @@
 export default function RegisterPage() {
-  const registerPageClassname = `flex flex-col mt-32 mx-24 mb-12   
-                                items-center justify-between space-y-20`;
+  // const registerPageClassname = `flex flex-col mt-32 mx-24 mb-12
+  //                               items-center justify-between space-y-20`;
   return (
     <>
       <RegisterForm />

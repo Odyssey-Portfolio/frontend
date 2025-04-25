@@ -61,7 +61,7 @@ function WelcomeText() {
   return (
     <div className={welcomeClassname}>
       <h1 className={h1Classname} style={{ color: COLOR_PRIMARY }}>
-        Howdey hey! I'm Anh.
+        Howdey hey! I&lsquo;m Anh.
       </h1>
       <h6 className={h2Classname} style={{ color: COLOR_SECONDARY }}>
         Or you can call me Andy!
@@ -166,10 +166,10 @@ function Hobbies() {
   return (
     <div className={hobbiesClassname}>
       <h1 className={headingClassname} style={{ color: COLOR_PRIMARY }}>
-        It's hobbies time!
+        It&lsquo;s hobbies time!
       </h1>
       <h1 className={subtextClassname} style={{ color: COLOR_SECONDARY }}>
-        If you share any of these with me, let's connect!
+        If you share any of these with me, let&lsquo;s connect!
       </h1>
       <div className={imageButtonWithModalClassname}>
         {CONTENT_HOBBIES.map((hobby, key) => {

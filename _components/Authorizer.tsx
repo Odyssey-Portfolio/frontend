@@ -1,6 +1,6 @@
 import { LOGGED_IN_USER } from "@/_constants/Auth";
 import { deserialize } from "@/utils/JsonUtils";
-import { ReactNode, useMemo } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { LoggedInUser } from "../_models/LoggedInUser";
 
 interface AuthorizerProps {
@@ -8,14 +8,19 @@ interface AuthorizerProps {
   roles: string[];
 }
 export default function Authorizer(props: AuthorizerProps) {
-  const loggedInUserFromSessionStorage = sessionStorage.getItem(LOGGED_IN_USER);
-  const isAuthorized = useMemo(() => {
-    if (!loggedInUserFromSessionStorage) return false;
+  const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
+
+  useEffect(() => {
+    const loggedInUserFromSessionStorage =
+      sessionStorage.getItem(LOGGED_IN_USER);
+    if (!loggedInUserFromSessionStorage) return;
+
     const loggedInUser = deserialize<LoggedInUser>(
       loggedInUserFromSessionStorage
     );
-    return props.roles.some((role) => loggedInUser?.roles.includes(role));
-  }, [loggedInUserFromSessionStorage]);
-
+    setIsAuthorized(
+      props.roles.some((role) => loggedInUser?.roles.includes(role))
+    );
+  }, []);
   return <>{!isAuthorized ? <></> : props.children}</>;
 }

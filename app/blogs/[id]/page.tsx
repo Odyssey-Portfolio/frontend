@@ -11,10 +11,7 @@ import { GetBlog } from "@/_models/GetBlog";
 import { selectBlogDetails } from "@/_redux/blogDetailsPage/blogDetailsPageSelector";
 import { useSelector } from "react-redux";
 
-interface BlogDetailsPage {
-  id: string;
-}
-export default function BlogDetailsPage(props: BlogDetailsPage) {
+export default function BlogDetailsPage() {
   const blogDetails = useSelector(selectBlogDetails);
   const blogDetailsPageClassname = `flex flex-col mt-32 mx-24 mb-12   
                                 items-center justify-between space-y-20`;

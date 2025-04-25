@@ -11,7 +11,7 @@ import { CONTENT_PROJECTS } from "@/_contents/Projects";
 export default function ProjectsPage() {
   const projectPageClassname = `flex flex-col mt-32 mx-24 mb-12   
                                 items-center justify-between space-y-20`;
-  const timelineClassname = `fixed top-1/2 transform -translate-y-1/2 right-2`;
+  // const timelineClassname = `fixed top-1/2 transform -translate-y-1/2 right-2`;
   return (
     <div>
       <div className={projectPageClassname}>

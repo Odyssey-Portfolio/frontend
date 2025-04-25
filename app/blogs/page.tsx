@@ -67,6 +67,7 @@ function BlogPageActions() {
   const modalVisibility = useSelector(selectVisiblity);
   const searchParams = useSelector(selectSearchParams);
   const dispatch = useDispatch<AppDispatch>();
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   const featureButtons: any[] = [
     // {
     //   icon: <FunnelIcon />,
@@ -125,7 +126,7 @@ function BlogList() {
   const searchParams = useSelector(selectSearchParams);
   useEffect(() => {
     dispatch(getBlogsThunk(searchParams));
-  }, []);
+  }, [dispatch, searchParams]);
 
   return (
     <div className={blogListClassname}>

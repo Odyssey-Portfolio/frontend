@@ -84,7 +84,7 @@ function LoginForm() {
     return () => {
       dispatch(clearAuthData());
     };
-  }, [authData]);
+  }, [dispatch, router, authData]);
 
   return (
     <FormProvider {...methods}>
