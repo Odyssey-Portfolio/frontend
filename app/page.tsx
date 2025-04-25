@@ -25,7 +25,6 @@ import {
   FONT_LEXEND,
   FONTSTYLE_HEADING1,
   FONTSTYLE_HEADING2,
-  FONTSTYLE_SUBTEXT1,
   FONTSTYLE_SUBTEXT2,
 } from "../_constants/Fonts";
 
@@ -56,9 +55,9 @@ export default function HomePage() {
 }
 
 function WelcomeText() {
-  const welcomeClassname = `text-center space-y-2`;
+  const welcomeClassname = `text-center space-y-5`;
   const h1Classname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING1}`;
-  const h2Classname = `${FONT_LEXEND.className} ${FONTSTYLE_SUBTEXT1}`;
+  const h2Classname = `${FONT_LEXEND.className} ${FONTSTYLE_SUBTEXT2}`;
   return (
     <div className={welcomeClassname}>
       <h1 className={h1Classname} style={{ color: COLOR_PRIMARY }}>

@@ -13,7 +13,7 @@ import { COLOR_PRIMARY, COLOR_SECONDARY } from "@/_constants/Colors";
 import {
   FONT_LEXEND,
   FONTSTYLE_HEADING1,
-  FONTSTYLE_SUBTEXT1,
+  FONTSTYLE_SUBTEXT2,
 } from "@/_constants/Fonts";
 import {
   selectIsLoading as selectIsCreatingBlog,
@@ -44,9 +44,9 @@ export default function BlogsPage() {
 }
 
 function HeadingText() {
-  const headingTextClassname = `text-center space-y-2`;
+  const headingTextClassname = `text-center space-y-5`;
   const h1Classname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING1}`;
-  const h2Classname = `${FONT_LEXEND.className} ${FONTSTYLE_SUBTEXT1}`;
+  const h2Classname = `${FONT_LEXEND.className} ${FONTSTYLE_SUBTEXT2} max-w-lg`;
   return (
     <FM_Reveal className={headingTextClassname}>
       <>
@@ -54,7 +54,7 @@ function HeadingText() {
           Blogs
         </h1>
         <h6 className={h2Classname} style={{ color: COLOR_SECONDARY }}>
-          A list of Blogs...
+          Self-taught software engineering lessons that I would like to share
         </h6>
       </>
     </FM_Reveal>
