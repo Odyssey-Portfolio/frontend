@@ -9,9 +9,10 @@ export const getBlogsThunk = createAsyncThunk(
       const response = await getBlogs(params);
       return response.data;
     } catch (error: any) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data || "Something went wrong"
-      );
+      if (error)
+        return thunkAPI.rejectWithValue(
+          error.response?.data || "Something went wrong"
+        );
     }
   }
 );

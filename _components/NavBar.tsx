@@ -5,10 +5,13 @@ import {
   COLOR_WHITE,
 } from "@/_constants/Colors";
 import { FONT_LEXEND } from "@/_constants/Fonts";
+import { LoggedInUser } from "@/_models/LoggedInUser";
+import { getLoggedInUser } from "@/utils/AuthUtils";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import AvatarWithDropdown from "./AvatarWithDropdown";
 type NavbarItem = {
   name: string;
   route: string;
@@ -91,7 +94,7 @@ export default function NavBar() {
           </motion.div>
         );
       })}
-      {/* <LoginButton /> */}
+      <LoginButton />
     </motion.div>
   );
 }
@@ -99,15 +102,27 @@ export default function NavBar() {
 function LoginButton() {
   const buttonContainerClassname = "flex items-center space-x-4";
   const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loggedInUser, setLoggedInUser] = useState<LoggedInUser>();
+  useEffect(() => {
+    if (!loggedInUser) setLoggedInUser(getLoggedInUser());
+    else setIsLoggedIn(true);
+  }, [loggedInUser]);
   return (
-    <div className={buttonContainerClassname}>
-      <button
-        className="px-6 py-2 text-white font-semibold rounded-xl shadow-md transition"
-        style={{ background: COLOR_PRIMARY }}
-        onClick={() => router.push("/login")}
-      >
-        Login
-      </button>
-    </div>
+    <>
+      {!isLoggedIn ? (
+        <div className={buttonContainerClassname}>
+          <button
+            className="px-6 py-2 text-white font-semibold rounded-xl shadow-md transition"
+            style={{ background: COLOR_PRIMARY }}
+            onClick={() => router.push("/login")}
+          >
+            Login
+          </button>
+        </div>
+      ) : (
+        <AvatarWithDropdown avatarUrl="/airplane.ico" onLogout={() => {}} />
+      )}
+    </>
   );
 }

@@ -15,6 +15,7 @@ import {
   FONTSTYLE_HEADING1,
   FONTSTYLE_SUBTEXT2,
 } from "@/_constants/Fonts";
+import { useDebounce } from "@/_hooks/useDebounce";
 import {
   selectIsLoading as selectIsCreatingBlog,
   selectVisiblity,
@@ -65,7 +66,6 @@ function BlogPageActions() {
   const blogListClassname = `flex flex-row justify-center  w-full gap-5`;
   const buttonGrids = `flex flex-row items-center gap-5 relative`;
   const modalVisibility = useSelector(selectVisiblity);
-  const searchParams = useSelector(selectSearchParams);
   const dispatch = useDispatch<AppDispatch>();
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   const featureButtons: any[] = [
@@ -81,13 +81,9 @@ function BlogPageActions() {
     },
   ];
 
-  const onSubmit = () => {
-    dispatch(getBlogsThunk(searchParams));
-  };
-
   return (
     <div className={blogListClassname}>
-      <SearchBar onSubmit={onSubmit} />
+      <SearchBar />
       <div className={buttonGrids}>
         {featureButtons.map((btn, key) => {
           if (btn.authorize)
@@ -119,18 +115,24 @@ function BlogPageActions() {
 function BlogList() {
   const blogListClassname = `grid grid-cols-3`;
   const emptyListClassname = `col-span-3`;
+  const spinnerClassname = `col-span-3 flex flex-row justify-center`;
   const blogs = useSelector(selectBlogs);
   const dispatch = useDispatch<AppDispatch>();
   const isCreatingBlog = useSelector(selectIsCreatingBlog);
   const isGettingBlogs = useSelector(selectIsGettingBlogs);
   const searchParams = useSelector(selectSearchParams);
+  const debouncedSearchParams = useDebounce(searchParams, 800);
   useEffect(() => {
-    dispatch(getBlogsThunk(searchParams));
-  }, [dispatch, searchParams]);
+    dispatch(getBlogsThunk(debouncedSearchParams));
+  }, [dispatch, debouncedSearchParams]);
 
   return (
     <div className={blogListClassname}>
-      {isGettingBlogs && <Spinner />}
+      {isGettingBlogs && (!blogs || !blogs.length) && (
+        <div className={spinnerClassname}>
+          <Spinner />
+        </div>
+      )}
       {!isGettingBlogs && (!blogs || !blogs.length) ? (
         <div className={emptyListClassname}>
           <EmptyList />
