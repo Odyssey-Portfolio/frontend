@@ -14,7 +14,7 @@ export default function ExpandOnFocusButton(props: ExpandOnFocusButtonProps) {
                             transition-all duration-300 h-full rounded-full cursor-default 
                             ${FONT_POPPINS.className}`;
   const nonFocusClassname = `w-24`;
-  const focusClassname = `w-48 px-4 py-2 overflow-hidden`;
+  const focusClassname = `w-fit px-4 py-2`;
   const iconClassname = `h-9 w-9 transition-transform duration-300`;
   const labelClassname = `${FONT_POPPINS.className} ${FONTSTYLE_PARAGRAPH1} whitespace-nowrap select-none`;
   return (
