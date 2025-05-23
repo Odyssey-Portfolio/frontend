@@ -71,7 +71,7 @@ function LoginForm() {
           type: "success",
         })
       );
-      router.push("/");
+      window.location.href = "/";
     } else if (authData && authData.statusCode === BAD_REQUEST) {
       dispatch(
         setSnackbarMessage({

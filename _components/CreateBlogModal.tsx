@@ -96,7 +96,7 @@ export default function CreateBlogModal() {
     return () => {
       dispatch(clearCreateBlogResponse());
     };
-  }, [apiResponse]);
+  }, [dispatch, apiResponse]);
 
   if (typeof window === "undefined") return null; // SSR-safe
   const modalRoot = document.body;

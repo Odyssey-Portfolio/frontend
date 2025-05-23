@@ -39,7 +39,7 @@ const getBlogsSlice = createSlice({
         state.isLoading = false;
         state.blogs = action.payload.returnData as GetBlog[];
       })
-      .addCase(getBlogsThunk.rejected, (state, action) => {
+      .addCase(getBlogsThunk.rejected, (state) => {
         state.isLoading = false;
       });
   },

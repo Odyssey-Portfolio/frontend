@@ -7,6 +7,7 @@ import EmptyList from "@/_components/EmptyList";
 import ExpandOnFocusButton from "@/_components/ExpandOnFocusButton";
 import FM_Reveal from "@/_components/FramerMotion/FM_Reveal";
 import LoadingOverlay from "@/_components/LoadingOverlay";
+import Modal from "@/_components/Modal";
 import SearchBar from "@/_components/SearchBar";
 import { ROLE_ADMIN } from "@/_constants/Auth";
 import { COLOR_PRIMARY, COLOR_SECONDARY } from "@/_constants/Colors";
@@ -15,6 +16,11 @@ import {
   FONTSTYLE_HEADING1,
   FONTSTYLE_SUBTEXT2,
 } from "@/_constants/Fonts";
+import {
+  CONTENT_BLOG_ABOUT_CONTENT,
+  CONTENT_BLOG_ABOUT_TITLE,
+} from "@/_contents/Blog";
+import { useDebounce } from "@/_hooks/useDebounce";
 import {
   selectIsLoading as selectIsCreatingBlog,
   selectVisiblity,
@@ -27,8 +33,8 @@ import {
 } from "@/_redux/getBlogs/getBlogsSelector";
 import { getBlogsThunk } from "@/_redux/getBlogs/getBlogsThunk";
 import { AppDispatch } from "@/_redux/store";
-import { PencilIcon } from "@heroicons/react/16/solid";
-import { useEffect } from "react";
+import { InformationCircleIcon, PencilIcon } from "@heroicons/react/16/solid";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function BlogsPage() {
@@ -64,8 +70,9 @@ function HeadingText() {
 function BlogPageActions() {
   const blogListClassname = `flex flex-row justify-center  w-full gap-5`;
   const buttonGrids = `flex flex-row items-center gap-5 relative`;
-  const modalVisibility = useSelector(selectVisiblity);
-  const searchParams = useSelector(selectSearchParams);
+  const createBlogModalVisibility = useSelector(selectVisiblity);
+  const [aboutBlogPageModalVisibility, setAboutBlogPageModalVisibility] =
+    useState<boolean>();
   const dispatch = useDispatch<AppDispatch>();
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   const featureButtons: any[] = [
@@ -79,58 +86,75 @@ function BlogPageActions() {
       action: () => dispatch(setVisibility(true)),
       authorize: true,
     },
+    {
+      icon: <InformationCircleIcon />,
+      label: "About this Page",
+      action: () => setAboutBlogPageModalVisibility(true),
+      authorize: false,
+    },
   ];
 
-  const onSubmit = () => {
-    dispatch(getBlogsThunk(searchParams));
-  };
-
   return (
-    <div className={blogListClassname}>
-      <SearchBar onSubmit={onSubmit} />
-      <div className={buttonGrids}>
-        {featureButtons.map((btn, key) => {
-          if (btn.authorize)
+    <FM_Reveal className={blogListClassname}>
+      <>
+        <SearchBar />
+        <div className={buttonGrids}>
+          {featureButtons.map((btn, key) => {
+            if (btn.authorize)
+              return (
+                <Authorizer key={key} roles={[ROLE_ADMIN]}>
+                  <ExpandOnFocusButton
+                    key={key}
+                    icon={btn.icon}
+                    label={btn.label}
+                    action={btn.action}
+                  />
+                </Authorizer>
+              );
             return (
-              <Authorizer key={key} roles={[ROLE_ADMIN]}>
-                <ExpandOnFocusButton
-                  key={key}
-                  icon={btn.icon}
-                  label={btn.label}
-                  action={btn.action}
-                />
-              </Authorizer>
+              <ExpandOnFocusButton
+                key={key}
+                icon={btn.icon}
+                label={btn.label}
+                action={btn.action}
+              />
             );
-          return (
-            <ExpandOnFocusButton
-              key={key}
-              icon={btn.icon}
-              label={btn.label}
-              action={btn.action}
-            />
-          );
-        })}
-      </div>
-      {modalVisibility == true && <CreateBlogModal />}
-    </div>
+          })}
+        </div>
+        {createBlogModalVisibility && <CreateBlogModal />}
+        {aboutBlogPageModalVisibility && (
+          <Modal
+            title={CONTENT_BLOG_ABOUT_TITLE}
+            htmlContent={CONTENT_BLOG_ABOUT_CONTENT}
+            closeAction={() => setAboutBlogPageModalVisibility(false)}
+          />
+        )}
+      </>
+    </FM_Reveal>
   );
 }
 
 function BlogList() {
-  const blogListClassname = `grid grid-cols-3`;
+  const blogListClassname = `grid grid-cols-3 gap-5`;
   const emptyListClassname = `col-span-3`;
+  const spinnerClassname = `col-span-3 flex flex-row justify-center`;
   const blogs = useSelector(selectBlogs);
   const dispatch = useDispatch<AppDispatch>();
   const isCreatingBlog = useSelector(selectIsCreatingBlog);
   const isGettingBlogs = useSelector(selectIsGettingBlogs);
   const searchParams = useSelector(selectSearchParams);
+  const debouncedSearchParams = useDebounce(searchParams, 800);
   useEffect(() => {
-    dispatch(getBlogsThunk(searchParams));
-  }, [dispatch, searchParams]);
+    dispatch(getBlogsThunk(debouncedSearchParams));
+  }, [dispatch, debouncedSearchParams]);
 
   return (
     <div className={blogListClassname}>
-      {isGettingBlogs && <Spinner />}
+      {isGettingBlogs && (!blogs || !blogs.length) && (
+        <div className={spinnerClassname}>
+          <Spinner />
+        </div>
+      )}
       {!isGettingBlogs && (!blogs || !blogs.length) ? (
         <div className={emptyListClassname}>
           <EmptyList />
