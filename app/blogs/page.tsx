@@ -135,7 +135,7 @@ function BlogPageActions() {
 }
 
 function BlogList() {
-  const blogListClassname = `grid grid-cols-3`;
+  const blogListClassname = `grid grid-cols-3 gap-5`;
   const emptyListClassname = `col-span-3`;
   const spinnerClassname = `col-span-3 flex flex-row justify-center`;
   const blogs = useSelector(selectBlogs);

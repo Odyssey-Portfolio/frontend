@@ -4,9 +4,9 @@ import { setKeyword } from "@/_redux/getBlogs/getBlogsActions";
 import { useDispatch } from "react-redux";
 
 export default function SearchBar() {
-  const searchBarClassname = `col-span-10 min-h-16 border-2 rounded-xl p-1`;
+  const searchBarClassname = `col-span-10 min-h-16 border-2 rounded-xl`;
   const inputClassname = `${FONT_POPPINS.className} ${FONTSTYLE_SUBTEXT2} 
-  w-full h-full focus:outline-none px-5`;
+  w-full h-full focus:outline-none rounded-xl p-5`;
   const dispatch = useDispatch();
 
   return (

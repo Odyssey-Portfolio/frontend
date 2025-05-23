@@ -40,7 +40,6 @@ export default function ProjectCard(props: ProjectCardProps) {
 
 function TopSection(props: ProjectCardProps) {
   const topSectionClassname = `p-5 flex flex-row items-center space-x-5 justify-center`;
-  const projectIconClassname = `w-16`;
   const projectNameClassname = `${FONT_LEXEND.className} ${FONTSTYLE_SUBTEXT3} font-bold cursor-default`;
   return (
     <div className={topSectionClassname}>

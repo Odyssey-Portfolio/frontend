@@ -7,7 +7,7 @@ export default function WavyBackground(props: WavyBackgroundProps) {
       <div className="relative w-full min-h-screen">
         <Background />
         {/* Page content */}
-        <div className="relative z-10">{props.children}</div>
+        <div className="relative">{props.children}</div>
       </div>
     </>
   );

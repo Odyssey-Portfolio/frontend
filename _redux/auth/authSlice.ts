@@ -4,19 +4,20 @@ import { LoginFormFields } from "@/_models/AuthFormFields";
 import { serialize } from "@/utils/JsonUtils";
 import { createSlice } from "@reduxjs/toolkit";
 import { loginThunk } from "./authThunk";
+import { LoggedInUser } from "@/_models/LoggedInUser";
 
 interface AuthState {
   loginFormFields: LoginFormFields | undefined;
   isLoading: boolean;
   apiResponse: ApiResponse | undefined;
-  // loggedInUser: LoggedInUser | undefined;
+  loggedInUser: LoggedInUser | undefined;
 }
 
 const initialState: AuthState = {
   loginFormFields: undefined,
   isLoading: false,
   apiResponse: undefined,
-  // loggedInUser: undefined,
+  loggedInUser: undefined,
 };
 
 const authSlice = createSlice({
@@ -35,7 +36,7 @@ const authSlice = createSlice({
       .addCase(loginThunk.fulfilled, (state, action) => {
         state.isLoading = false;
         state.apiResponse = action.payload as ApiResponse;
-        // state.loggedInUser = action.payload.returnData as LoggedInUser;
+        state.loggedInUser = action.payload.returnData as LoggedInUser;
         const loggedInUserString = serialize(action.payload.returnData);
         sessionStorage.setItem(LOGGED_IN_USER, loggedInUserString);
       })
