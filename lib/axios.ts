@@ -1,9 +1,9 @@
 // src/lib/axios.ts
-import { LOCAL_SECURE_SERVER_URL } from "@/_constants/Endpoints";
+import { DEPLOYED_SERVER_URL } from "@/_constants/Endpoints";
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: LOCAL_SECURE_SERVER_URL, // Your backend URL
+  baseURL: DEPLOYED_SERVER_URL, // Your backend URL
   withCredentials: true, // 👈 This ensures cookies are sent/received
 });
 

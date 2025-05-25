@@ -29,7 +29,7 @@ function Background() {
         <div
           key={i}
           className="absolute inset-0"
-          style={{ top: `${i * 10}%`, height: "100vh" }}
+          style={{ top: `${i * 10 * 0.3}rem`, width: "100vw", height: "100vh" }}
         >
           <svg
             viewBox="0 0 1440 320"
