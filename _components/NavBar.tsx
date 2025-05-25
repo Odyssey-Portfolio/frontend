@@ -5,12 +5,19 @@ import {
   COLOR_WHITE,
 } from "@/_constants/Colors";
 import { FONT_LEXEND } from "@/_constants/Fonts";
+import { SUCCESS } from "@/_constants/ResponseCodes";
 import { LoggedInUser } from "@/_models/LoggedInUser";
+import { selectAuthData } from "@/_redux/auth/authSelector";
+import { logoutThunk } from "@/_redux/auth/authThunk";
+import { setSnackbarMessage } from "@/_redux/snackbar/snackbarActions";
+import { AppDispatch } from "@/_redux/store";
 import { getLoggedInUser } from "@/utils/AuthUtils";
+import { nanoid } from "@reduxjs/toolkit";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import AvatarWithDropdown from "./AvatarWithDropdown";
 type NavbarItem = {
   name: string;
@@ -94,20 +101,50 @@ export default function NavBar() {
           </motion.div>
         );
       })}
-      <LoginButton />
+      <AvatarButton />
     </motion.div>
   );
 }
 
-function LoginButton() {
+function AvatarButton() {
   const buttonContainerClassname = "flex items-center space-x-4";
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
   const [loggedInUser, setLoggedInUser] = useState<LoggedInUser>();
+  const authData = useSelector(selectAuthData);
+  const handleLogout = () => {
+    dispatch(logoutThunk());
+  };
+
   useEffect(() => {
     if (!loggedInUser) setLoggedInUser(getLoggedInUser());
     else setIsLoggedIn(true);
   }, [loggedInUser]);
+
+  useEffect(() => {
+    if (authData && authData.statusCode === SUCCESS) {
+      dispatch(
+        setSnackbarMessage({
+          id: nanoid(),
+          message: authData.message,
+          type: "success",
+        })
+      );
+      window.location.href = "/";
+    } else if (authData && authData.statusCode !== SUCCESS) {
+      dispatch(
+        setSnackbarMessage({
+          id: nanoid(),
+          message: authData.message,
+          type: "error",
+        })
+      );
+    }
+    // return () => {
+    //   dispatch(clearAuthData());
+    // };
+  }, [dispatch, router, authData]);
   return (
     <>
       {!isLoggedIn ? (
@@ -121,7 +158,7 @@ function LoginButton() {
           </button>
         </div>
       ) : (
-        <AvatarWithDropdown avatarUrl="/airplane.ico" onLogout={() => {}} />
+        <AvatarWithDropdown avatarUrl="/airplane.ico" onLogout={handleLogout} />
       )}
     </>
   );

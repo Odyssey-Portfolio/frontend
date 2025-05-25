@@ -8,15 +8,10 @@ import {
   FONTSTYLE_HEADING1,
   FONTSTYLE_SUBTEXT2,
 } from "@/_constants/Fonts";
-import {
-  BAD_REQUEST,
-  INTERNAL_SERVER_ERROR,
-  SUCCESS,
-} from "@/_constants/ResponseCodes";
+import { SUCCESS } from "@/_constants/ResponseCodes";
 import { loginSchema } from "@/_constants/ValidationSchema";
 import { LoginFormFields } from "@/_models/AuthFormFields";
 import { selectAuthData, selectIsLoading } from "@/_redux/auth/authSelector";
-import { clearAuthData } from "@/_redux/auth/authSlice";
 import { loginThunk } from "@/_redux/auth/authThunk";
 import { setSnackbarMessage } from "@/_redux/snackbar/snackbarActions";
 import { AppDispatch } from "@/_redux/store";
@@ -61,6 +56,7 @@ function LoginForm() {
   const methods = useForm<LoginFormFields>({
     resolver: yupResolver<LoginFormFields>(loginSchema),
   });
+  const { errors } = methods.formState;
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const isLoading = useSelector(selectIsLoading);
@@ -79,12 +75,8 @@ function LoginForm() {
           type: "success",
         })
       );
-      window.location.href = "/";
-    } else if (
-      authData &&
-      (authData.statusCode === BAD_REQUEST ||
-        authData?.statusCode === INTERNAL_SERVER_ERROR)
-    ) {
+      // window.location.href = "/";
+    } else if (authData && authData.statusCode !== SUCCESS) {
       dispatch(
         setSnackbarMessage({
           id: nanoid(),
@@ -93,9 +85,9 @@ function LoginForm() {
         })
       );
     }
-    return () => {
-      dispatch(clearAuthData());
-    };
+    // return () => {
+    //   dispatch(clearAuthData());
+    // };
   }, [dispatch, router, authData]);
 
   return (
@@ -105,11 +97,13 @@ function LoginForm() {
           label="Email"
           type="email"
           {...methods.register("email", { required: true })}
+          error={errors.email?.message}
         />
         <TextInput
           label="Password"
           type="password"
           {...methods.register("password", { required: true })}
+          error={errors.password?.message}
         />
 
         <Button

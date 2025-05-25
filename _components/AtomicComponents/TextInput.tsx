@@ -16,9 +16,9 @@ export default function TextInput({ label, ...props }: TextInputProps) {
     <div className={containerClassname}>
       <div className={labelSectionClassname}>
         {label && <label className={labelClassname}>{label}</label>}
-        {props.error && <div className={errorClassname}>{props.error}</div>}
       </div>
       <input className={inputClassname} {...props} />
+      {props.error && <div className={errorClassname}>{props.error}</div>}
     </div>
   );
 }

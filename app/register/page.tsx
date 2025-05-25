@@ -8,15 +8,10 @@ import {
   FONTSTYLE_HEADING1,
   FONTSTYLE_SUBTEXT2,
 } from "@/_constants/Fonts";
-import {
-  BAD_REQUEST,
-  INTERNAL_SERVER_ERROR,
-  SUCCESS,
-} from "@/_constants/ResponseCodes";
+import { SUCCESS } from "@/_constants/ResponseCodes";
 import { registerSchema } from "@/_constants/ValidationSchema";
 import { RegisterFormFields } from "@/_models/AuthFormFields";
 import { selectAuthData, selectIsLoading } from "@/_redux/auth/authSelector";
-import { clearAuthData } from "@/_redux/auth/authSlice";
 import { registerThunk } from "@/_redux/auth/authThunk";
 import { setSnackbarMessage } from "@/_redux/snackbar/snackbarActions";
 import { AppDispatch } from "@/_redux/store";
@@ -60,6 +55,7 @@ function RegisterForm() {
   const methods = useForm<RegisterFormFields>({
     resolver: yupResolver<RegisterFormFields>(registerSchema),
   });
+  const { errors } = methods.formState;
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const isLoading = useSelector(selectIsLoading);
@@ -78,11 +74,7 @@ function RegisterForm() {
         })
       );
       router.push("/login");
-    } else if (
-      authData &&
-      (authData.statusCode === BAD_REQUEST ||
-        authData?.statusCode === INTERNAL_SERVER_ERROR)
-    ) {
+    } else if (authData && authData.statusCode !== SUCCESS) {
       dispatch(
         setSnackbarMessage({
           id: nanoid(),
@@ -91,9 +83,9 @@ function RegisterForm() {
         })
       );
     }
-    return () => {
-      dispatch(clearAuthData());
-    };
+    // return () => {
+    //   dispatch(clearAuthData());
+    // };
   }, [dispatch, router, authData]);
 
   return (
@@ -103,16 +95,19 @@ function RegisterForm() {
           label="Full Name"
           type="text"
           {...methods.register("name", { required: true })}
+          error={errors.name?.message}
         />
         <TextInput
           label="Email"
           type="email"
           {...methods.register("email", { required: true })}
+          error={errors.email?.message}
         />
         <TextInput
           label="Password"
           type="password"
           {...methods.register("password", { required: true })}
+          error={errors.password?.message}
         />
 
         <Button

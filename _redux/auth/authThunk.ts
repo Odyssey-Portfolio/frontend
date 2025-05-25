@@ -1,5 +1,5 @@
 import { LoginFormFields, RegisterFormFields } from "@/_models/AuthFormFields";
-import { login, register } from "@/api/auth";
+import { login, logout, register } from "@/api/auth";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -25,6 +25,23 @@ export const registerThunk = createAsyncThunk(
   async (fields: RegisterFormFields, thunkAPI) => {
     try {
       const response = await register(fields);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error))
+        // Type-guard AxiosError
+        return thunkAPI.rejectWithValue(
+          error.response?.data || "Something went wrong"
+        );
+      console.log(error);
+    }
+  }
+);
+
+export const logoutThunk = createAsyncThunk(
+  "auth/logout",
+  async (_, thunkAPI) => {
+    try {
+      const response = await logout();
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error))

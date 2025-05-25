@@ -4,7 +4,7 @@ import { LoginFormFields } from "@/_models/AuthFormFields";
 import { LoggedInUser } from "@/_models/LoggedInUser";
 import { serialize } from "@/utils/JsonUtils";
 import { createSlice } from "@reduxjs/toolkit";
-import { loginThunk, registerThunk } from "./authThunk";
+import { loginThunk, logoutThunk, registerThunk } from "./authThunk";
 
 interface AuthState {
   loginFormFields: LoginFormFields | undefined;
@@ -52,6 +52,18 @@ const authSlice = createSlice({
         state.apiResponse = action.payload as ApiResponse;
       })
       .addCase(registerThunk.rejected, (state, action) => {
+        state.isLoading = false;
+        state.apiResponse = action.payload as ApiResponse;
+      })
+      .addCase(logoutThunk.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(logoutThunk.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.apiResponse = action.payload as ApiResponse;
+        sessionStorage.removeItem(LOGGED_IN_USER);
+      })
+      .addCase(logoutThunk.rejected, (state, action) => {
         state.isLoading = false;
         state.apiResponse = action.payload as ApiResponse;
       });
