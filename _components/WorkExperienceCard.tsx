@@ -7,7 +7,7 @@ import {
   FONTSTYLE_SUBTEXT1,
   FONTSTYLE_SUBTEXT2,
 } from "@/_constants/Fonts";
-import { motion, MotionValue, useScroll, useTransform } from "motion/react";
+import { motion, MotionValue, useTransform } from "motion/react";
 import Image from "next/image";
 import { useRef } from "react";
 
@@ -23,17 +23,6 @@ export interface WorkExperienceCardProps {
 }
 export default function WorkExprienceCard(props: WorkExperienceCardProps) {
   const workExperienceCardRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: workExperienceCardRef,
-
-    offset: ["start end", "start start"],
-    /*
-        start end: offset starts working when: the start of target (workExperienceCard) 
-                    meets the end of its container (WorkExperiencePage)
-        start start: offset stops working when: the start of target (workExperienceCard) 
-                    meets the START of its container (WorkExperiencePage)
-    */
-  });
   const cardScale = useTransform(props.progress, props.range, [
     1,
     props.targetScale,

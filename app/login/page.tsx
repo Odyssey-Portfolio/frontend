@@ -8,13 +8,19 @@ import {
   FONTSTYLE_HEADING1,
   FONTSTYLE_SUBTEXT2,
 } from "@/_constants/Fonts";
-import { BAD_REQUEST, SUCCESS } from "@/_constants/ResponseCodes";
+import {
+  BAD_REQUEST,
+  INTERNAL_SERVER_ERROR,
+  SUCCESS,
+} from "@/_constants/ResponseCodes";
+import { loginSchema } from "@/_constants/ValidationSchema";
 import { LoginFormFields } from "@/_models/AuthFormFields";
 import { selectAuthData, selectIsLoading } from "@/_redux/auth/authSelector";
 import { clearAuthData } from "@/_redux/auth/authSlice";
 import { loginThunk } from "@/_redux/auth/authThunk";
 import { setSnackbarMessage } from "@/_redux/snackbar/snackbarActions";
 import { AppDispatch } from "@/_redux/store";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { nanoid } from "@reduxjs/toolkit";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -52,7 +58,9 @@ function HeadingText() {
 
 function LoginForm() {
   const loginFormClassname = "space-y-5 w-96";
-  const methods = useForm<LoginFormFields>();
+  const methods = useForm<LoginFormFields>({
+    resolver: yupResolver<LoginFormFields>(loginSchema),
+  });
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const isLoading = useSelector(selectIsLoading);
@@ -72,7 +80,11 @@ function LoginForm() {
         })
       );
       window.location.href = "/";
-    } else if (authData && authData.statusCode === BAD_REQUEST) {
+    } else if (
+      authData &&
+      (authData.statusCode === BAD_REQUEST ||
+        authData?.statusCode === INTERNAL_SERVER_ERROR)
+    ) {
       dispatch(
         setSnackbarMessage({
           id: nanoid(),

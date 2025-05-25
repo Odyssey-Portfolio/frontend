@@ -50,9 +50,6 @@ const authSlice = createSlice({
       .addCase(registerThunk.fulfilled, (state, action) => {
         state.isLoading = false;
         state.apiResponse = action.payload as ApiResponse;
-        state.loggedInUser = action.payload.returnData as LoggedInUser;
-        const loggedInUserString = serialize(action.payload.returnData);
-        sessionStorage.setItem(LOGGED_IN_USER, loggedInUserString);
       })
       .addCase(registerThunk.rejected, (state, action) => {
         state.isLoading = false;
