@@ -4,7 +4,7 @@ interface WavyBackgroundProps {
 export default function WavyBackground(props: WavyBackgroundProps) {
   return (
     <>
-      <div className="relative w-full min-h-screen">
+      <div className="w-full min-h-screen">
         <Background />
         {/* Page content */}
         <div className="relative">{props.children}</div>
@@ -24,7 +24,16 @@ function Background() {
     "L1440,320 L0,320 Z"; // Bottom close
 
   return (
-    <div className="fixed inset-[-10] -z-10">
+    //replaced Tailwind classname with css style to fix styling not working on Vercel deployment
+    <div
+      style={{
+        width: "100vw",
+        height: "100vh",
+        position: "fixed",
+        top: 0,
+        zIndex: -10,
+      }}
+    >
       {waveColors.map((fill, i) => (
         <div
           key={i}

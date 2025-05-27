@@ -10,11 +10,11 @@ export interface ExpandOnFocusButtonProps {
 }
 export default function ExpandOnFocusButton(props: ExpandOnFocusButtonProps) {
   const [isHovered, setIsHovered] = useState(false);
-  const baseClassname = `flex items-center justify-center gap-2 
-                            transition-all duration-300 h-full rounded-full cursor-default 
+  const expandOnFocusButtonClassname = `flex items-center justify-center gap-2 
+                            rounded-full select-none
+                            w-24 h-full transition-all duration-300
+                            ease-out hover:w-60
                             ${FONT_POPPINS.className}`;
-  const nonFocusClassname = `w-24`;
-  const focusClassname = `w-fit px-4 py-2`;
   const iconClassname = `h-9 w-9 transition-transform duration-300`;
   const labelClassname = `${FONT_POPPINS.className} ${FONTSTYLE_PARAGRAPH1} whitespace-nowrap select-none`;
   return (
@@ -22,9 +22,7 @@ export default function ExpandOnFocusButton(props: ExpandOnFocusButtonProps) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={props.action}
-      className={`${baseClassname} ${
-        isHovered ? focusClassname : nonFocusClassname
-      }`}
+      className={`${expandOnFocusButtonClassname}`}
       style={{ backgroundColor: COLOR_PRIMARY, color: COLOR_WHITE }}
     >
       <div className={iconClassname}>{props.icon}</div>
