@@ -17,10 +17,11 @@ interface NumberedTitleContentProps {
   lineHeight?: number;
 }
 export default function NumberedTitleContent(props: NumberedTitleContentProps) {
-  const numberedTitleContentClassname = `flex flex-col w-full space-y-2`;
+  const numberedTitleContentClassname = `flex flex-col items-center w-full space-y-2 md:items-start`;
   const numberClassname = `${FONTSTYLE_HEADING1}`;
-  const titleClassname = `${FONT_POPPINS.className} ${FONTSTYLE_SUBTEXT1} line-clamp-2 min-h-20`;
-  const descriptionClassname = `${FONT_POPPINS.className} ${FONTSTYLE_PARAGRAPH1}`;
+  const responsiveTextClassname = `text-center md:text-left`;
+  const titleClassname = `${FONT_POPPINS.className} ${FONTSTYLE_SUBTEXT1} md:line-clamp-2 min-h-20 ${responsiveTextClassname}`;
+  const descriptionClassname = `${FONT_POPPINS.className} ${FONTSTYLE_PARAGRAPH1} ${responsiveTextClassname}`;
   return (
     <div className={numberedTitleContentClassname}>
       <div className={numberClassname} style={{ color: COLOR_PRIMARY }}>

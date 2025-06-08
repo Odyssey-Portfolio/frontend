@@ -30,13 +30,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const navbarClassname = "flex flex-row justify-center";
+  const rootClassname = `max-w-screen-sm
+                      md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl`;
+
   return (
-    <html lang="en">
+    <html lang="en" className={rootClassname}>
       <head>
         <link rel="icon" href="/airplane.ico" type="image/png" />
       </head>
       <Providers>
-        <body className={`antialiased`}>
+        <body className={`antialiased ${rootClassname}`}>
           <div className={navbarClassname}>
             <NavBar />
           </div>
