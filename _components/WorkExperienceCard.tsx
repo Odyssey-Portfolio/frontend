@@ -4,9 +4,11 @@ import {
   FONT_POPPINS,
   FONT_POPPINS2,
   FONTSTYLE_HEADING1,
+  FONTSTYLE_HEADING4,
   FONTSTYLE_SUBTEXT1,
   FONTSTYLE_SUBTEXT2,
 } from "@/_constants/Fonts";
+import { useIsMediumScreen } from "@/_hooks/useIsMediumScreen";
 import { motion, MotionValue, useTransform } from "motion/react";
 import Image from "next/image";
 import { useRef } from "react";
@@ -23,11 +25,14 @@ export interface WorkExperienceCardProps {
 }
 export default function WorkExprienceCard(props: WorkExperienceCardProps) {
   const workExperienceCardRef = useRef(null);
+  const screenWidth = window.innerWidth;
+  const screenHeight = window.innerHeight;
+  const isMediumScreen = useIsMediumScreen();
   const cardScale = useTransform(props.progress, props.range, [
     1,
     props.targetScale,
   ]);
-  const workExperienceCardClassname = `sticky top-[5rem] relative rounded-lg w-[60rem] h-[32rem]
+  const workExperienceCardClassname = `sticky top-[5rem] relative rounded-lg
                                         overflow-hidden shadow-lg mb-24`;
   const overlayTextClassname = `absolute inset-0 flex items-center p-5
                                 justify-center bg-black bg-opacity-0 opacity-0
@@ -38,6 +43,8 @@ export default function WorkExprienceCard(props: WorkExperienceCardProps) {
       ref={workExperienceCardRef}
       className={workExperienceCardClassname}
       style={{
+        width: isMediumScreen ? screenWidth * 0.55 : screenWidth * 0.85,
+        height: screenHeight * 0.5,
         scale: cardScale,
         top: `calc(10% + ${props.index * 2}rem)`,
       }}
@@ -53,8 +60,8 @@ export default function WorkExprienceCard(props: WorkExperienceCardProps) {
 }
 
 function Description(props: WorkExperienceCardProps) {
-  const descriptionClassname = `flex flex-col text-white select-none cursor-default space-y-16`;
-  const companyNameClassname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING1}`;
+  const descriptionClassname = `flex flex-col text-white select-none cursor-default space-y-16 w-full md:px-5`;
+  const companyNameClassname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING4} md:${FONTSTYLE_HEADING1}`;
 
   const jobTitleClassname = `${FONT_POPPINS.className} ${FONTSTYLE_SUBTEXT1}`;
   const yearsClassname = `${FONT_POPPINS2.className} ${FONTSTYLE_SUBTEXT2}`;

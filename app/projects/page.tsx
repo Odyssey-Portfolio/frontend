@@ -9,7 +9,7 @@ import {
 import { CONTENT_PROJECTS } from "@/_contents/Projects";
 
 export default function ProjectsPage() {
-  const projectPageClassname = `flex flex-col mt-32 mx-24 mb-12   
+  const projectPageClassname = `flex flex-col mt-32 md:mx-12 mb-12   
                                 items-center justify-between space-y-20`;
   // const timelineClassname = `fixed top-1/2 transform -translate-y-1/2 right-2`;
   return (
@@ -43,7 +43,7 @@ function HeadingText() {
   );
 }
 function ProjectList() {
-  const projectListClassname = `grid grid-cols-3 w-full gap-5`;
+  const projectListClassname = `px-5 grid grid-cols-1 md:grid-cols-3 w-full md:mx-5 gap-5`;
   return (
     <div className={projectListClassname}>
       {CONTENT_PROJECTS.map((project, key) => {
