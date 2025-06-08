@@ -60,7 +60,7 @@ export default function WorkExprienceCard(props: WorkExperienceCardProps) {
 }
 
 function Description(props: WorkExperienceCardProps) {
-  const descriptionClassname = `flex flex-col text-white select-none cursor-default space-y-16 w-full md:px-5`;
+  const descriptionClassname = `flex flex-col text-white select-none cursor-default space-y-16 w-full md:p-5`;
   const companyNameClassname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING4} md:${FONTSTYLE_HEADING1}`;
 
   const jobTitleClassname = `${FONT_POPPINS.className} ${FONTSTYLE_SUBTEXT1}`;

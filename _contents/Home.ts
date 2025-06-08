@@ -15,8 +15,7 @@ export const CONTENT_LIFESTORY = `
   Shortly after entering the University, I got to know awesome tech geeks, as thanks to them, I had learnt more about different technologies, for example, API, Containerzation..., and apply them in some of my personal projects.
   Throughout such a journey, there were times when I felt like giving up halfway. But the joy of seeing your brainchildren up and running as expected has propelled me forward.
   Hence, I would love to put into good use my perseverance, and some other soft skills, including concise communication, teamwork, open-mindedness.
-</div>
-;`;
+</div>`;
 
 export const CONTENT_BADMINTON = `
 <div>

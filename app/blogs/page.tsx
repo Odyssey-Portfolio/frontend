@@ -38,7 +38,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function BlogsPage() {
-  const blogPageClassname = `flex flex-col mt-32 mx-24 mb-12   
+  const blogPageClassname = `flex flex-col mt-32 mx-12 md:mx-24 mb-12   
                                 items-center justify-between space-y-20`;
   return (
     <div className={blogPageClassname}>
@@ -68,8 +68,8 @@ function HeadingText() {
 }
 
 function BlogPageActions() {
-  const blogListClassname = `flex flex-row justify-center  w-full gap-5`;
-  const buttonGrids = `flex flex-row items-center gap-5 relative`;
+  const blogListClassname = `flex flex-col items-center md:flex-row md:justify-center w-full gap-5`;
+  const buttonGrids = `flex flex-row items-center gap-5 relative h-full`;
   const createBlogModalVisibility = useSelector(selectVisiblity);
   const [aboutBlogPageModalVisibility, setAboutBlogPageModalVisibility] =
     useState<boolean>();
@@ -135,7 +135,7 @@ function BlogPageActions() {
 }
 
 function BlogList() {
-  const blogListClassname = `grid grid-cols-3 gap-5`;
+  const blogListClassname = `grid grid-cols-1 md:grid-cols-3 gap-5`;
   const emptyListClassname = `col-span-3`;
   const spinnerClassname = `col-span-3 flex flex-row justify-center`;
   const blogs = useSelector(selectBlogs);
@@ -149,22 +149,24 @@ function BlogList() {
   }, [dispatch, debouncedSearchParams]);
 
   return (
-    <div className={blogListClassname}>
-      {isGettingBlogs && (!blogs || !blogs.length) && (
-        <div className={spinnerClassname}>
-          <Spinner />
-        </div>
-      )}
-      {!isGettingBlogs && (!blogs || !blogs.length) ? (
-        <div className={emptyListClassname}>
-          <EmptyList />
-        </div>
-      ) : (
-        blogs.map((blog, key) => {
-          return <BlogCard key={key} isImageB64 blog={blog} />;
-        })
-      )}
-      {isCreatingBlog && <LoadingOverlay />}
-    </div>
+    <FM_Reveal className={blogListClassname}>
+      <>
+        {isGettingBlogs && (!blogs || !blogs.length) && (
+          <div className={spinnerClassname}>
+            <Spinner />
+          </div>
+        )}
+        {!isGettingBlogs && (!blogs || !blogs.length) ? (
+          <div className={emptyListClassname}>
+            <EmptyList />
+          </div>
+        ) : (
+          blogs.map((blog, key) => {
+            return <BlogCard key={key} isImageB64 blog={blog} />;
+          })
+        )}
+        {isCreatingBlog && <LoadingOverlay />}
+      </>
+    </FM_Reveal>
   );
 }

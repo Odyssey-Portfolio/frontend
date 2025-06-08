@@ -1,3 +1,6 @@
+"use client";
+import { useIsMediumScreen } from "@/_hooks/useIsMediumScreen";
+
 interface WavyBackgroundProps {
   children: React.ReactNode;
 }
@@ -14,14 +17,16 @@ export default function WavyBackground(props: WavyBackgroundProps) {
 }
 
 function Background() {
+  const isMedium = useIsMediumScreen();
   const waveColors = ["#0066cc", "#3399ff", "#66ccff", "#99ddff", "#cceeff"];
 
-  // 2 full wave crests: Start -> Down -> Up -> Down again
-  const wavePath =
-    "M0,160 " +
-    "C360,320, 720,0, 1080,160 " + // Wave 1 (down -> up)
-    "C1260,213, 1380,213, 1440,160 " + // Wave 2 (gentle dip)
-    "L1440,320 L0,320 Z"; // Bottom close
+  const base = "M0,160";
+  const wave1 = isMedium
+    ? "C360,320, 720,0, 1080,160 "
+    : "C860,320, 720,0, 1980,160 ";
+  const wave2 = isMedium ? "C1260,213, 1380,213, 1440,160 " : "";
+  const wave3 = "L1440,320 L0,320 Z"; // Bottom close
+  const wavePath = `${base} ${wave1} ${wave2} ${wave3}`;
 
   return (
     //replaced Tailwind classname with css style to fix styling not working on Vercel deployment

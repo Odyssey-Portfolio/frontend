@@ -12,7 +12,7 @@ export default function ExpandOnFocusButton(props: ExpandOnFocusButtonProps) {
   const [isHovered, setIsHovered] = useState(false);
   const expandOnFocusButtonClassname = `flex items-center justify-center gap-2 
                             rounded-full select-none
-                            w-24 h-full transition-all duration-300
+                            w-20 h-20 transition-all duration-300
                             ease-out hover:w-60
                             ${FONT_POPPINS.className}`;
   const iconClassname = `h-9 w-9 transition-transform duration-300`;
