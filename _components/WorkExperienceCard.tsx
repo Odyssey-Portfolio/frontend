@@ -11,7 +11,7 @@ import {
 import { useIsMediumScreen } from "@/_hooks/useIsMediumScreen";
 import { motion, MotionValue, useTransform } from "motion/react";
 import Image from "next/image";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export interface WorkExperienceCardProps {
   index: number;
@@ -25,8 +25,8 @@ export interface WorkExperienceCardProps {
 }
 export default function WorkExprienceCard(props: WorkExperienceCardProps) {
   const workExperienceCardRef = useRef(null);
-  const screenWidth = window.innerWidth;
-  const screenHeight = window.innerHeight;
+  const [screenWidth, setScreenWidth] = useState(0);
+  const [screenHeight, setScreenHeight] = useState(0);
   const isMediumScreen = useIsMediumScreen();
   const cardScale = useTransform(props.progress, props.range, [
     1,
@@ -38,6 +38,10 @@ export default function WorkExprienceCard(props: WorkExperienceCardProps) {
                                 justify-center bg-black bg-opacity-0 opacity-0
                                  bg-opacity-70
                                 opacity-100`;
+  useEffect(() => {
+    setScreenWidth(window.innerWidth);
+    setScreenHeight(window.innerHeight);
+  }, []);
   return (
     <motion.div
       ref={workExperienceCardRef}

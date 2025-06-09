@@ -28,7 +28,7 @@ export default function ProjectsPage() {
 function HeadingText() {
   const headingTextClassname = `text-center space-y-5`;
   const h1Classname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING1}`;
-  const h2Classname = `${FONT_LEXEND.className} ${FONTSTYLE_SUBTEXT2} max-w-lg`;
+  const h2Classname = `${FONT_LEXEND.className} ${FONTSTYLE_SUBTEXT2} max-w-lg px-5`;
   return (
     <FM_Reveal className={headingTextClassname}>
       <>

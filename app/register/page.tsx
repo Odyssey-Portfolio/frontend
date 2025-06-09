@@ -51,7 +51,7 @@ function HeadingText() {
 }
 
 function RegisterForm() {
-  const registerFormClassname = "space-y-5 w-96";
+  const registerFormClassname = "space-y-5 w-full px-5 md:w-96 md:px-0";
   const methods = useForm<RegisterFormFields>({
     resolver: yupResolver<RegisterFormFields>(registerSchema),
   });
