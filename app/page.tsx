@@ -29,33 +29,25 @@ import {
 } from "../_constants/Fonts";
 
 export default function HomePage() {
-  const homepageClassname = `flex flex-col mt-32 mx-12 mb-12 items-center justify-between space-y-20`;
+  const homepageClassname = `flex flex-col mt-32 md:mx-12 mb-12 items-center justify-between space-y-20`;
   return (
     <div>
       <FM_Reveal className={homepageClassname}>
         <>
           <WelcomeText />
           <AvatarAndBio />
+          <AboutMe />
+          <MyLifeStory />
+          <FutureGoals />
+          <Hobbies />
         </>
-      </FM_Reveal>
-      <FM_Reveal className={homepageClassname}>
-        <AboutMe />
-      </FM_Reveal>
-      <FM_Reveal className={homepageClassname}>
-        <MyLifeStory />
-      </FM_Reveal>
-      <FM_Reveal className={homepageClassname}>
-        <FutureGoals />
-      </FM_Reveal>
-      <FM_Reveal className={homepageClassname}>
-        <Hobbies />
       </FM_Reveal>
     </div>
   );
 }
 
 function WelcomeText() {
-  const welcomeClassname = `text-center space-y-5`;
+  const welcomeClassname = `text-center space-y-5 m-5 md:m-0`;
   const h1Classname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING1}`;
   const h2Classname = `${FONT_LEXEND.className} ${FONTSTYLE_SUBTEXT2}`;
   return (
@@ -71,11 +63,17 @@ function WelcomeText() {
 }
 function AvatarAndBio() {
   const avatarAndBioClassname = `flex flex-col space-y-6 items-center
-    md:flex-row md:w-4/5 md:space-x-5 md:space-y-0`;
+  m-5 md:flex-row md:w-4/5 md:space-x-1 md:space-y-0`;
+  const roundedImageWrapperClassname = `flex flex-row w-full justify-center md:w-4/12`;
+  const paragraphRendererWrapperClassname = `md:w-8/12`;
   return (
     <div className={avatarAndBioClassname}>
-      <RoundedImage src={`/my-profile-pic.jpg`} height={300} width={200} />
-      <ParagraphRenderer paragraph={CONTENT_SHORTINTRO} isHtml />
+      <div className={roundedImageWrapperClassname}>
+        <RoundedImage src={`/my-profile-pic.jpg`} height={300} width={300} />
+      </div>
+      <div className={paragraphRendererWrapperClassname}>
+        <ParagraphRenderer paragraph={CONTENT_SHORTINTRO} isHtml />
+      </div>
     </div>
   );
 }

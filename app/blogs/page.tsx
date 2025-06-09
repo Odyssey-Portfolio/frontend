@@ -60,7 +60,7 @@ function HeadingText() {
           Blogs
         </h1>
         <h6 className={h2Classname} style={{ color: COLOR_SECONDARY }}>
-          Self-taught software engineering lessons that I would like to share
+          Self-taught lessons that I would like to share
         </h6>
       </>
     </FM_Reveal>
