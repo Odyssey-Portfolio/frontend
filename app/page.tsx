@@ -29,33 +29,25 @@ import {
 } from "../_constants/Fonts";
 
 export default function HomePage() {
-  const homepageClassname = `flex flex-col mt-32 mx-12 mb-12 items-center justify-between space-y-20`;
+  const homepageClassname = `flex flex-col mt-32 md:mx-12 mb-12 items-center justify-between space-y-20`;
   return (
     <div>
       <FM_Reveal className={homepageClassname}>
         <>
           <WelcomeText />
           <AvatarAndBio />
+          <AboutMe />
+          <MyLifeStory />
+          <FutureGoals />
+          <Hobbies />
         </>
-      </FM_Reveal>
-      <FM_Reveal className={homepageClassname}>
-        <AboutMe />
-      </FM_Reveal>
-      <FM_Reveal className={homepageClassname}>
-        <MyLifeStory />
-      </FM_Reveal>
-      <FM_Reveal className={homepageClassname}>
-        <FutureGoals />
-      </FM_Reveal>
-      <FM_Reveal className={homepageClassname}>
-        <Hobbies />
       </FM_Reveal>
     </div>
   );
 }
 
 function WelcomeText() {
-  const welcomeClassname = `text-center space-y-5`;
+  const welcomeClassname = `text-center space-y-5 m-5 md:m-0`;
   const h1Classname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING1}`;
   const h2Classname = `${FONT_LEXEND.className} ${FONTSTYLE_SUBTEXT2}`;
   return (
@@ -70,23 +62,24 @@ function WelcomeText() {
   );
 }
 function AvatarAndBio() {
-  const avatarAndBioClassname = `flex flex-row w-4/5 grid grid-cols-12 items-center`;
-  const roundedImageClassname = `col-span-4`;
-  const bioClassname = `col-span-8`;
+  const avatarAndBioClassname = `flex flex-col space-y-6 items-center
+  m-5 md:flex-row md:w-4/5 md:space-x-1 md:space-y-0`;
+  const roundedImageWrapperClassname = `flex flex-row w-full justify-center md:w-4/12`;
+  const paragraphRendererWrapperClassname = `md:w-8/12`;
   return (
     <div className={avatarAndBioClassname}>
-      <div className={roundedImageClassname}>
-        <RoundedImage src={`/my-profile-pic.jpg`} height={300} width={200} />
+      <div className={roundedImageWrapperClassname}>
+        <RoundedImage src={`/my-profile-pic.jpg`} height={300} width={300} />
       </div>
-      <div className={bioClassname}>
-        <ParagraphRenderer paragraph={CONTENT_SHORTINTRO} lineHeight={2.2} />
+      <div className={paragraphRendererWrapperClassname}>
+        <ParagraphRenderer paragraph={CONTENT_SHORTINTRO} isHtml />
       </div>
     </div>
   );
 }
 function AboutMe() {
-  const headingClassname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING2}`;
   const aboutMeClassname = `flex flex-col w-4/5 items-center space-y-3`;
+  const headingClassname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING2} text-center`;
   const iconWithContentClassname = `space-y-2`;
   const information: IconWithContentType[] = [
     { icon: <UserIcon />, content: "Đào Việt Anh (Andy)" },
@@ -118,22 +111,26 @@ function AboutMe() {
 }
 
 function MyLifeStory() {
-  const headingClassname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING2}`;
-  const aboutMeClassname = `flex flex-col w-4/5 items-center space-y-4`;
+  const headingClassname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING2} text-center md:text-left`;
+  const aboutMeClassname = `flex flex-col w-4/5 items-center space-y-5`;
   return (
     <div className={aboutMeClassname}>
       <h1 className={headingClassname} style={{ color: COLOR_PRIMARY }}>
         My Software development Story
       </h1>
-      <ParagraphRenderer paragraph={CONTENT_LIFESTORY} lineHeight={2.2} />
+      <ParagraphRenderer
+        paragraph={CONTENT_LIFESTORY}
+        lineHeight={2.2}
+        isHtml
+      />
     </div>
   );
 }
 
 function FutureGoals() {
-  const headingClassname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING2} mb-5`;
+  const headingClassname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING2} mb-5 text-center md:text-left`;
   const futureGoalsClassname = `flex flex-col w-4/5 items-center space-y-4`;
-  const numberedTitleContent = `flex flex-row grid grid-cols-12 gap-12`;
+  const numberedTitleContent = `grid grid-cols-1 md:grid-cols-12 gap-12`;
   return (
     <div className={futureGoalsClassname}>
       <h1 className={headingClassname} style={{ color: COLOR_PRIMARY }}>
@@ -158,10 +155,11 @@ function FutureGoals() {
 }
 
 function Hobbies() {
-  const headingClassname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING2}`;
+  const responsiveTextClassname = `text-center md:text-left`;
+  const headingClassname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING2} ${responsiveTextClassname}`;
   const hobbiesClassname = `flex flex-col w-4/5 items-center space-y-4`;
-  const subtextClassname = `${FONT_LEXEND.className} ${FONTSTYLE_SUBTEXT2}`;
-  const imageButtonWithModalClassname = `flex flex-row grid grid-cols-12`;
+  const subtextClassname = `${FONT_LEXEND.className} ${FONTSTYLE_SUBTEXT2} ${responsiveTextClassname}`;
+  const imageButtonWithModalClassname = `flex flex-col space-y-4 md:grid md:grid-cols-12 md:items-center md:space-y-0`;
 
   return (
     <div className={hobbiesClassname}>
@@ -174,7 +172,7 @@ function Hobbies() {
       <div className={imageButtonWithModalClassname}>
         {CONTENT_HOBBIES.map((hobby, key) => {
           return (
-            <div className={"col-span-4 p-4"} key={key}>
+            <div className={"md:col-span-4 md:mx-5"} key={key}>
               <ImageButtonWithModal
                 image={hobby.image}
                 title={hobby.title}

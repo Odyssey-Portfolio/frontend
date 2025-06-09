@@ -25,10 +25,10 @@ type NavbarItem = {
 };
 
 export default function NavBar() {
-  const navbarClassname = `fixed transform  top-5 bg-white/30 backdrop-blur-lg
-     shadow-lg rounded-xl px-6 py-3 flex gap-4 items-center z-20`;
+  const navbarClassname = `fixed transform top-5 bg-white/30 backdrop-blur-lg flex flex-wrap justify-center
+     shadow-lg rounded-xl px-2 py-2 md:px-6 md:py-3 flex gap-4 items-center z-20 w-11/12 md:w-fit`;
   const highligherClassname = `rounded-3xl p-2`;
-  const navitemClassname = `${FONT_LEXEND.className} flex flex-row text-center select-none`;
+  const navitemClassname = `${FONT_LEXEND.className} flex flex-row text-center select-none text-sm sm:text-base`;
   const [selectedItem, setSelectedItem] = useState<string>("Home");
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);

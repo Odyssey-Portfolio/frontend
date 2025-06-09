@@ -22,7 +22,7 @@ import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 export default function RegisterPage() {
-  const registerPageClassname = `flex flex-col mt-32 mx-24 mb-12
+  const registerPageClassname = `flex flex-col mt-32 mx-5 md:mx-24 mb-12
                                 items-center justify-between space-y-20`;
   return (
     <div className={registerPageClassname}>
@@ -51,7 +51,7 @@ function HeadingText() {
 }
 
 function RegisterForm() {
-  const registerFormClassname = "space-y-5 w-96";
+  const registerFormClassname = "space-y-5 w-full px-5 md:w-96 md:px-0";
   const methods = useForm<RegisterFormFields>({
     resolver: yupResolver<RegisterFormFields>(registerSchema),
   });

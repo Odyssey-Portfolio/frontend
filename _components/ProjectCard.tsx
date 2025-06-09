@@ -180,26 +180,26 @@ function Languages(props: ProjectCardProps) {
   );
 }
 
-function Overlay(props: ProjectCardProps) {
-  const overlayClassname = `absolute inset-0 flex items-center rounded-lg
-                            justify-center bg-black bg-opacity-0 opacity-100
-                            transition-all duration-300`; /* hover:bg-opacity-50
-                            hover:opacity-100 */
-  const githubButtonClassname = `flex flex-col items-center rounded-lg bg-white
-                                border-2 p-2 active:bg-transparent active:text-white`;
-  return (
-    <div className={overlayClassname}>
-      <div
-        className={githubButtonClassname}
-        style={{ borderColor: COLOR_WHITE }}
-      >
-        <Image src="/github.png" alt="avatar" width={100} height={200} />
-        <span
-          className={`${FONT_LEXEND.className} ${FONTSTYLE_PARAGRAPH1} cursor-pointer`}
-        >
-          View on GitHub
-        </span>
-      </div>
-    </div>
-  );
-}
+// function Overlay(props: ProjectCardProps) {
+//   const overlayClassname = `absolute inset-0 flex items-center rounded-lg
+//                             justify-center bg-black bg-opacity-0 opacity-100
+//                             transition-all duration-300`; /* hover:bg-opacity-50
+//                             hover:opacity-100 */
+//   const githubButtonClassname = `flex flex-col items-center rounded-lg bg-white
+//                                 border-2 p-2 active:bg-transparent active:text-white`;
+//   return (
+//     <div className={overlayClassname}>
+//       <div
+//         className={githubButtonClassname}
+//         style={{ borderColor: COLOR_WHITE }}
+//       >
+//         <Image src="/github.png" alt="avatar" width={100} height={200} />
+//         <span
+//           className={`${FONT_LEXEND.className} ${FONTSTYLE_PARAGRAPH1} cursor-pointer`}
+//         >
+//           View on GitHub
+//         </span>
+//       </div>
+//     </div>
+//   );
+// }

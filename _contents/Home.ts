@@ -1,14 +1,25 @@
 import { ImageButtonWithModalType } from "@/_components/ImageButtonWithModal";
 import { NumberedTitleContentType } from "../_components/NumberedTitleContent";
-import { FONT_POPPINS } from "../_constants/Fonts";
+import { FONT_POPPINS, FONTSTYLE_PARAGRAPH1 } from "../_constants/Fonts";
 
-export const CONTENT_SHORTINTRO = `As of now, I am a Consultant at Netcompany Vietnam for almost half a year, maintaining React applications based on customers requirements. 
-Although I can wrap my head around most domains in the IT industry, be it Back-end, DevOps, I decide to stick to front-end development for now, as it feels like home to me.`;
+const mediumScreenLineSpacing = `md:leading-[2rem]`;
+export const CONTENT_SHORTINTRO = `
+<div className='${FONT_POPPINS.className} ${FONTSTYLE_PARAGRAPH1} ${mediumScreenLineSpacing} leading-loose text-center md:text-left '>
+  I am a Consultant at Netcompany Vietnam, maintaining React applications based on customers requirements.
+  Although I can wrap my head around most domains in the IT industry, be it Back-end, DevOps, I decide to stick to front-end development for now,
+  as it feels like home to me.
+</div>`;
 
-export const CONTENT_LIFESTORY = `Since High School, I have always dreamt of creating software products that better our lives. My journey started with Python - a simple yet powerful language which allowed me to create simple apps, like a calculator, a Pomodoro Timer, and so on.
-Shortly after entering the University, I got to know awesome tech geeks, as thanks to them, I had learnt more about different technologies, for example, API, Containerzation..., and apply them in some of my personal projects.
-Throughout such a journey, there were times when I felt like giving up halfway. But the joy of seeing your brainchildren up and running as expected has propelled me forward.
-Hence, I would love to put into good use my perseverance, and some other soft skills, including concise communication, teamwork, open-mindedness.`;
+export const CONTENT_LIFESTORY = `
+<div className='${FONT_POPPINS.className} ${FONTSTYLE_PARAGRAPH1} ${mediumScreenLineSpacing} text-center md:text-left'>
+  Since High School, I have always dreamt of creating software products that better our lives. My journey started with Python - a simple yet powerful language which allowed me to create simple apps, like a calculator, a Pomodoro Timer, and so on.
+  <br/><br/>
+  Shortly after entering the University, I got to know awesome tech geeks, as thanks to them, I had learnt more about different technologies, for example, API, Containerzation..., and apply them in some of my personal projects.
+  <br/><br/>
+  Throughout such a journey, there were times when I felt like giving up halfway. But the joy of seeing your brainchildren up and running as expected has propelled me forward.
+
+  Hence, I would love to put into good use my perseverance, and some other soft skills, including concise communication, teamwork, open-mindedness.
+</div>`;
 
 export const CONTENT_BADMINTON = `
 <div>

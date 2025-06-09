@@ -23,7 +23,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function LoginPage() {
-  const loginPageClassname = `flex flex-col mt-32 mx-24 mb-12   
+  const loginPageClassname = `flex flex-col mt-32 mx-5 md:mx-24 mb-12   
                                 items-center justify-between space-y-20`;
   return (
     <div className={loginPageClassname}>
@@ -52,7 +52,7 @@ function HeadingText() {
 }
 
 function LoginForm() {
-  const loginFormClassname = "space-y-5 w-96";
+  const loginFormClassname = "space-y-5 w-full px-5 md:w-96 md:px-0";
   const methods = useForm<LoginFormFields>({
     resolver: yupResolver<LoginFormFields>(loginSchema),
   });

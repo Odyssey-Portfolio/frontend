@@ -12,7 +12,7 @@ import { useScroll } from "motion/react";
 import { useRef } from "react";
 
 export default function WorkExperiencePage() {
-  const workExperiencePageClassname = `flex flex-col mt-32 mx-24 mb-12   
+  const workExperiencePageClassname = `flex flex-col mt-32 md:mx-24 mb-12   
                                 items-center justify-between space-y-20 h-96`;
   return (
     <div className={workExperiencePageClassname}>
