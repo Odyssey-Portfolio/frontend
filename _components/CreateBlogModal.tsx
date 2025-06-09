@@ -47,7 +47,7 @@ import TextInput from "./AtomicComponents/TextInput";
 export default function CreateBlogModal() {
   const backdropClassname = `fixed inset-0 bg-gray-500/50 transition-opacity 
                               flex flex-col justify-center items-center`;
-  const modalClassname = `z-40 w-8/12 h-96 rounded-lg px-4 py-3 flex flex-col 
+  const modalClassname = `z-40 w-11/12 md:w-8/12 h-96 rounded-lg px-4 py-3 flex flex-col 
                           space-y-5`;
   const dispatch = useDispatch<AppDispatch>();
   const apiResponse = useSelector(selectCreateBlogResponse);
@@ -121,7 +121,7 @@ interface HeaderSectionProps {
   onSubmit: () => void;
 }
 function HeaderSection(props: HeaderSectionProps) {
-  const headerClassname = ` flex flex-row justify-between items-center`;
+  const headerClassname = `flex flex-col md:flex-row justify-between items-center`;
   const titleClassname = `${FONT_LEXEND.className} ${FONTSTYLE_SUBTEXT3}`;
   const buttonGroupClassname = `flex flex-row space-x-2 items-center`;
 
@@ -157,9 +157,9 @@ function EditorSection() {
 }
 
 function MetadataEditor() {
-  const metadataContainerClassname = `grid grid-cols-12 space-x-2`;
-  const textInputContainerClassname = `col-span-9 space-y-3`;
-  const imageUploaderContainerClassname = `col-span-3`;
+  const metadataContainerClassname = `flex flex-col md:flex-row md:space-x-3`;
+  const textInputContainerClassname = `md:w-9/12 space-y-3 md:px-2`;
+  const imageUploaderContainerClassname = `md:w-3/12`;
   const {
     register,
     setValue,

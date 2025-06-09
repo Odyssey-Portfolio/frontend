@@ -18,7 +18,7 @@ interface BlogCardProps {
   isImageB64: boolean;
 }
 export default function BlogCard(props: BlogCardProps) {
-  const blogCardClassname = `relative rounded-lg flex flex-col h-full`;
+  const blogCardClassname = `relative rounded-lg flex flex-col md:h-full`;
   const imageClassname = `h-64 w-full`;
   const detailsClassname = `p-2 space-y-3`;
   return (
