@@ -23,7 +23,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function LoginPage() {
-  const loginPageClassname = `flex flex-col mt-32 mx-24 mb-12   
+  const loginPageClassname = `flex flex-col mt-32 md:mx-24 mb-12   
                                 items-center justify-between space-y-20`;
   return (
     <div className={loginPageClassname}>

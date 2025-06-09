@@ -13,17 +13,19 @@ import { useSelector } from "react-redux";
 
 export default function BlogDetailsPage() {
   const blogDetails = useSelector(selectBlogDetails);
-  const blogDetailsPageClassname = `flex flex-col mt-32 mx-24 mb-12   
+  const blogDetailsPageClassname = `flex flex-col mt-32 mx-12 md:mx-24 mb-12   
                                 items-center justify-between space-y-20`;
   return (
-    <div className={blogDetailsPageClassname}>
-      {blogDetails && (
-        <>
-          <HeadingText blogDetails={blogDetails} />
-          <ParagraphRenderer isHtml paragraph={blogDetails?.content} />
-        </>
-      )}
-    </div>
+    <FM_Reveal className={blogDetailsPageClassname}>
+      <>
+        {blogDetails && (
+          <>
+            <HeadingText blogDetails={blogDetails} />
+            <ParagraphRenderer isHtml paragraph={blogDetails?.content} />
+          </>
+        )}
+      </>
+    </FM_Reveal>
   );
 }
 
@@ -36,15 +38,13 @@ function HeadingText(props: HeadingTextProps) {
   const h1Classname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING2}`;
   const h2Classname = `${FONT_LEXEND.className} ${FONTSTYLE_SUBTEXT1}`;
   return (
-    <FM_Reveal className={headingTextClassname}>
-      <>
-        <h1 className={h1Classname} style={{ color: COLOR_PRIMARY }}>
-          {props.blogDetails.title}
-        </h1>
-        <h6 className={h2Classname} style={{ color: COLOR_SECONDARY }}>
-          {props.blogDetails.description}
-        </h6>
-      </>
-    </FM_Reveal>
+    <div className={headingTextClassname}>
+      <h1 className={h1Classname} style={{ color: COLOR_PRIMARY }}>
+        {props.blogDetails.title}
+      </h1>
+      <h6 className={h2Classname} style={{ color: COLOR_SECONDARY }}>
+        {props.blogDetails.description}
+      </h6>
+    </div>
   );
 }

@@ -32,7 +32,7 @@ export const createBlogSchema = yup.object({
 export const registerSchema = yup.object({
   name: yup
     .string()
-    .required("Title is required")
+    .required("Name is required")
     .min(5, "Name should be at least 5 characters.")
     .max(50, "Name should not exceed 50 characters."),
   email: yup
