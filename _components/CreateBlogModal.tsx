@@ -19,6 +19,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Toggle } from "@radix-ui/react-toggle";
 import { nanoid } from "@reduxjs/toolkit";
 import Highlight from "@tiptap/extension-highlight";
+import Table from "@tiptap/extension-table";
+import TableCell from "@tiptap/extension-table-cell";
+import TableHeader from "@tiptap/extension-table-header";
+import TableRow from "@tiptap/extension-table-row";
 import TextAlign from "@tiptap/extension-text-align";
 import { Editor, EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -33,7 +37,10 @@ import {
   Heading3,
   Highlighter,
   Italic,
+  List,
+  ListOrdered,
   Strikethrough,
+  TableIcon,
   Text,
 } from "lucide-react";
 import { useEffect } from "react";
@@ -206,6 +213,12 @@ function MainEditor(props: MainEditorProps) {
         multicolor: true,
         HTMLAttributes: { class: "hover:bg-red-500" },
       }),
+      Table.configure({
+        resizable: true,
+      }),
+      TableRow,
+      TableCell,
+      TableHeader,
     ],
     immediatelyRender: false,
     editorProps: {
@@ -297,6 +310,26 @@ function MenuBar(props: MenuBarProps) {
       icon: <AlignJustify className="w-6 h-6" />,
       onClick: () => editor.chain().focus().setTextAlign("justify").run(),
       pressed: editor.isActive({ textAlign: "justify" }),
+    },
+    {
+      icon: <List className="w-6 h-6" />,
+      onClick: () => editor.chain().focus().toggleBulletList().run(),
+      pressed: editor.isActive("bulletList"),
+    },
+    {
+      icon: <ListOrdered className="w-6 h-6" />,
+      onClick: () => editor.chain().focus().toggleOrderedList().run(),
+      pressed: editor.isActive("orderedList"),
+    },
+    {
+      icon: <TableIcon className="w-6 h-6" />,
+      onClick: () =>
+        editor
+          .chain()
+          .focus()
+          .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+          .run(),
+      pressed: false,
     },
   ];
 
