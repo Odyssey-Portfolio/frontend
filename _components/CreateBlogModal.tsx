@@ -18,6 +18,7 @@ import { deserialize } from "@/utils/JsonUtils";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Toggle } from "@radix-ui/react-toggle";
 import { nanoid } from "@reduxjs/toolkit";
+import BulletList from "@tiptap/extension-bullet-list";
 import Highlight from "@tiptap/extension-highlight";
 import Table from "@tiptap/extension-table";
 import TableCell from "@tiptap/extension-table-cell";
@@ -47,14 +48,15 @@ import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
+import "../app/globals.css";
 import Button, { ButtonVariants } from "./AtomicComponents/Button";
 import ImageUploader from "./AtomicComponents/ImageUploader";
 import TextInput from "./AtomicComponents/TextInput";
 
 export default function CreateBlogModal() {
   const backdropClassname = `fixed inset-0 bg-gray-500/50 transition-opacity 
-                              flex flex-col justify-center items-center`;
-  const modalClassname = `z-40 w-11/12 md:w-8/12 h-96 rounded-lg px-4 py-3 flex flex-col 
+                              flex flex-col justify-center items-center py-6`;
+  const modalClassname = `z-40 w-11/12 md:w-8/12 h-full rounded-lg px-4 py-3 flex flex-col 
                           space-y-5`;
   const dispatch = useDispatch<AppDispatch>();
   const apiResponse = useSelector(selectCreateBlogResponse);
@@ -204,6 +206,12 @@ function MainEditor(props: MainEditorProps) {
   const errorClassname = `text-red-500 text-sm font-bold`;
   const { setValue } = useFormContext();
   const editor = useEditor({
+    editorProps: {
+      attributes: {
+        class:
+          "max-h-96 border rounded-md bg-slate-50 py-2 px-3 overflow-y-scroll max-w-none prose",
+      },
+    },
     extensions: [
       StarterKit,
       TextAlign.configure({
@@ -216,17 +224,34 @@ function MainEditor(props: MainEditorProps) {
       Table.configure({
         resizable: true,
       }),
+      TableHeader,
       TableRow,
       TableCell,
+      BulletList.configure({
+        HTMLAttributes: {
+          class: "list-disc ml-5",
+        },
+      }),
+      TableCell.extend({
+        addAttributes() {
+          return {
+            backgroundColor: {
+              default: null,
+              parseHTML: (element) =>
+                element.getAttribute("data-background-color"),
+              renderHTML: (attributes) => {
+                return {
+                  "data-background-color": attributes.backgroundColor,
+                  style: `background-color: ${attributes.backgroundColor}`,
+                };
+              },
+            },
+          };
+        },
+      }),
       TableHeader,
     ],
-    immediatelyRender: false,
-    editorProps: {
-      attributes: {
-        class:
-          "min-h-80 max-h-[10px] border rounded-md bg-slate-50 py-2 px-3 overflow-y-scroll",
-      },
-    },
+    // immediatelyRender: false,
     onUpdate: ({ editor }) => {
       setValue("content", editor.getHTML());
     },
@@ -323,13 +348,15 @@ function MenuBar(props: MenuBarProps) {
     },
     {
       icon: <TableIcon className="w-6 h-6" />,
-      onClick: () =>
+      onClick: () => {
+        // Step 1: Insert the table
         editor
           .chain()
           .focus()
-          .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
-          .run(),
-      pressed: false,
+          .insertTable({ rows: 2, cols: 3, withHeaderRow: true })
+          .run();
+      },
+      pressed: editor.isActive("table"),
     },
   ];
 
