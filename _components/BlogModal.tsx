@@ -40,6 +40,7 @@ import {
   Italic,
   List,
   ListOrdered,
+  PlusCircleIcon,
   Strikethrough,
   TableIcon,
   Text,
@@ -53,7 +54,7 @@ import Button, { ButtonVariants } from "./AtomicComponents/Button";
 import ImageUploader from "./AtomicComponents/ImageUploader";
 import TextInput from "./AtomicComponents/TextInput";
 
-export default function CreateBlogModal() {
+export default function BlogModal() {
   const backdropClassname = `fixed inset-0 bg-gray-500/50 transition-opacity 
                               flex flex-col justify-center items-center py-6`;
   const modalClassname = `z-40 w-11/12 md:w-8/12 h-full rounded-lg px-4 py-3 flex flex-col 
@@ -139,7 +140,7 @@ function HeaderSection(props: HeaderSectionProps) {
 
   return (
     <div className={headerClassname}>
-      <div className={titleClassname}>Create a Post</div>
+      <div className={titleClassname}>Create a Blog</div>
       <div className={buttonGroupClassname}>
         <Button label="Submit" onClick={handleSubmit(props.onSubmit)} />
         <Button
@@ -202,14 +203,14 @@ interface MainEditorProps {
   error?: string;
 }
 function MainEditor(props: MainEditorProps) {
-  const editorClassname = `flex flex-col space-y-2`;
+  const editorWrapperClassname = `flex flex-col space-y-2`;
+  const editorClassname = `h-80 border rounded-md bg-slate-50 py-2 px-3 overflow-y-scroll max-w-none prose`;
   const errorClassname = `text-red-500 text-sm font-bold`;
   const { setValue } = useFormContext();
   const editor = useEditor({
     editorProps: {
       attributes: {
-        class:
-          "max-h-96 border rounded-md bg-slate-50 py-2 px-3 overflow-y-scroll max-w-none prose",
+        class: editorClassname,
       },
     },
     extensions: [
@@ -232,33 +233,16 @@ function MainEditor(props: MainEditorProps) {
           class: "list-disc ml-5",
         },
       }),
-      TableCell.extend({
-        addAttributes() {
-          return {
-            backgroundColor: {
-              default: null,
-              parseHTML: (element) =>
-                element.getAttribute("data-background-color"),
-              renderHTML: (attributes) => {
-                return {
-                  "data-background-color": attributes.backgroundColor,
-                  style: `background-color: ${attributes.backgroundColor}`,
-                };
-              },
-            },
-          };
-        },
-      }),
       TableHeader,
     ],
-    // immediatelyRender: false,
+    immediatelyRender: true,
     onUpdate: ({ editor }) => {
       setValue("content", editor.getHTML());
     },
   });
 
   return (
-    <div className={editorClassname}>
+    <div className={editorWrapperClassname}>
       {props.error && <div className={errorClassname}>{props.error}</div>}
       <MenuBar editor={editor} />
       <EditorContent editor={editor} />
@@ -355,6 +339,14 @@ function MenuBar(props: MenuBarProps) {
           .focus()
           .insertTable({ rows: 2, cols: 3, withHeaderRow: true })
           .run();
+      },
+      pressed: editor.isActive("table"),
+    },
+    {
+      icon: <PlusCircleIcon className="w-6 h-6" />,
+      onClick: () => {
+        // Step 1: Insert the table
+        editor.chain().focus().addRowAfter().run();
       },
       pressed: editor.isActive("table"),
     },

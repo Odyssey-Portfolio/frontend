@@ -4,7 +4,9 @@ import ParagraphRenderer from "@/_components/ParagraphRenderer";
 import { COLOR_PRIMARY, COLOR_SECONDARY } from "@/_constants/Colors";
 import {
   FONT_LEXEND,
+  FONT_POPPINS,
   FONTSTYLE_HEADING2,
+  FONTSTYLE_PARAGRAPH1,
   FONTSTYLE_SUBTEXT1,
 } from "@/_constants/Fonts";
 import { GetBlog } from "@/_models/GetBlog";
@@ -52,7 +54,11 @@ function ParagraphRendererWrapper(props: BlogDetailsProps) {
   const paragraphRendererWrapperClassname = `mx-12 md:mx-56`;
   return (
     <div className={paragraphRendererWrapperClassname}>
-      <ParagraphRenderer isHtml paragraph={props.blogDetails?.content} />
+      <ParagraphRenderer
+        isHtml
+        customTailwindStyle={`${FONT_POPPINS.className} ${FONTSTYLE_PARAGRAPH1} leading-10`}
+        paragraph={props.blogDetails?.content}
+      />
     </div>
   );
 }

@@ -1,4 +1,5 @@
-import { COLOR_PRIMARY } from "@/_constants/Colors";
+import { ROLE_ADMIN } from "@/_constants/Auth";
+import { COLOR_PRIMARY, COLOR_RED } from "@/_constants/Colors";
 import {
   FONT_LEXEND,
   FONT_POPPINS,
@@ -12,6 +13,7 @@ import { BookOpenIcon } from "@heroicons/react/16/solid";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
+import Authorizer from "./Authorizer";
 
 interface BlogCardProps {
   blog: GetBlog;
@@ -40,11 +42,38 @@ export default function BlogCard(props: BlogCardProps) {
             borderRadius: 25,
           }}
         />
+        <Authorizer roles={[ROLE_ADMIN]}>
+          <AdminButtonSection />
+        </Authorizer>
       </div>
       <div className={detailsClassname}>
         <TitleSection {...props} />
         <GoToBlogSection {...props} />
       </div>
+    </div>
+  );
+}
+
+function AdminButtonSection() {
+  const adminButtonWrapperClassname = `absolute top-2 right-2 px-2 py-1 flex flex-row justify-between space-x-1`;
+  const updateBlogButtonClasssname = `bg-red-500 text-white 
+  text-xs px-2 py-1 rounded-full shadow-md hover:bg-red-600 transition-all`;
+  const deleteBlogButtonClasssname = `text-white 
+  text-xs px-2 py-1 rounded-full shadow-md hover:bg-red-600 transition-all`;
+  return (
+    <div className={adminButtonWrapperClassname}>
+      <button
+        className={updateBlogButtonClasssname}
+        style={{ backgroundColor: COLOR_PRIMARY }}
+      >
+        Update
+      </button>
+      <button
+        className={deleteBlogButtonClasssname}
+        style={{ backgroundColor: COLOR_RED }}
+      >
+        Remove
+      </button>
     </div>
   );
 }

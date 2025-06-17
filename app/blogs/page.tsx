@@ -2,7 +2,7 @@
 import Spinner from "@/_components/AtomicComponents/Spinner";
 import Authorizer from "@/_components/Authorizer";
 import BlogCard from "@/_components/BlogCard";
-import CreateBlogModal from "@/_components/CreateBlogModal";
+import BlogModal from "@/_components/BlogModal";
 import EmptyList from "@/_components/EmptyList";
 import ExpandOnFocusButton from "@/_components/ExpandOnFocusButton";
 import FM_Reveal from "@/_components/FramerMotion/FM_Reveal";
@@ -121,7 +121,7 @@ function BlogPageActions() {
             );
           })}
         </div>
-        {createBlogModalVisibility && <CreateBlogModal />}
+        {createBlogModalVisibility && <BlogModal />}
         {aboutBlogPageModalVisibility && (
           <Modal
             title={CONTENT_BLOG_ABOUT_TITLE}

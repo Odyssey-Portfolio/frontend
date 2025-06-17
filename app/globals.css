@@ -4,7 +4,6 @@
 
 /* add the code bellow */
 @layer utilities {
-
   /* Hide scrollbar for Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
@@ -90,17 +89,17 @@
 
 @layer base {
   body {
-    @apply bg-background text-foreground
+    @apply bg-background text-foreground;
   }
   h1 {
-    @apply text-2xl font-bold
+    @apply text-2xl font-bold;
   }
   h2 {
-    @apply text-xl font-bold
+    @apply text-xl font-bold;
   }
   h3 {
-    @apply text-lg font-bold
-  }  
+    @apply text-lg font-bold;
+  }
 }
 /* Basic editor styles */
 .tiptap :first-child {
@@ -108,7 +107,8 @@
 }
 
 /* Table styling */
-.tiptap table {
+.tiptap table,
+table {
   border-collapse: collapse;
   margin: 0;
   overflow: hidden;
@@ -117,7 +117,9 @@
 }
 
 .tiptap table td,
-.tiptap table th {
+.tiptap table th,
+th,
+td {
   border: 1px solid var(--gray-3);
   box-sizing: border-box;
   min-width: 1em;
@@ -126,12 +128,13 @@
   vertical-align: top;
 }
 
-.tiptap table td>*,
-.tiptap table th>* {
+.tiptap table td > *,
+.tiptap table th > * {
   margin-bottom: 0;
 }
 
-.tiptap table th {
+.tiptap table th,
+th {
   background-color: var(--gray-1);
   font-weight: bold;
   text-align: left;
@@ -141,6 +144,7 @@
   background: var(--gray-2);
   content: "";
   position: absolute;
+  opacity: 0.25;
   top: 0;
   right: 0;
   bottom: 0;

@@ -7,6 +7,7 @@ export interface ParagraphRendererProps {
   paragraph: string;
   lineHeight?: number;
   isHtml?: boolean;
+  customTailwindStyle?: string;
 }
 export default function ParagraphRenderer(props: ParagraphRendererProps) {
   const [chunks, setChunks] = useState<string[]>();
@@ -18,7 +19,7 @@ export default function ParagraphRenderer(props: ParagraphRendererProps) {
   return (
     <>
       {props.isHtml ? (
-        <>{parse(props.paragraph)}</>
+        <HtmlContent {...props} />
       ) : (
         <>
           {chunks &&
@@ -35,4 +36,12 @@ export default function ParagraphRenderer(props: ParagraphRendererProps) {
       )}
     </>
   );
+}
+
+function HtmlContent(props: ParagraphRendererProps) {
+  if (props.customTailwindStyle)
+    return (
+      <div className={props.customTailwindStyle}>{parse(props.paragraph)}</div>
+    );
+  return <>{parse(props.paragraph)}</>;
 }
