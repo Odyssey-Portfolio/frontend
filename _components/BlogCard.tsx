@@ -8,6 +8,11 @@ import {
 } from "@/_constants/Fonts";
 import { GetBlog } from "@/_models/GetBlog";
 import { setBlogDetails } from "@/_redux/blogDetailsPage/blogDetailsPageActions";
+import {
+  setBlog,
+  setIsUpdateMode,
+  setVisibility,
+} from "@/_redux/blogModal/blogModalSlice";
 import { AppDispatch } from "@/_redux/store";
 import { BookOpenIcon } from "@heroicons/react/16/solid";
 import Image from "next/image";
@@ -43,7 +48,7 @@ export default function BlogCard(props: BlogCardProps) {
           }}
         />
         <Authorizer roles={[ROLE_ADMIN]}>
-          <AdminButtonSection />
+          <AdminButtonSection {...props} />
         </Authorizer>
       </div>
       <div className={detailsClassname}>
@@ -54,15 +59,24 @@ export default function BlogCard(props: BlogCardProps) {
   );
 }
 
-function AdminButtonSection() {
-  const adminButtonWrapperClassname = `absolute top-2 right-2 px-2 py-1 flex flex-row justify-between space-x-1`;
-  const updateBlogButtonClasssname = `bg-red-500 text-white 
-  text-xs px-2 py-1 rounded-full shadow-md hover:bg-red-600 transition-all`;
-  const deleteBlogButtonClasssname = `text-white 
-  text-xs px-2 py-1 rounded-full shadow-md hover:bg-red-600 transition-all`;
+function AdminButtonSection(props: BlogCardProps) {
+  const adminButtonWrapperClassname = `absolute top-2 right-2 px-2 py-1 flex 
+    flex-row justify-between space-x-1`;
+  const updateBlogButtonClasssname = `${FONT_POPPINS.className} text-white 
+    text-xs md:text-lg px-3 py-1 rounded-full shadow-md transition-all`;
+  const deleteBlogButtonClasssname = `${FONT_POPPINS.className} text-white 
+    text-xs md:text-lg px-3 py-1 rounded-full shadow-md transition-all`;
+  const dispatch = useDispatch();
+
+  const openBlogModal = () => {
+    dispatch(setBlog(props.blog));
+    dispatch(setVisibility(true));
+    dispatch(setIsUpdateMode(true));
+  };
   return (
     <div className={adminButtonWrapperClassname}>
       <button
+        onClick={openBlogModal}
         className={updateBlogButtonClasssname}
         style={{ backgroundColor: COLOR_PRIMARY }}
       >

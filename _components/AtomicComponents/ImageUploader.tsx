@@ -4,17 +4,21 @@ import Image from "next/image";
 import { useState } from "react";
 
 interface ImageUploaderProps {
+  defaultImage?: string | null;
+  viewMode?: boolean;
   label?: string;
   onChange?: (imageString: File | null) => void;
   error?: string;
 }
 
 export default function ImageUploader({
+  viewMode,
+  defaultImage,
   label,
   onChange,
   error,
 }: ImageUploaderProps) {
-  const [image, setImage] = useState<string | null>(null);
+  const [image, setImage] = useState(defaultImage);
   const errorClassname = `text-red-500 text-sm font-bold`;
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,12 +48,14 @@ export default function ImageUploader({
               fill
               className="object-cover rounded-lg"
             />
-            <button
-              onClick={handleRemoveImage}
-              className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full shadow-md hover:bg-red-600 transition-all"
-            >
-              Remove
-            </button>
+            {!viewMode && (
+              <button
+                onClick={handleRemoveImage}
+                className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full shadow-md hover:bg-red-600 transition-all"
+              >
+                Remove
+              </button>
+            )}
           </div>
         ) : (
           <>

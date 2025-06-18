@@ -5,13 +5,14 @@ import { CREATED, UNAUTHORIZED } from "@/_constants/ResponseCodes";
 import { createBlogSchema } from "@/_constants/ValidationSchema";
 import { CreateBlog } from "@/_models/CreateBlog";
 import { LoggedInUser } from "@/_models/LoggedInUser";
-import { clearCreateBlogResponse } from "@/_redux/createBlogModal/createBlogModalActions";
-import { selectCreateBlogResponse } from "@/_redux/createBlogModal/createBlogModalSelector";
+import { clearCreateBlogResponse } from "@/_redux/blogModal/blogModalActions";
 import {
-  setIsLoading,
-  setVisibility,
-} from "@/_redux/createBlogModal/createBlogModalSlice";
-import { createBlogThunk } from "@/_redux/createBlogModal/createBlogModalThunk";
+  selectBlog,
+  selectCreateBlogResponse,
+  selectUpdateMode,
+} from "@/_redux/blogModal/blogModalSelector";
+import { setIsLoading, setVisibility } from "@/_redux/blogModal/blogModalSlice";
+import { createBlogThunk } from "@/_redux/blogModal/blogModalThunk";
 import { setSnackbarMessage } from "@/_redux/snackbar/snackbarActions";
 import { AppDispatch } from "@/_redux/store";
 import { deserialize } from "@/utils/JsonUtils";
@@ -59,10 +60,22 @@ export default function BlogModal() {
                               flex flex-col justify-center items-center py-6`;
   const modalClassname = `z-40 w-11/12 md:w-8/12 h-full rounded-lg px-4 py-3 flex flex-col 
                           space-y-5`;
+
   const dispatch = useDispatch<AppDispatch>();
   const apiResponse = useSelector(selectCreateBlogResponse);
+  const isUpdateMode = useSelector(selectUpdateMode);
+  const selectedBlog = useSelector(selectBlog);
   const methods = useForm<CreateBlog>({
     resolver: yupResolver<CreateBlog>(createBlogSchema),
+    ...(isUpdateMode &&
+      selectedBlog && {
+        defaultValues: {
+          title: selectedBlog.title,
+          content: selectedBlog.content,
+          description: selectedBlog.description,
+          image: selectedBlog.image,
+        },
+      }),
   });
 
   const getUserId = (): string => {
@@ -77,11 +90,23 @@ export default function BlogModal() {
     return "";
   };
 
-  const onSubmit = () => {
+  const createNewBlog = () => {
     const newBlog = methods.getValues();
     newBlog.userId = getUserId();
     dispatch(setIsLoading(true));
     dispatch(createBlogThunk(newBlog));
+  };
+
+  const updateExistingBlog = () => {
+    const existingBlog = methods.getValues();
+    existingBlog.userId = getUserId();
+    dispatch(setIsLoading(true));
+    dispatch(createBlogThunk(existingBlog));
+  };
+
+  const onSubmit = () => {
+    if (isUpdateMode) updateExistingBlog();
+    else createNewBlog();
   };
 
   useEffect(() => {
@@ -134,13 +159,15 @@ function HeaderSection(props: HeaderSectionProps) {
   const headerClassname = `flex flex-col md:flex-row justify-between items-center`;
   const titleClassname = `${FONT_LEXEND.className} ${FONTSTYLE_SUBTEXT3}`;
   const buttonGroupClassname = `flex flex-row space-x-2 items-center`;
-
+  const isUpdateMode = useSelector(selectUpdateMode);
   const { handleSubmit } = useFormContext();
   const dispatch = useDispatch();
 
   return (
     <div className={headerClassname}>
-      <div className={titleClassname}>Create a Blog</div>
+      <div className={titleClassname}>
+        {isUpdateMode ? "Update the Blog" : " Create a Blog"}
+      </div>
       <div className={buttonGroupClassname}>
         <Button label="Submit" onClick={handleSubmit(props.onSubmit)} />
         <Button
@@ -171,14 +198,19 @@ function MetadataEditor() {
   const textInputContainerClassname = `md:w-9/12 space-y-3 md:px-2`;
   const imageUploaderContainerClassname = `md:w-3/12`;
   const {
+    getValues,
     register,
     setValue,
     formState: { errors },
   } = useFormContext();
+  const updateMode = useSelector(selectUpdateMode);
+  const viewMode = updateMode;
   return (
     <div className={metadataContainerClassname}>
       <div className={imageUploaderContainerClassname}>
         <ImageUploader
+          viewMode={viewMode}
+          defaultImage={getValues("image")}
           onChange={(imageString) => setValue("image", imageString)}
           error={errors["image"]?.message as string | undefined}
         />
@@ -188,11 +220,13 @@ function MetadataEditor() {
           label="Title"
           {...register("title")}
           error={errors["title"]?.message as string | undefined}
+          disabled={viewMode}
         />
         <TextInput
           label="Description"
           {...register("description")}
           error={errors["description"]?.message as string | undefined}
+          disabled={viewMode}
         />
       </div>
     </div>
@@ -206,7 +240,8 @@ function MainEditor(props: MainEditorProps) {
   const editorWrapperClassname = `flex flex-col space-y-2`;
   const editorClassname = `h-80 border rounded-md bg-slate-50 py-2 px-3 overflow-y-scroll max-w-none prose`;
   const errorClassname = `text-red-500 text-sm font-bold`;
-  const { setValue } = useFormContext();
+  const { getValues, setValue } = useFormContext();
+  const updateMode = useSelector(selectUpdateMode);
   const editor = useEditor({
     editorProps: {
       attributes: {
@@ -239,6 +274,7 @@ function MainEditor(props: MainEditorProps) {
     onUpdate: ({ editor }) => {
       setValue("content", editor.getHTML());
     },
+    content: updateMode && getValues("content"),
   });
 
   return (
