@@ -24,6 +24,7 @@ import { Toggle } from "@radix-ui/react-toggle";
 import { nanoid } from "@reduxjs/toolkit";
 import BulletList from "@tiptap/extension-bullet-list";
 import Highlight from "@tiptap/extension-highlight";
+import Image from "@tiptap/extension-image";
 import Table from "@tiptap/extension-table";
 import TableCell from "@tiptap/extension-table-cell";
 import TableHeader from "@tiptap/extension-table-header";
@@ -41,6 +42,7 @@ import {
   Heading2,
   Heading3,
   Highlighter,
+  ImageIcon,
   Italic,
   List,
   ListOrdered,
@@ -53,6 +55,7 @@ import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
+import ImageResize from "tiptap-extension-resize-image";
 import { UpdateBlog } from "../_models/UpdateBlog";
 import "../app/globals.css";
 import Button, { ButtonVariants } from "./AtomicComponents/Button";
@@ -278,6 +281,10 @@ function MainEditor(props: MainEditorProps) {
       TableHeader,
       TableRow,
       TableCell,
+      Image.configure({
+        allowBase64: true,
+      }),
+      ImageResize,
       BulletList.configure({
         HTMLAttributes: {
           class: "list-disc ml-5",
@@ -396,8 +403,30 @@ function MenuBar(props: MenuBarProps) {
     {
       icon: <PlusCircleIcon className="w-6 h-6" />,
       onClick: () => {
-        // Step 1: Insert the table
         editor.chain().focus().addRowAfter().run();
+      },
+      pressed: editor.isActive("table"),
+    },
+    {
+      icon: <ImageIcon className="w-6 h-6" />,
+      onClick: () => {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = "image/*";
+
+        input.onchange = async () => {
+          const file = input.files?.[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = () => {
+              const base64 = reader.result as string;
+              editor.chain().focus().setImage({ src: base64 }).run();
+            };
+            reader.readAsDataURL(file); // This encodes to base64
+          }
+        };
+
+        input.click();
       },
       pressed: editor.isActive("table"),
     },
