@@ -1,7 +1,7 @@
 import { LOGGED_IN_USER } from "@/_constants/Auth";
 import { COLOR_WHITE } from "@/_constants/Colors";
 import { FONT_LEXEND, FONTSTYLE_SUBTEXT3 } from "@/_constants/Fonts";
-import { CREATED, UNAUTHORIZED } from "@/_constants/ResponseCodes";
+import { CREATED, SUCCESS, UNAUTHORIZED } from "@/_constants/ResponseCodes";
 import { createBlogSchema } from "@/_constants/ValidationSchema";
 import { CreateBlog } from "@/_models/CreateBlog";
 import { LoggedInUser } from "@/_models/LoggedInUser";
@@ -12,7 +12,10 @@ import {
   selectUpdateMode,
 } from "@/_redux/blogModal/blogModalSelector";
 import { setIsLoading, setVisibility } from "@/_redux/blogModal/blogModalSlice";
-import { createBlogThunk } from "@/_redux/blogModal/blogModalThunk";
+import {
+  createBlogThunk,
+  updateBlogThunk,
+} from "@/_redux/blogModal/blogModalThunk";
 import { setSnackbarMessage } from "@/_redux/snackbar/snackbarActions";
 import { AppDispatch } from "@/_redux/store";
 import { deserialize } from "@/utils/JsonUtils";
@@ -50,6 +53,7 @@ import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
+import { UpdateBlog } from "../_models/UpdateBlog";
 import "../app/globals.css";
 import Button, { ButtonVariants } from "./AtomicComponents/Button";
 import ImageUploader from "./AtomicComponents/ImageUploader";
@@ -90,6 +94,14 @@ export default function BlogModal() {
     return "";
   };
 
+  const buildUpdateBlog = (createBlog: CreateBlog): UpdateBlog => {
+    return {
+      id: selectedBlog?.id as string,
+      content: createBlog.content,
+      userId: getUserId(),
+    };
+  };
+
   const createNewBlog = () => {
     const newBlog = methods.getValues();
     newBlog.userId = getUserId();
@@ -101,7 +113,7 @@ export default function BlogModal() {
     const existingBlog = methods.getValues();
     existingBlog.userId = getUserId();
     dispatch(setIsLoading(true));
-    dispatch(createBlogThunk(existingBlog));
+    dispatch(updateBlogThunk(buildUpdateBlog(existingBlog)));
   };
 
   const onSubmit = () => {
@@ -118,7 +130,10 @@ export default function BlogModal() {
           type: "error",
         })
       );
-    else if (apiResponse && apiResponse.statusCode === CREATED) {
+    else if (
+      apiResponse &&
+      (apiResponse.statusCode === CREATED || apiResponse.statusCode === SUCCESS)
+    ) {
       dispatch(
         setSnackbarMessage({
           id: nanoid(),

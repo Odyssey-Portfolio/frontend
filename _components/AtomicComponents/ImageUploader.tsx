@@ -38,6 +38,7 @@ export default function ImageUploader({
   return (
     <div className="flex flex-col gap-2">
       {label && <label className="text-gray-700 font-medium">{label}</label>}
+      {error && <div className={errorClassname}>{error}</div>}
 
       <div className="relative flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 hover:border-blue-500 transition-all duration-200">
         {image ? (
@@ -65,11 +66,7 @@ export default function ImageUploader({
               className="absolute w-full h-full opacity-0 cursor-pointer"
               onChange={handleImageUpload}
             />
-            {!error ? (
-              <p className="text-gray-500 text-sm">Click to upload an image</p>
-            ) : (
-              <div className={errorClassname}>{error}</div>
-            )}
+            <p className="text-gray-500 text-sm">Click to upload an image</p>
           </>
         )}
       </div>
