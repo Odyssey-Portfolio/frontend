@@ -78,6 +78,7 @@ export default function BlogModal() {
       selectedBlog && {
         defaultValues: {
           title: selectedBlog.title,
+          isUpdateMode: isUpdateMode,
           content: selectedBlog.content,
           description: selectedBlog.description,
           image: selectedBlog.image,
