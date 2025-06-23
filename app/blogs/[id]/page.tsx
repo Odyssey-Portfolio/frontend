@@ -6,11 +6,13 @@ import {
   FONT_LEXEND,
   FONT_POPPINS,
   FONTSTYLE_HEADING2,
+  FONTSTYLE_HEADING4,
   FONTSTYLE_PARAGRAPH1,
 } from "@/_constants/Fonts";
 import { GetBlog } from "@/_models/GetBlog";
 import { selectBlogDetails } from "@/_redux/blogDetailsPage/blogDetailsPageSelector";
 import { useSelector } from "react-redux";
+import { useIsMediumScreen } from "../../../_hooks/useIsMediumScreen";
 
 export default function BlogDetailsPage() {
   const blogDetails = useSelector(selectBlogDetails);
@@ -35,7 +37,8 @@ interface BlogDetailsProps {
 
 function HeadingText(props: BlogDetailsProps) {
   const headingTextClassname = `mx-12 text-center space-y-2`;
-  const h1Classname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING2}`;
+  const isMediumScreen = useIsMediumScreen()
+  const h1Classname = `${FONT_LEXEND.className} ${isMediumScreen ? FONTSTYLE_HEADING2 : FONTSTYLE_HEADING4}`;
   return (
     <div className={headingTextClassname}>
       <h1 className={h1Classname} style={{ color: COLOR_PRIMARY }}>
