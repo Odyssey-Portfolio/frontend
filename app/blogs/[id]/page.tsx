@@ -1,13 +1,12 @@
 "use client";
 import FM_Reveal from "@/_components/FramerMotion/FM_Reveal";
 import ParagraphRenderer from "@/_components/ParagraphRenderer";
-import { COLOR_PRIMARY, COLOR_SECONDARY } from "@/_constants/Colors";
+import { COLOR_PRIMARY } from "@/_constants/Colors";
 import {
   FONT_LEXEND,
   FONT_POPPINS,
   FONTSTYLE_HEADING2,
   FONTSTYLE_PARAGRAPH1,
-  FONTSTYLE_SUBTEXT1,
 } from "@/_constants/Fonts";
 import { GetBlog } from "@/_models/GetBlog";
 import { selectBlogDetails } from "@/_redux/blogDetailsPage/blogDetailsPageSelector";
@@ -37,15 +36,11 @@ interface BlogDetailsProps {
 function HeadingText(props: BlogDetailsProps) {
   const headingTextClassname = `mx-12 text-center space-y-2`;
   const h1Classname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING2}`;
-  const h2Classname = `${FONT_LEXEND.className} ${FONTSTYLE_SUBTEXT1}`;
   return (
     <div className={headingTextClassname}>
       <h1 className={h1Classname} style={{ color: COLOR_PRIMARY }}>
         {props.blogDetails.title}
       </h1>
-      <h6 className={h2Classname} style={{ color: COLOR_SECONDARY }}>
-        {props.blogDetails.description}
-      </h6>
     </div>
   );
 }

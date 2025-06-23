@@ -24,6 +24,7 @@ import { Toggle } from "@radix-ui/react-toggle";
 import { nanoid } from "@reduxjs/toolkit";
 import BulletList from "@tiptap/extension-bullet-list";
 import Highlight from "@tiptap/extension-highlight";
+import HardBreak from '@tiptap/extension-hard-break'
 import Image from "@tiptap/extension-image";
 import Table from "@tiptap/extension-table";
 import TableCell from "@tiptap/extension-table-cell";
@@ -268,7 +269,14 @@ function MainEditor(props: MainEditorProps) {
       },
     },
     extensions: [
-      StarterKit,
+        StarterKit,
+        HardBreak.extend({
+            addKeyboardShortcuts() {
+                return {
+                    Enter: () => this.editor.commands.setHardBreak()
+                }
+            }
+        }),
       TextAlign.configure({
         types: ["heading", "paragraph"],
       }),
@@ -421,7 +429,7 @@ function MenuBar(props: MenuBarProps) {
             const reader = new FileReader();
             reader.onload = () => {
               const base64 = reader.result as string;
-              editor.chain().focus().setImage({ src: base64 }).run();
+              editor.chain().focus().setImage({ src: base64, title: "Test"}).run();
             };
             reader.readAsDataURL(file); // This encodes to base64
           }
