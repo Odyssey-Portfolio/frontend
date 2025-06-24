@@ -10,20 +10,28 @@ import TableHeader from "@tiptap/extension-table-header";
 import TableRow from "@tiptap/extension-table-row";
 import TextAlign from "@tiptap/extension-text-align";
 import { useEditor, EditorContent, Editor } from "@tiptap/react";
+import Paragraph from '@tiptap/extension-paragraph'
 import StarterKit from "@tiptap/starter-kit";
-import { Heading1, Heading2, Heading3, Bold, Italic, Strikethrough, Highlighter, AlignLeft, AlignCenter, AlignRight, AlignJustify, List, ListOrdered, TableIcon, PlusCircleIcon, ImageIcon, Text } from "lucide-react";
+import {
+    Heading1, Heading2, Heading3,
+    Bold, Italic, Strikethrough, Highlighter, AlignLeft, AlignCenter, AlignRight, AlignJustify, List, ListOrdered, TableIcon, PlusCircleIcon, MinusCircleIcon, ImageIcon, Text
+} from "lucide-react";
 import { useSelector } from "react-redux";
 import ImageResize from "tiptap-extension-resize-image";
 import Image from "@tiptap/extension-image";
-import { selectUpdateMode } from "../../_redux/blogModal/blogModalSelector.js";
+import { selectUpdateMode } from "../../_redux/blogModal/blogModalSelector";
+import { FONTSTYLE_PARAGRAPH1, FONTSTYLE_PARAGRAPH2, FONT_POPPINS } from "../../_constants/Fonts";
+import "./TipTapEditor.css"
 
-interface MainEditorProps {
+interface TipTapEditorProps {
     error?: string;
 }
-export function TipTapEditor(props: MainEditorProps) {
-    const editorWrapperClassname = `flex flex-col space-y-2`;
-    const editorClassname = `h-80 border rounded-md bg-slate-50 py-2 px-3 overflow-y-scroll max-w-none prose`;
+export function TipTapEditor(props: TipTapEditorProps) {
+    const editorWrapperClassname = `flex flex-col space-y-2`;    
+    const editorClassname = `h-80 border rounded-md bg-slate-50 py-2 px-3 overflow-y-scroll max-w-none`
+    const editorTextClassname = `${FONT_POPPINS.className} ${FONTSTYLE_PARAGRAPH2}`    
     const errorClassname = `text-red-500 text-sm font-bold`;
+    const tableCellBaseClassname = `px-3 font-bold`
     const { getValues, setValue } = useFormContext();
     const updateMode = useSelector(selectUpdateMode);
     const editor = useEditor({
@@ -41,19 +49,36 @@ export function TipTapEditor(props: MainEditorProps) {
                     }
                 }
             }),
+            Paragraph.configure({
+                HTMLAttributes: {
+                    class: editorTextClassname,
+                },
+            }),
             TextAlign.configure({
                 types: ["heading", "paragraph"],
             }),
             Highlight.configure({
                 multicolor: true,
                 HTMLAttributes: { class: "hover:bg-red-500" },
-            }),
+            }),            
             Table.configure({
                 resizable: true,
+                HTMLAttributes: {
+                    class: `table-auto md:table-fixed w-full border-collapse border border-gray-400`}
+
             }),
-            TableHeader,
+            TableHeader.configure({
+                HTMLAttributes: {
+                    class: `border border-gray-300 bg-blue-50 ${tableCellBaseClassname}`,
+                    
+                }
+            }),            
             TableRow,
-            TableCell,
+            TableCell.configure({
+                HTMLAttributes: {
+                    class: `border border-gray-300 bg-gray-800 ${tableCellBaseClassname}`
+                }
+            }),
             Image.configure({
                 allowBase64: true,
             }),
@@ -63,7 +88,6 @@ export function TipTapEditor(props: MainEditorProps) {
                     class: "list-disc ml-5",
                 },
             }),
-            TableHeader,
         ],
         immediatelyRender: true,
         onUpdate: ({ editor }) => {
@@ -163,8 +187,7 @@ function MenuBar(props: MenuBarProps) {
         },
         {
             icon: <TableIcon className="w-6 h-6" />,
-            onClick: () => {
-                // Step 1: Insert the table
+            onClick: () => {                
                 editor
                     .chain()
                     .focus()
@@ -177,6 +200,13 @@ function MenuBar(props: MenuBarProps) {
             icon: <PlusCircleIcon className="w-6 h-6" />,
             onClick: () => {
                 editor.chain().focus().addRowAfter().run();
+            },
+            pressed: editor.isActive("table"),
+        },
+        {
+            icon: <MinusCircleIcon className="w-6 h-6" />,
+            onClick: () => {
+                editor.chain().focus().deleteRow().run();
             },
             pressed: editor.isActive("table"),
         },

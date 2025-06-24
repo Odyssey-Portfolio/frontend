@@ -102,12 +102,12 @@
   }
 }
 /* Basic editor styles */
-.tiptap :first-child {
+/*.tiptap :first-child {
   margin-top: 0;
-}
+}*/
 
 /* Table styling */
-.tiptap table,
+/*.tiptap table,
 table {
   border-collapse: collapse;
   margin: 0;
@@ -171,4 +171,4 @@ th {
 .tiptap.resize-cursor {
   cursor: ew-resize;
   cursor: col-resize;
-}
+}*/

@@ -4,10 +4,8 @@ import ParagraphRenderer from "@/_components/ParagraphRenderer";
 import { COLOR_PRIMARY } from "@/_constants/Colors";
 import {
   FONT_LEXEND,
-  FONT_POPPINS,
   FONTSTYLE_HEADING2,
   FONTSTYLE_HEADING4,
-  FONTSTYLE_PARAGRAPH1,
 } from "@/_constants/Fonts";
 import { GetBlog } from "@/_models/GetBlog";
 import { selectBlogDetails } from "@/_redux/blogDetailsPage/blogDetailsPageSelector";
@@ -53,8 +51,7 @@ function ParagraphRendererWrapper(props: BlogDetailsProps) {
   return (
     <div className={paragraphRendererWrapperClassname}>
       <ParagraphRenderer
-        isHtml
-        customTailwindStyle={`${FONT_POPPINS.className} ${FONTSTYLE_PARAGRAPH1} leading-10`}
+        isHtml        
         paragraph={props.blogDetails?.content}
       />
     </div>
