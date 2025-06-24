@@ -64,7 +64,7 @@ export function TipTapEditor(props: TipTapEditorProps) {
             Table.configure({
                 resizable: true,
                 HTMLAttributes: {
-                    class: `table-auto md:table-fixed w-full border-collapse border border-gray-400`}
+                    class: `table-auto md:table-fixed border-collapse border border-gray-400`}
 
             }),
             TableHeader.configure({
@@ -76,11 +76,12 @@ export function TipTapEditor(props: TipTapEditorProps) {
             TableRow,
             TableCell.configure({
                 HTMLAttributes: {
-                    class: `border border-gray-300 bg-gray-800 ${tableCellBaseClassname}`
+                    class: `border border-gray-300 ${tableCellBaseClassname}`
                 }
             }),
             Image.configure({
                 allowBase64: true,
+                inline:true,
             }),
             ImageResize,
             BulletList.configure({
@@ -213,21 +214,23 @@ function MenuBar(props: MenuBarProps) {
         {
             icon: <ImageIcon className="w-6 h-6" />,
             onClick: () => {
-                const input = document.createElement("input");
-                input.type = "file";
-                input.accept = "image/*";
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'image/*';
 
-                input.onchange = async () => {
-                    const file = input.files?.[0];
+                input.addEventListener('change', (e: any) => {                                    
+                    const file = e.target.files[0];
                     if (file) {
                         const reader = new FileReader();
-                        reader.onload = () => {
-                            const base64 = reader.result as string;
-                            editor.chain().focus().setImage({ src: base64, title: "Test" }).run();
+                        reader.onload = (e) => {
+                            const url = e.target?.result;
+                            console.log('Image URL:', url);
+                            editor.chain().focus().setImage({ src: url }).run();
                         };
-                        reader.readAsDataURL(file); // This encodes to base64
+
+                        reader.readAsDataURL(file);
                     }
-                };
+                });
 
                 input.click();
             },
