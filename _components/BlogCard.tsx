@@ -26,11 +26,11 @@ interface BlogCardProps {
 }
 export default function BlogCard(props: BlogCardProps) {
   const blogCardClassname = `relative rounded-lg flex flex-col md:h-full`;
-  const imageClassname = `h-64 w-full`;
+  const imageWrapperClassname = `flex flex-row justify-center`;
   const detailsClassname = `p-2 space-y-3`;
   return (
     <div className={blogCardClassname}>
-      <div className={imageClassname}>
+      <div className={imageWrapperClassname}>
         <Image
           src={
             props.isImageB64
@@ -42,8 +42,8 @@ export default function BlogCard(props: BlogCardProps) {
           height={0}
           sizes="100vh"
           style={{
-            height: "100%",
-            width: "100%",
+            height: "auto",
+            width: "60%",
             borderRadius: 25,
           }}
         />

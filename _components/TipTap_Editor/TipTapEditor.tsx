@@ -34,6 +34,7 @@ export function TipTapEditor(props: TipTapEditorProps) {
     const tableCellBaseClassname = `px-3 font-bold`
     const { getValues, setValue } = useFormContext();
     const updateMode = useSelector(selectUpdateMode);
+    const htmlContent: Content | null = updateMode ? getValues("content") : null;    
     const editor = useEditor({
         editorProps: {
             attributes: {
@@ -81,7 +82,7 @@ export function TipTapEditor(props: TipTapEditorProps) {
             }),
             Image.configure({
                 allowBase64: true,
-                inline:true,
+                inline: true,
             }),
             ImageResize,
             BulletList.configure({
@@ -94,7 +95,7 @@ export function TipTapEditor(props: TipTapEditorProps) {
         onUpdate: ({ editor }) => {
             setValue("content", editor.getHTML());
         },
-        content: updateMode && getValues("content"),
+        content: htmlContent,
     });
 
     return (

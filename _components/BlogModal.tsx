@@ -41,19 +41,19 @@ export default function BlogModal() {
   const dispatch = useDispatch<AppDispatch>();
   const apiResponse = useSelector(selectCreateBlogResponse);
   const isUpdateMode = useSelector(selectUpdateMode);
-  const selectedBlog = useSelector(selectBlog);
+  const selectedBlog = useSelector(selectBlog);  
   const methods = useForm<CreateBlog>({
     resolver: yupResolver<CreateBlog>(createBlogSchema),
     ...(isUpdateMode &&
       selectedBlog && {
-        defaultValues: {
+      defaultValues: {
           title: selectedBlog.title,
           isUpdateMode: isUpdateMode,
-          content: selectedBlog.content,
+          content: selectedBlog?.content,
           description: selectedBlog.description,
           image: selectedBlog.image,
-        },
-      }),
+      },
+    }),
   });
 
   const getUserId = (): string => {
