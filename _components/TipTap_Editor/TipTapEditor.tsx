@@ -9,7 +9,7 @@ import TableCell from "@tiptap/extension-table-cell";
 import TableHeader from "@tiptap/extension-table-header";
 import TableRow from "@tiptap/extension-table-row";
 import TextAlign from "@tiptap/extension-text-align";
-import { useEditor, EditorContent, Editor } from "@tiptap/react";
+import { useEditor, EditorContent, Editor, Content } from "@tiptap/react";
 import Paragraph from '@tiptap/extension-paragraph'
 import StarterKit from "@tiptap/starter-kit";
 import {
@@ -17,10 +17,10 @@ import {
     Bold, Italic, Strikethrough, Highlighter, AlignLeft, AlignCenter, AlignRight, AlignJustify, List, ListOrdered, TableIcon, PlusCircleIcon, MinusCircleIcon, ImageIcon, Text
 } from "lucide-react";
 import { useSelector } from "react-redux";
-import ImageResize from "tiptap-extension-resize-image";
 import Image from "@tiptap/extension-image";
+import ImageResize from 'tiptap-extension-resize-image';
 import { selectUpdateMode } from "../../_redux/blogModal/blogModalSelector";
-import { FONTSTYLE_PARAGRAPH1, FONTSTYLE_PARAGRAPH2, FONT_POPPINS } from "../../_constants/Fonts";
+import { FONTSTYLE_PARAGRAPH2, FONT_POPPINS } from "../../_constants/Fonts";
 import "./TipTapEditor.css"
 
 interface TipTapEditorProps {
@@ -65,13 +65,12 @@ export function TipTapEditor(props: TipTapEditorProps) {
             Table.configure({
                 resizable: true,
                 HTMLAttributes: {
-                    class: `table-auto md:table-fixed border-collapse border border-gray-400`}
-
+                    class: `table-auto md:table-fixed border-collapse border border-gray-400`
+                },                    
             }),
             TableHeader.configure({
                 HTMLAttributes: {
-                    class: `border border-gray-300 bg-blue-50 ${tableCellBaseClassname}`,
-                    
+                    class: `border border-gray-300 bg-blue-50 ${tableCellBaseClassname}`,                    
                 }
             }),            
             TableRow,
@@ -81,10 +80,12 @@ export function TipTapEditor(props: TipTapEditorProps) {
                 }
             }),
             Image.configure({
-                allowBase64: true,
+                allowBase64: true,    
                 inline: true,
             }),
-            ImageResize,
+            ImageResize.configure({
+                allowBase64: true,
+            }),
             BulletList.configure({
                 HTMLAttributes: {
                     class: "list-disc ml-5",
