@@ -41,19 +41,19 @@ export default function BlogModal() {
   const dispatch = useDispatch<AppDispatch>();
   const apiResponse = useSelector(selectCreateBlogResponse);
   const isUpdateMode = useSelector(selectUpdateMode);
-  const selectedBlog = useSelector(selectBlog);  
+  const selectedBlog = useSelector(selectBlog);
   const methods = useForm<CreateBlog>({
     resolver: yupResolver<CreateBlog>(createBlogSchema),
     ...(isUpdateMode &&
       selectedBlog && {
-      defaultValues: {
+        defaultValues: {
           title: selectedBlog.title,
           isUpdateMode: isUpdateMode,
           content: selectedBlog?.content,
           description: selectedBlog.description,
           image: selectedBlog.image,
-      },
-    }),
+        },
+      }),
   });
 
   const getUserId = (): string => {
@@ -75,24 +75,19 @@ export default function BlogModal() {
       userId: getUserId(),
     };
   };
-
-  const createNewBlog = () => {
-    const newBlog = methods.getValues();
-    newBlog.userId = getUserId();
-    dispatch(setIsLoading(true));
-    dispatch(createBlogThunk(newBlog));
-  };
-
-  const updateExistingBlog = () => {
-    const existingBlog = methods.getValues();
-    existingBlog.userId = getUserId();
-    dispatch(setIsLoading(true));
-    dispatch(updateBlogThunk(buildUpdateBlog(existingBlog)));
+  const getEnhancedBlog = () => {
+    const blog = methods.getValues();
+    const parsedHtmlContent = HandleTableOverflow(blog.content);
+    blog.content = parsedHtmlContent;
+    blog.userId = getUserId();
+    return blog;
   };
 
   const onSubmit = () => {
-    if (isUpdateMode) updateExistingBlog();
-    else createNewBlog();
+    const blog = getEnhancedBlog();
+    dispatch(setIsLoading(true));
+    if (isUpdateMode) dispatch(updateBlogThunk(buildUpdateBlog(blog)));
+    else dispatch(createBlogThunk(blog));
   };
 
   useEffect(() => {
@@ -220,4 +215,30 @@ function MetadataEditor() {
       </div>
     </div>
   );
+}
+
+function HandleTableOverflow(htmlContent: string): string {
+  const parser = new DOMParser();
+  const document = parser.parseFromString(htmlContent, "text/html");
+  const tables: HTMLCollectionOf<HTMLTableElement> =
+    document.getElementsByTagName("table");
+
+  const createOverflowDiv = () => {
+    const overflowDiv = document.createElement("div");
+    overflowDiv.className = "w-full overflow-x-scroll";
+    return overflowDiv;
+  };
+
+  const appendOverflowDivToTables = () => {
+    const tableArray = Array.from(tables); //manipulates table in a cloned DOM, prevents bugs
+    for (const table of tableArray) {
+      const overflowDiv = createOverflowDiv();
+      const tableParentNode = table.parentNode;
+      tableParentNode?.insertBefore(overflowDiv, table);
+      overflowDiv?.appendChild(table);
+    }
+  };
+
+  appendOverflowDivToTables();
+  return document.body.innerHTML;
 }

@@ -9,7 +9,7 @@ import TableCell from "@tiptap/extension-table-cell";
 import TableHeader from "@tiptap/extension-table-header";
 import TableRow from "@tiptap/extension-table-row";
 import TextAlign from "@tiptap/extension-text-align";
-import { useEditor, EditorContent, Editor, Content } from "@tiptap/react";
+import { useEditor, EditorContent, Editor } from "@tiptap/react";
 import Paragraph from "@tiptap/extension-paragraph";
 import StarterKit from "@tiptap/starter-kit";
 import {
@@ -81,7 +81,7 @@ export function TipTapEditor(props: TipTapEditorProps) {
       Table.configure({
         resizable: true,
         HTMLAttributes: {
-          class: `table-auto md:table-fixed border-collapse border border-gray-400`,
+          class: `inline-block table-auto md:table-fixed border-collapse border border-gray-400`,
         },
       }),
       TableHeader.configure({
