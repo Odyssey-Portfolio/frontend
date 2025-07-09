@@ -1,10 +1,9 @@
-import { LOGGED_IN_USER } from "@/_constants/Auth";
 import { COLOR_WHITE } from "@/_constants/Colors";
 import { FONT_LEXEND, FONTSTYLE_SUBTEXT3 } from "@/_constants/Fonts";
 import { CREATED, SUCCESS, UNAUTHORIZED } from "@/_constants/ResponseCodes";
 import { createBlogSchema } from "@/_constants/ValidationSchema";
 import { CreateBlog } from "@/_models/CreateBlog";
-import { LoggedInUser } from "@/_models/LoggedInUser";
+
 import { clearCreateBlogResponse } from "@/_redux/blogModal/blogModalActions";
 import {
   selectBlog,
@@ -18,7 +17,6 @@ import {
 } from "@/_redux/blogModal/blogModalThunk";
 import { setSnackbarMessage } from "@/_redux/snackbar/snackbarActions";
 import { AppDispatch } from "@/_redux/store";
-import { deserialize } from "@/utils/JsonUtils";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { nanoid } from "@reduxjs/toolkit";
 import { useEffect } from "react";
@@ -31,6 +29,7 @@ import Button, { ButtonVariants } from "./AtomicComponents/Button";
 import ImageUploader from "./AtomicComponents/ImageUploader";
 import TextInput from "./AtomicComponents/TextInput";
 import { TipTapEditor } from "./TipTap_Editor/TipTapEditor";
+import { getUserId } from "../utils/AuthUtils";
 
 export default function BlogModal() {
   const backdropClassname = `fixed inset-0 bg-gray-500/50 transition-opacity 
@@ -55,18 +54,6 @@ export default function BlogModal() {
         },
       }),
   });
-
-  const getUserId = (): string => {
-    const loggedInUserFromSessionStorage =
-      sessionStorage.getItem(LOGGED_IN_USER);
-    if (loggedInUserFromSessionStorage) {
-      const loggedInUser = deserialize<LoggedInUser>(
-        loggedInUserFromSessionStorage
-      );
-      return loggedInUser.id;
-    }
-    return "";
-  };
 
   const buildUpdateBlog = (createBlog: CreateBlog): UpdateBlog => {
     return {

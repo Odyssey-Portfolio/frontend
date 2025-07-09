@@ -1,7 +1,11 @@
 import { ApiResponse } from "@/_models/ApiResponse";
 import { GetBlog } from "@/_models/GetBlog";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { createBlogThunk, updateBlogThunk } from "./blogModalThunk";
+import {
+  createBlogThunk,
+  deleteBlogThunk,
+  updateBlogThunk,
+} from "./blogModalThunk";
 
 interface BlogModalState {
   isLoading: boolean;
@@ -60,6 +64,17 @@ const blogModalSlice = createSlice({
         state.apiResponse = action.payload as ApiResponse;
       })
       .addCase(updateBlogThunk.rejected, (state, action) => {
+        state.isLoading = false;
+        state.apiResponse = action.payload as ApiResponse;
+      })
+      .addCase(deleteBlogThunk.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteBlogThunk.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.apiResponse = action.payload as ApiResponse;
+      })
+      .addCase(deleteBlogThunk.rejected, (state, action) => {
         state.isLoading = false;
         state.apiResponse = action.payload as ApiResponse;
       });

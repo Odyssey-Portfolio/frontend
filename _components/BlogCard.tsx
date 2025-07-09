@@ -22,6 +22,9 @@ import Authorizer from "./Authorizer";
 import Modal from "./Modal";
 import Button, { ButtonVariants } from "./AtomicComponents/Button";
 import { JSX, useState } from "react";
+import { deleteBlogThunk } from "../_redux/blogModal/blogModalThunk";
+import { DeleteBlog } from "../_models/DeleteBlog";
+import { getUserId } from "../utils/AuthUtils";
 
 interface BlogCardProps {
   blog: GetBlog;
@@ -93,6 +96,7 @@ function AdminButtonSection(props: BlogCardProps) {
         Remove
       </button>
       <ConfirmDeleteBlogModal
+        blog={props.blog}
         showModal={showModal}
         setShowModal={setShowModal}
       />
@@ -101,10 +105,21 @@ function AdminButtonSection(props: BlogCardProps) {
 }
 
 interface ConfirmDeleteBlogModalProps {
+  blog: GetBlog;
   showModal: boolean;
   setShowModal: (value: boolean) => void;
 }
 function ConfirmDeleteBlogModal(props: ConfirmDeleteBlogModalProps) {
+  const dispatch = useDispatch<AppDispatch>();
+  const buildDeleteBlogRequest = (): DeleteBlog => {
+    return {
+      id: props.blog.id,
+      userId: getUserId(),
+    };
+  };
+  const handleDeleteBlog = () => {
+    dispatch(deleteBlogThunk(buildDeleteBlogRequest()));
+  };
   const bottomActions: JSX.Element[] = [
     <Button
       key="cancel"
@@ -112,7 +127,12 @@ function ConfirmDeleteBlogModal(props: ConfirmDeleteBlogModalProps) {
       variant={ButtonVariants.PRIMARY}
       onClick={() => props.setShowModal(false)}
     />,
-    <Button key="ok" label="Okay" variant={ButtonVariants.DANGER} />,
+    <Button
+      key="ok"
+      label="Okay"
+      variant={ButtonVariants.DANGER}
+      onClick={handleDeleteBlog}
+    />,
   ];
   return (
     <>
