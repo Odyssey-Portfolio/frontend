@@ -39,6 +39,7 @@ import { AppDispatch } from "@/_redux/store";
 import { InformationCircleIcon, PencilIcon } from "@heroicons/react/16/solid";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import ParagraphRenderer from "../../_components/ParagraphRenderer";
 
 export default function BlogsPage() {
   const blogPageClassname = `flex flex-col mt-32 mx-12 md:mx-24 mb-12   
@@ -132,9 +133,10 @@ function BlogPageActions() {
         {aboutBlogPageModalVisibility && (
           <Modal
             title={CONTENT_BLOG_ABOUT_TITLE}
-            htmlContent={CONTENT_BLOG_ABOUT_CONTENT}
             closeAction={() => setAboutBlogPageModalVisibility(false)}
-          />
+          >
+            <ParagraphRenderer isHtml paragraph={CONTENT_BLOG_ABOUT_CONTENT} />
+          </Modal>
         )}
       </>
     </FM_Reveal>

@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import Modal from "./Modal";
+import ParagraphRenderer from "./ParagraphRenderer";
 
 export type ImageButtonWithModalType = {
   image: string;
@@ -38,11 +39,12 @@ export default function ImageButtonWithModal(props: ImageButtonWithModalProps) {
       {isModalOpen && (
         <Modal
           title={props.title}
-          htmlContent={props.htmlContent}
           closeAction={() => {
             setIsModalOpen(false);
           }}
-        />
+        >
+          <ParagraphRenderer isHtml paragraph={props.htmlContent} />
+        </Modal>
       )}
     </div>
   );

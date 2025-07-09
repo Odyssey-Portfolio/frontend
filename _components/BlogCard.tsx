@@ -19,6 +19,9 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import Authorizer from "./Authorizer";
+import Modal from "./Modal";
+import Button, { ButtonVariants } from "./AtomicComponents/Button";
+import { JSX, useState } from "react";
 
 interface BlogCardProps {
   blog: GetBlog;
@@ -67,7 +70,7 @@ function AdminButtonSection(props: BlogCardProps) {
   const deleteBlogButtonClasssname = `${FONT_POPPINS.className} text-white 
     text-xs md:text-lg px-3 py-1 rounded-full shadow-md transition-all`;
   const dispatch = useDispatch();
-
+  const [showModal, setShowModal] = useState(false);
   const openBlogModal = () => {
     dispatch(setBlog(props.blog));
     dispatch(setVisibility(true));
@@ -83,12 +86,46 @@ function AdminButtonSection(props: BlogCardProps) {
         Update
       </button>
       <button
+        onClick={() => setShowModal(true)}
         className={deleteBlogButtonClasssname}
         style={{ backgroundColor: COLOR_RED }}
       >
         Remove
       </button>
+      <ConfirmDeleteBlogModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+      />
     </div>
+  );
+}
+
+interface ConfirmDeleteBlogModalProps {
+  showModal: boolean;
+  setShowModal: (value: boolean) => void;
+}
+function ConfirmDeleteBlogModal(props: ConfirmDeleteBlogModalProps) {
+  const bottomActions: JSX.Element[] = [
+    <Button
+      key="cancel"
+      label="Cancel"
+      variant={ButtonVariants.PRIMARY}
+      onClick={() => props.setShowModal(false)}
+    />,
+    <Button key="ok" label="Okay" variant={ButtonVariants.DANGER} />,
+  ];
+  return (
+    <>
+      {props.showModal && (
+        <Modal
+          title="Confirm Delete"
+          bottomActions={bottomActions}
+          closeAction={() => props.setShowModal(false)}
+        >
+          <>Do you really want to soft delete this blog?</>
+        </Modal>
+      )}
+    </>
   );
 }
 

@@ -3,10 +3,12 @@ import { useIsMediumScreen } from "@/_hooks/useIsMediumScreen";
 import { XCircleIcon } from "@heroicons/react/16/solid";
 import { createPortal } from "react-dom";
 import { COLOR_RED } from "../_constants/Colors";
-import ParagraphRenderer from "./ParagraphRenderer";
+import { JSX } from "react";
+
 export interface ModalProps {
   title: string;
-  htmlContent: string;
+  children: JSX.Element;
+  bottomActions?: JSX.Element[];
   closeAction: () => void;
 }
 export default function Modal(props: ModalProps) {
@@ -21,7 +23,7 @@ export default function Modal(props: ModalProps) {
         aria-hidden="true"
       ></div>
       <div className="fixed inset-0 z-40 w-screen flex items-center justify-center">
-        <div className="flex justify-center sm:p-0 h-5/6">
+        <div className="flex justify-center sm:p-0 max-h-5/6">
           <div className="relative rounded-lg bg-white text-left shadow-xl transition-all w-10/12">
             <div
               className=" flex flex-row rounded-t-lg bg-gray-50 items-center 
@@ -46,8 +48,17 @@ export default function Modal(props: ModalProps) {
                 />
               )}
             </div>
-            <div className="m-5 overflow-y-scroll h-5/6">
-              <ParagraphRenderer isHtml paragraph={props.htmlContent} />
+            <div className="m-5 overflow-y-scroll max-h-5/6">
+              {props.children}
+            </div>
+            {/*Bottom Actions */}
+            <div className="flex w-full flex-row justify-end">
+              <div className="flex flex-row w-2/3 space-x-1 p-5">
+                {props.bottomActions &&
+                  props.bottomActions.map((bottomAction) => {
+                    return bottomAction;
+                  })}
+              </div>
             </div>
           </div>
         </div>
