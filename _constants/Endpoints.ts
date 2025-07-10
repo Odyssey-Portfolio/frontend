@@ -10,8 +10,11 @@
 
 export const LOCAL_SERVER_URL = "http://localhost:5018";
 export const LOCAL_SECURE_SERVER_URL = "https://localhost:7206";
+//export const DEPLOYED_SERVER_URL =
+//  "https://odyssey-portfolio-backend.onrender.com";
+
 export const DEPLOYED_SERVER_URL =
-  "https://odyssey-portfolio-backend.onrender.com";
+  "https://eminent-terminally-satyr.ngrok-free.app";
 
 export const BLOG_ENDPOINT = `/blog`;
 
