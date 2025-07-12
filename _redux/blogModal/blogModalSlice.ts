@@ -4,14 +4,17 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   createBlogThunk,
   deleteBlogThunk,
+  getBlogByIdThunk,
   updateBlogThunk,
 } from "./blogModalThunk";
+import { GetBlogByIdDto } from "../../_models/GetBlogByIdDto";
 
 interface BlogModalState {
   isLoading: boolean;
   isVisible: boolean;
   isUpdateMode: boolean;
   selectedBlog: GetBlog | undefined;
+  selectedBlogDetails: GetBlogByIdDto | undefined;
   apiResponse: ApiResponse | undefined;
 }
 
@@ -20,6 +23,7 @@ const initialState: BlogModalState = {
   isVisible: false,
   isUpdateMode: false,
   selectedBlog: undefined,
+  selectedBlogDetails: undefined,
   apiResponse: undefined,
 };
 
@@ -75,6 +79,18 @@ const blogModalSlice = createSlice({
         state.apiResponse = action.payload as ApiResponse;
       })
       .addCase(deleteBlogThunk.rejected, (state, action) => {
+        state.isLoading = false;
+        state.apiResponse = action.payload as ApiResponse;
+      })
+      .addCase(getBlogByIdThunk.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getBlogByIdThunk.fulfilled, (state, action) => {
+        state.isLoading = false;
+        const response = action.payload as ApiResponse;
+        state.selectedBlogDetails = response.returnData as GetBlogByIdDto;
+      })
+      .addCase(getBlogByIdThunk.rejected, (state, action) => {
         state.isLoading = false;
         state.apiResponse = action.payload as ApiResponse;
       });

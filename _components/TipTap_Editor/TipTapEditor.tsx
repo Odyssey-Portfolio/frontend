@@ -1,4 +1,3 @@
-import { useFormContext } from "react-hook-form";
 import { Toggle } from "@radix-ui/react-toggle";
 import BulletList from "@tiptap/extension-bullet-list";
 import HardBreak from "@tiptap/extension-hard-break";
@@ -32,15 +31,20 @@ import {
   ImageIcon,
   Text,
 } from "lucide-react";
-import { useSelector } from "react-redux";
 import Image from "@tiptap/extension-image";
 import ImageResize from "tiptap-extension-resize-image";
-import { selectUpdateMode } from "../../_redux/blogModal/blogModalSelector";
+
 import { FONTSTYLE_PARAGRAPH2, FONT_POPPINS } from "../../_constants/Fonts";
 import "./TipTapEditor.css";
 
+import { useFormContext } from "react-hook-form";
+import { useSelector } from "react-redux";
+import { selectUpdateMode } from "../../_redux/blogModal/blogModalSelector";
+import { useEffect, useState } from "react";
+
 interface TipTapEditorProps {
-  error?: string;
+  htmlContentPropName: string;
+  updateMode?: boolean;
 }
 export function TipTapEditor(props: TipTapEditorProps) {
   const editorWrapperClassname = `flex flex-col space-y-2`;
@@ -48,9 +52,14 @@ export function TipTapEditor(props: TipTapEditorProps) {
   const editorTextClassname = `${FONT_POPPINS.className} ${FONTSTYLE_PARAGRAPH2}`;
   const errorClassname = `text-red-500 text-sm font-bold`;
   const tableCellBaseClassname = `px-3 font-bold`;
-  const { getValues, setValue } = useFormContext();
+  const [firstLoadCompleted, setFirstLoadCompleted] = useState(false);
   const updateMode = useSelector(selectUpdateMode);
-  const htmlContent: Content | null = updateMode ? getValues("content") : null;
+  const {
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useFormContext();
+  const htmlContent = getValues(props.htmlContentPropName);
   const editor = useEditor({
     editorProps: {
       attributes: {
@@ -81,7 +90,7 @@ export function TipTapEditor(props: TipTapEditorProps) {
       Table.configure({
         resizable: true,
         HTMLAttributes: {
-          class: `inline-block table-auto md:table-fixed border-collapse border border-gray-400`,
+          class: `w-full p-2 m-1 table-auto md:table-fixed border-collapse border border-gray-400`,
         },
       }),
       TableHeader.configure({
@@ -110,14 +119,24 @@ export function TipTapEditor(props: TipTapEditorProps) {
     ],
     immediatelyRender: true,
     onUpdate: ({ editor }) => {
-      setValue("content", editor.getHTML());
+      setValue(props.htmlContentPropName, editor.getHTML());
     },
-    content: htmlContent,
   });
+
+  useEffect(() => {
+    if (htmlContent && updateMode && !firstLoadCompleted) {
+      editor.commands.setContent(htmlContent);
+      setFirstLoadCompleted(true);
+    }
+  }, [htmlContent, firstLoadCompleted]);
 
   return (
     <div className={editorWrapperClassname}>
-      {props.error && <div className={errorClassname}>{props.error}</div>}
+      {errors && (
+        <div className={errorClassname}>
+          {errors[props.htmlContentPropName]?.message as string | undefined}
+        </div>
+      )}
       <MenuBar editor={editor} />
       <EditorContent editor={editor} />
     </div>

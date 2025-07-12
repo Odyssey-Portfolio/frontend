@@ -2,7 +2,7 @@ import { UNAUTHORIZED } from "@/_constants/ResponseCodes";
 import { ApiResponse } from "@/_models/ApiResponse";
 import { CreateBlog } from "@/_models/CreateBlog";
 import { UpdateBlog } from "@/_models/UpdateBlog";
-import { createBlog, deleteBlog, updateBlog } from "@/api/blog";
+import { createBlog, deleteBlog, getBlogById, updateBlog } from "@/api/blog";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { DeleteBlog } from "../../_models/DeleteBlog";
@@ -64,6 +64,23 @@ export const deleteBlogThunk = createAsyncThunk(
           returnData: "",
         };
         return rejectWithValue(apiResponse);
+      }
+      console.log(error);
+    }
+  }
+);
+
+export const getBlogByIdThunk = createAsyncThunk(
+  "blogDetailsPage/get",
+  async (params: string, thunkAPI) => {
+    try {
+      const response = await getBlogById(params);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return thunkAPI.rejectWithValue(
+          error.response?.data || "Something went wrong"
+        );
       }
       console.log(error);
     }

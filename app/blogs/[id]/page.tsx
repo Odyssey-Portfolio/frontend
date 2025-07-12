@@ -70,7 +70,7 @@ function HeadingText(props: BlogDetailsProps) {
 }
 
 function ParagraphRendererWrapper(props: BlogDetailsProps) {
-  const paragraphRendererWrapperClassname = `mx-12 md:mx-56`;
+  const paragraphRendererWrapperClassname = `w-full px-8 md:px-56`;
   return (
     <div className={paragraphRendererWrapperClassname}>
       <ParagraphRenderer isHtml paragraph={props.blogDetails?.content} />

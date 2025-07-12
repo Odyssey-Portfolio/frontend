@@ -13,6 +13,7 @@ import {
 import { setIsLoading, setVisibility } from "@/_redux/blogModal/blogModalSlice";
 import {
   createBlogThunk,
+  getBlogByIdThunk,
   updateBlogThunk,
 } from "@/_redux/blogModal/blogModalThunk";
 import { setSnackbarMessage } from "@/_redux/snackbar/snackbarActions";
@@ -30,6 +31,7 @@ import ImageUploader from "./AtomicComponents/ImageUploader";
 import TextInput from "./AtomicComponents/TextInput";
 import { TipTapEditor } from "./TipTap_Editor/TipTapEditor";
 import { getUserId } from "../utils/AuthUtils";
+import { selectBlogDetails } from "../_redux/blogDetailsPage/blogDetailsPageSelector";
 
 export default function BlogModal() {
   const backdropClassname = `fixed inset-0 bg-gray-500/50 transition-opacity 
@@ -41,18 +43,18 @@ export default function BlogModal() {
   const apiResponse = useSelector(selectCreateBlogResponse);
   const isUpdateMode = useSelector(selectUpdateMode);
   const selectedBlog = useSelector(selectBlog);
+  const selectedBlogByIdDetails = useSelector(selectBlogDetails);
+  const shouldLoadDataIntoForm = isUpdateMode && selectedBlog;
   const methods = useForm<CreateBlog>({
     resolver: yupResolver<CreateBlog>(createBlogSchema),
-    ...(isUpdateMode &&
-      selectedBlog && {
-        defaultValues: {
-          title: selectedBlog.title,
-          isUpdateMode: isUpdateMode,
-          content: selectedBlog?.content,
-          description: selectedBlog.description,
-          image: selectedBlog.image,
-        },
-      }),
+    ...(shouldLoadDataIntoForm && {
+      defaultValues: {
+        title: selectedBlog.title,
+        isUpdateMode: isUpdateMode,
+        description: selectedBlog.description,
+        image: selectedBlog.image,
+      },
+    }),
   });
 
   const buildUpdateBlog = (createBlog: CreateBlog): UpdateBlog => {
@@ -104,6 +106,16 @@ export default function BlogModal() {
     };
   }, [dispatch, apiResponse]);
 
+  useEffect(() => {
+    if (selectedBlog && !selectedBlogByIdDetails)
+      dispatch(getBlogByIdThunk(selectedBlog.id));
+  }, [dispatch, selectedBlog, selectedBlogByIdDetails]);
+
+  useEffect(() => {
+    if (selectedBlogByIdDetails)
+      methods.setValue("content", selectedBlogByIdDetails.content);
+  }, [methods, selectedBlogByIdDetails]);
+
   if (typeof window === "undefined") return null; // SSR-safe
   const modalRoot = document.body;
   if (!modalRoot) return null;
@@ -153,13 +165,23 @@ function HeaderSection(props: HeaderSectionProps) {
 
 function EditorSection() {
   const editorSectionClassname = `space-y-3 overflow-y-scroll`;
-  const {
-    formState: { errors },
-  } = useFormContext();
+  const htmlContentPropName = "content";
+
+  const updateMode = useSelector(selectUpdateMode);
+  //const {
+  //  getValues,
+  //  formState: { errors },
+  //} = useFormContext();
+  //const htmlContent: Content | null = updateMode
+  //  ? getValues(htmlContentPropName)
+  //  : null;
   return (
     <div className={editorSectionClassname}>
       <MetadataEditor />
-      <TipTapEditor error={errors["content"]?.message as string | undefined} />
+      <TipTapEditor
+        htmlContentPropName={htmlContentPropName}
+        updateMode={updateMode}
+      />
     </div>
   );
 }
@@ -206,13 +228,21 @@ function MetadataEditor() {
 
 function HandleTableOverflow(htmlContent: string): string {
   const parser = new DOMParser();
+  const overflowDivClassname = "overflow-x-auto";
   const document = parser.parseFromString(htmlContent, "text/html");
   const tables: HTMLCollectionOf<HTMLTableElement> =
     document.getElementsByTagName("table");
+  const isOverflowDivAppended = () => {
+    for (const table of tables) {
+      const tableParentElement = table.parentElement;
+      if (tableParentElement?.className === overflowDivClassname) return true;
+    }
+    return false;
+  };
 
   const createOverflowDiv = () => {
     const overflowDiv = document.createElement("div");
-    overflowDiv.className = "w-full overflow-x-scroll";
+    overflowDiv.className = overflowDivClassname;
     return overflowDiv;
   };
 
@@ -226,6 +256,7 @@ function HandleTableOverflow(htmlContent: string): string {
     }
   };
 
+  if (isOverflowDivAppended()) return document.body.innerHTML;
   appendOverflowDivToTables();
   return document.body.innerHTML;
 }
