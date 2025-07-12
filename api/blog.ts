@@ -19,6 +19,11 @@ export async function getBlogs(params: GetBlogsParams) {
   return response;
 }
 
+export async function getBlogById(params: string) {
+  const response = await axiosInstance.get(`${BLOG_ENDPOINT}/${params}`);
+  return response;
+}
+
 export async function updateBlog(blog: UpdateBlog) {
   const blogFormData = toFormData(blog);
   const response = await axiosInstance.put(BLOG_ENDPOINT, blogFormData);

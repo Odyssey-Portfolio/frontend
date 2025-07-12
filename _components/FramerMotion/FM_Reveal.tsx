@@ -14,6 +14,10 @@ export default function FM_Reveal(props: FMRevealProps) {
   useEffect(() => {
     if (isInView) {
       mainControls.start("visible");
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth", // Smooth scroll to top
+      });
     } else {
       mainControls.start("hidden");
     }

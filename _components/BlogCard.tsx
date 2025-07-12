@@ -7,7 +7,6 @@ import {
   FONTSTYLE_SUBTEXT2,
 } from "@/_constants/Fonts";
 import { GetBlog } from "@/_models/GetBlog";
-import { setBlogDetails } from "@/_redux/blogDetailsPage/blogDetailsPageActions";
 import {
   setBlog,
   setIsUpdateMode,
@@ -165,9 +164,7 @@ function GoToBlogSection(props: BlogCardProps) {
   const iconClassname = `col-span-2 w-12 h-12 cursor-default`;
   const labelClassname = `${FONT_POPPINS.className} ${FONTSTYLE_PARAGRAPH1}`;
   const router = useRouter();
-  const dispatch = useDispatch<AppDispatch>();
   const goToBlog = () => {
-    dispatch(setBlogDetails(props.blog));
     router.push(`/blogs/${props.blog.id}`);
   };
   return (
