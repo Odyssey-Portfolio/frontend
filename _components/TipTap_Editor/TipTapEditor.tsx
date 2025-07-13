@@ -132,6 +132,8 @@ const TipTapEditor = forwardRef<TipTapEditorRef, TipTapEditorProps>(
       }
     }, [htmlContent]);
 
+    //Loads the final content from buffer to Hook Form's Context, ONLY when user clicks submit.
+    //This prevents TipTapEditor from re-rendering (running Hook Form's setValue for every key input)
     useImperativeHandle(ref, () => {
       return {
         setEditorBufferContentToFormContext() {
