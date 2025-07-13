@@ -38,110 +38,124 @@ import { FONTSTYLE_PARAGRAPH2, FONT_POPPINS } from "../../_constants/Fonts";
 import "./TipTapEditor.css";
 
 import { useFormContext } from "react-hook-form";
-import { useSelector } from "react-redux";
-import { selectUpdateMode } from "../../_redux/blogModal/blogModalSelector";
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 
 interface TipTapEditorProps {
   htmlContentPropName: string;
   updateMode?: boolean;
 }
-export function TipTapEditor(props: TipTapEditorProps) {
-  const editorWrapperClassname = `flex flex-col space-y-2`;
-  const editorClassname = `h-80 border rounded-md bg-slate-50 py-2 px-3 overflow-y-scroll max-w-none`;
-  const editorTextClassname = `${FONT_POPPINS.className} ${FONTSTYLE_PARAGRAPH2}`;
-  const errorClassname = `text-red-500 text-sm font-bold`;
-  const tableCellBaseClassname = `px-3 font-bold`;
-  const [firstLoadCompleted, setFirstLoadCompleted] = useState(false);
-  const updateMode = useSelector(selectUpdateMode);
-  const {
-    setValue,
-    getValues,
-    formState: { errors },
-  } = useFormContext();
-  const htmlContent = getValues(props.htmlContentPropName);
-  const editor = useEditor({
-    editorProps: {
-      attributes: {
-        class: editorClassname,
-      },
-    },
-    extensions: [
-      StarterKit,
-      HardBreak.extend({
-        addKeyboardShortcuts() {
-          return {
-            Enter: () => this.editor.commands.setHardBreak(),
-          };
-        },
-      }),
-      Paragraph.configure({
-        HTMLAttributes: {
-          class: editorTextClassname,
-        },
-      }),
-      TextAlign.configure({
-        types: ["heading", "paragraph"],
-      }),
-      Highlight.configure({
-        multicolor: true,
-        HTMLAttributes: { class: "hover:bg-red-500" },
-      }),
-      Table.configure({
-        resizable: true,
-        HTMLAttributes: {
-          class: `w-full p-2 m-1 table-auto md:table-fixed border-collapse border border-gray-400`,
-        },
-      }),
-      TableHeader.configure({
-        HTMLAttributes: {
-          class: `border border-gray-300 bg-blue-50 ${tableCellBaseClassname}`,
-        },
-      }),
-      TableRow,
-      TableCell.configure({
-        HTMLAttributes: {
-          class: `border border-gray-300 ${tableCellBaseClassname}`,
-        },
-      }),
-      Image.configure({
-        allowBase64: true,
-        inline: true,
-      }),
-      ImageResize.configure({
-        allowBase64: true,
-      }),
-      BulletList.configure({
-        HTMLAttributes: {
-          class: "list-disc ml-5",
-        },
-      }),
-    ],
-    immediatelyRender: true,
-    onUpdate: ({ editor }) => {
-      setValue(props.htmlContentPropName, editor.getHTML());
-    },
-  });
-
-  useEffect(() => {
-    if (htmlContent && updateMode && !firstLoadCompleted) {
-      editor.commands.setContent(htmlContent);
-      setFirstLoadCompleted(true);
-    }
-  }, [htmlContent, firstLoadCompleted]);
-
-  return (
-    <div className={editorWrapperClassname}>
-      {errors && (
-        <div className={errorClassname}>
-          {errors[props.htmlContentPropName]?.message as string | undefined}
-        </div>
-      )}
-      <MenuBar editor={editor} />
-      <EditorContent editor={editor} />
-    </div>
-  );
+export interface TipTapEditorRef {
+  setEditorBufferContentToFormContext: () => void;
 }
+
+const TipTapEditor = forwardRef<TipTapEditorRef, TipTapEditorProps>(
+  ({ htmlContentPropName, updateMode }, ref) => {
+    const editorWrapperClassname = `flex flex-col space-y-2`;
+    const editorClassname = `h-80 border rounded-md bg-slate-50 py-2 px-3 overflow-y-scroll max-w-none`;
+    const editorTextClassname = `${FONT_POPPINS.className} ${FONTSTYLE_PARAGRAPH2}`;
+    const errorClassname = `text-red-500 text-sm font-bold`;
+    const tableCellBaseClassname = `px-3 font-bold`;
+    const {
+      setValue,
+      getValues,
+      formState: { errors },
+    } = useFormContext();
+    const htmlContent = getValues(htmlContentPropName);
+    const [editorBuffer, setEditorBuffer] = useState<string>();
+
+    const editor = useEditor({
+      editorProps: {
+        attributes: {
+          class: editorClassname,
+        },
+      },
+      extensions: [
+        StarterKit,
+        HardBreak.extend({
+          addKeyboardShortcuts() {
+            return {
+              Enter: () => this.editor.commands.setHardBreak(),
+            };
+          },
+        }),
+        Paragraph.configure({
+          HTMLAttributes: {
+            class: editorTextClassname,
+          },
+        }),
+        TextAlign.configure({
+          types: ["heading", "paragraph"],
+        }),
+        Highlight.configure({
+          multicolor: true,
+          HTMLAttributes: { class: "hover:bg-red-500" },
+        }),
+        Table.configure({
+          resizable: true,
+          HTMLAttributes: {
+            class: `w-full p-2 m-1 table-auto md:table-fixed border-collapse border border-gray-400`,
+          },
+        }),
+        TableHeader.configure({
+          HTMLAttributes: {
+            class: `border border-gray-300 bg-blue-50 ${tableCellBaseClassname}`,
+          },
+        }),
+        TableRow,
+        TableCell.configure({
+          HTMLAttributes: {
+            class: `border border-gray-300 ${tableCellBaseClassname}`,
+          },
+        }),
+        Image.configure({
+          allowBase64: true,
+          inline: true,
+        }),
+        ImageResize.configure({
+          allowBase64: true,
+        }),
+        BulletList.configure({
+          HTMLAttributes: {
+            class: "list-disc ml-5",
+          },
+        }),
+      ],
+      immediatelyRender: true,
+      onUpdate: ({ editor }) => {
+        setEditorBuffer(editor.getHTML());
+      },
+    });
+
+    useEffect(() => {
+      if (htmlContent && updateMode) {
+        editor.commands.setContent(htmlContent);
+      }
+    }, [htmlContent]);
+
+    useImperativeHandle(ref, () => {
+      return {
+        setEditorBufferContentToFormContext() {
+          setValue(htmlContentPropName, editorBuffer);
+        },
+      };
+    });
+
+    return (
+      <div className={editorWrapperClassname}>
+        {errors && (
+          <div className={errorClassname}>
+            {errors[htmlContentPropName]?.message as string | undefined}
+          </div>
+        )}
+        <MenuBar editor={editor} />
+        <EditorContent editor={editor} />
+      </div>
+    );
+  }
+);
+
+TipTapEditor.displayName = "TipTapEditor";
+export default TipTapEditor;
 
 interface MenuBarProps {
   editor: Editor | null;

@@ -20,10 +20,11 @@ import { useDispatch } from "react-redux";
 import Authorizer from "./Authorizer";
 import Modal from "./Modal";
 import Button, { ButtonVariants } from "./AtomicComponents/Button";
-import { JSX, useState } from "react";
+import { JSX, useEffect, useState } from "react";
 import { deleteBlogThunk } from "../_redux/blogModal/blogModalThunk";
 import { DeleteBlog } from "../_models/DeleteBlog";
 import { getUserId } from "../utils/AuthUtils";
+import Spinner from "./AtomicComponents/Spinner";
 
 interface BlogCardProps {
   blog: GetBlog;
@@ -164,19 +165,32 @@ function GoToBlogSection(props: BlogCardProps) {
   const iconClassname = `col-span-2 w-12 h-12 cursor-default`;
   const labelClassname = `${FONT_POPPINS.className} ${FONTSTYLE_PARAGRAPH1}`;
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const goToBlog = () => {
     router.push(`/blogs/${props.blog.id}`);
+    setIsLoading(true);
   };
+  useEffect(() => {
+    return () => {
+      setIsLoading(false);
+    };
+  }, []);
   return (
-    <div
-      className={goToBlogClassname}
-      style={{ color: COLOR_PRIMARY }}
-      onClick={goToBlog}
-    >
-      <div className={iconClassname}>
-        <BookOpenIcon />
-      </div>
-      <div className={labelClassname}>Read</div>
-    </div>
+    <>
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <div
+          className={goToBlogClassname}
+          style={{ color: COLOR_PRIMARY }}
+          onClick={goToBlog}
+        >
+          <div className={iconClassname}>
+            <BookOpenIcon />
+          </div>
+          <div className={labelClassname}>Read</div>
+        </div>
+      )}
+    </>
   );
 }

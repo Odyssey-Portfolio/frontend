@@ -8,9 +8,14 @@ import { clearCreateBlogResponse } from "@/_redux/blogModal/blogModalActions";
 import {
   selectBlog,
   selectCreateBlogResponse,
+  selectPreviousBlog,
   selectUpdateMode,
 } from "@/_redux/blogModal/blogModalSelector";
-import { setIsLoading, setVisibility } from "@/_redux/blogModal/blogModalSlice";
+import {
+  setIsLoading,
+  setPreviousBlog,
+  setVisibility,
+} from "@/_redux/blogModal/blogModalSlice";
 import {
   createBlogThunk,
   getBlogByIdThunk,
@@ -20,7 +25,7 @@ import { setSnackbarMessage } from "@/_redux/snackbar/snackbarActions";
 import { AppDispatch } from "@/_redux/store";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { nanoid } from "@reduxjs/toolkit";
-import { useEffect } from "react";
+import { Ref, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -29,7 +34,7 @@ import "../app/globals.css";
 import Button, { ButtonVariants } from "./AtomicComponents/Button";
 import ImageUploader from "./AtomicComponents/ImageUploader";
 import TextInput from "./AtomicComponents/TextInput";
-import { TipTapEditor } from "./TipTap_Editor/TipTapEditor";
+import TipTapEditor, { TipTapEditorRef } from "./TipTap_Editor/TipTapEditor";
 import { getUserId } from "../utils/AuthUtils";
 import { selectBlogDetails } from "../_redux/blogDetailsPage/blogDetailsPageSelector";
 
@@ -43,8 +48,10 @@ export default function BlogModal() {
   const apiResponse = useSelector(selectCreateBlogResponse);
   const isUpdateMode = useSelector(selectUpdateMode);
   const selectedBlog = useSelector(selectBlog);
+  const previousBlog = useSelector(selectPreviousBlog);
   const selectedBlogByIdDetails = useSelector(selectBlogDetails);
   const shouldLoadDataIntoForm = isUpdateMode && selectedBlog;
+  const tiptapEditorRef = useRef<TipTapEditorRef>(null);
   const methods = useForm<CreateBlog>({
     resolver: yupResolver<CreateBlog>(createBlogSchema),
     ...(shouldLoadDataIntoForm && {
@@ -56,6 +63,12 @@ export default function BlogModal() {
       },
     }),
   });
+
+  const shouldFetchNewBlogByIdDetails = () => {
+    if (previousBlog?.id === selectedBlog?.id) return false;
+    if (selectedBlog) dispatch(setPreviousBlog(selectedBlog));
+    return true;
+  };
 
   const buildUpdateBlog = (createBlog: CreateBlog): UpdateBlog => {
     return {
@@ -73,6 +86,7 @@ export default function BlogModal() {
   };
 
   const onSubmit = () => {
+    tiptapEditorRef.current?.setEditorBufferContentToFormContext();
     const blog = getEnhancedBlog();
     dispatch(setIsLoading(true));
     if (isUpdateMode) dispatch(updateBlogThunk(buildUpdateBlog(blog)));
@@ -107,9 +121,9 @@ export default function BlogModal() {
   }, [dispatch, apiResponse]);
 
   useEffect(() => {
-    if (selectedBlog && !selectedBlogByIdDetails)
+    if (selectedBlog && shouldFetchNewBlogByIdDetails())
       dispatch(getBlogByIdThunk(selectedBlog.id));
-  }, [dispatch, selectedBlog, selectedBlogByIdDetails]);
+  }, [dispatch, shouldFetchNewBlogByIdDetails]);
 
   useEffect(() => {
     if (selectedBlogByIdDetails)
@@ -127,7 +141,7 @@ export default function BlogModal() {
           style={{ backgroundColor: COLOR_WHITE }}
         >
           <HeaderSection onSubmit={onSubmit} />
-          <EditorSection />
+          <EditorSection tiptapEditorRef={tiptapEditorRef} />
         </div>
       </FormProvider>
     </div>,
@@ -163,7 +177,10 @@ function HeaderSection(props: HeaderSectionProps) {
   );
 }
 
-function EditorSection() {
+interface EditorSectionProps {
+  tiptapEditorRef: Ref<TipTapEditorRef> | undefined;
+}
+function EditorSection(props: EditorSectionProps) {
   const editorSectionClassname = `space-y-3 overflow-y-scroll`;
   const htmlContentPropName = "content";
 
@@ -179,6 +196,7 @@ function EditorSection() {
     <div className={editorSectionClassname}>
       <MetadataEditor />
       <TipTapEditor
+        ref={props.tiptapEditorRef}
         htmlContentPropName={htmlContentPropName}
         updateMode={updateMode}
       />

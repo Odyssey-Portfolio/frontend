@@ -31,6 +31,14 @@ export default function BlogDetailsPage() {
   useEffect(() => {
     dispatch(getBlogByIdThunk(id));
   }, [dispatch, id]);
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // Smooth scroll to top
+    });
+  }, []);
+
   return (
     <FM_Reveal className={blogDetailsPageClassname}>
       <>

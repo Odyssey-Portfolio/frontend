@@ -13,6 +13,7 @@ interface BlogModalState {
   isLoading: boolean;
   isVisible: boolean;
   isUpdateMode: boolean;
+  previousBlog: GetBlog | undefined;
   selectedBlog: GetBlog | undefined;
   selectedBlogDetails: GetBlogByIdDto | undefined;
   apiResponse: ApiResponse | undefined;
@@ -22,6 +23,7 @@ const initialState: BlogModalState = {
   isLoading: false,
   isVisible: false,
   isUpdateMode: false,
+  previousBlog: undefined,
   selectedBlog: undefined,
   selectedBlogDetails: undefined,
   apiResponse: undefined,
@@ -39,6 +41,9 @@ const blogModalSlice = createSlice({
     },
     setIsUpdateMode: (state, action: PayloadAction<boolean>) => {
       state.isUpdateMode = action.payload;
+    },
+    setPreviousBlog: (state, action: PayloadAction<GetBlog>) => {
+      state.previousBlog = action.payload;
     },
     setBlog: (state, action: PayloadAction<GetBlog>) => {
       state.selectedBlog = action.payload;
@@ -97,6 +102,11 @@ const blogModalSlice = createSlice({
   },
 });
 
-export const { setVisibility, setIsLoading, setIsUpdateMode, setBlog } =
-  blogModalSlice.actions;
+export const {
+  setVisibility,
+  setIsLoading,
+  setIsUpdateMode,
+  setBlog,
+  setPreviousBlog,
+} = blogModalSlice.actions;
 export default blogModalSlice.reducer;
