@@ -6,14 +6,14 @@ import {
   FONTSTYLE_PARAGRAPH1,
   FONTSTYLE_SUBTEXT2,
 } from "@/_constants/Fonts";
-import { GetBlog } from "@/_models/GetBlog";
+import { GetBlog, GetBlogAdmin } from "@/_models/GetBlog";
 import {
   setBlog,
   setIsUpdateMode,
   setVisibility,
 } from "@/_redux/blogModal/blogModalSlice";
 import { AppDispatch } from "@/_redux/store";
-import { BookOpenIcon } from "@heroicons/react/16/solid";
+import { BookOpenIcon, XCircleIcon } from "@heroicons/react/16/solid";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
@@ -27,15 +27,34 @@ import { getUserId } from "../utils/AuthUtils";
 import Spinner from "./AtomicComponents/Spinner";
 
 interface BlogCardProps {
-  blog: GetBlog;
+  blog: GetBlogAdmin;
   isImageB64: boolean;
 }
 export default function BlogCard(props: BlogCardProps) {
   const blogCardClassname = `relative rounded-lg flex flex-col md:h-full`;
+  const [opacity, setOpacity] = useState<number>(1);
   const imageWrapperClassname = `flex flex-row justify-center`;
   const detailsClassname = `p-2 space-y-3`;
+
+  const isBlogSoftDeleted = props.blog.isDeleted;
+  const handleHover = () => {
+    if (!isBlogSoftDeleted) return;
+    setOpacity(1);
+  };
+  const handleOffHover = () => {
+    if (!isBlogSoftDeleted) return;
+    setOpacity(0.5);
+  };
+  useEffect(() => {
+    if (isBlogSoftDeleted) setOpacity(0.5);
+  }, []);
   return (
-    <div className={blogCardClassname}>
+    <div
+      className={blogCardClassname}
+      style={{ opacity: opacity, transition: "opacity 0.1s ease-in-out" }}
+      onMouseEnter={handleHover}
+      onMouseLeave={handleOffHover}
+    >
       <div className={imageWrapperClassname}>
         <Image
           src={
@@ -54,7 +73,11 @@ export default function BlogCard(props: BlogCardProps) {
           }}
         />
         <Authorizer roles={[ROLE_ADMIN]}>
-          <AdminButtonSection {...props} />
+          {isBlogSoftDeleted ? (
+            <AdminRestoreBlogButton />
+          ) : (
+            <AdminButtonSection {...props} />
+          )}
         </Authorizer>
       </div>
       <div className={detailsClassname}>
@@ -104,6 +127,24 @@ function AdminButtonSection(props: BlogCardProps) {
   );
 }
 
+function AdminRestoreBlogButton() {
+  const adminButtonWrapperClassname = `absolute top-2 right-2 px-2 py-1 flex 
+    flex-row justify-between space-x-1`;
+  const restoreBlogButtonClasssname = `${FONT_POPPINS.className} text-white 
+    text-xs md:text-lg px-3 py-1 rounded-full shadow-md transition-all`;
+  //const dispatch = useDispatch();
+  //const [showModal, setShowModal] = useState(false);
+  return (
+    <div className={adminButtonWrapperClassname}>
+      <button
+        className={restoreBlogButtonClasssname}
+        style={{ backgroundColor: COLOR_PRIMARY }}
+      >
+        Restore
+      </button>
+    </div>
+  );
+}
 interface ConfirmDeleteBlogModalProps {
   blog: GetBlog;
   showModal: boolean;

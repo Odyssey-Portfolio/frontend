@@ -6,7 +6,8 @@ import { getBlogsThunk } from "./getBlogsThunk";
 interface GetBlogsState {
   isLoading: boolean;
   searchParams: GetBlogsParams;
-  blogs: GetBlog[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  blogs: any[];
 }
 
 const initialState: GetBlogsState = {
@@ -37,7 +38,7 @@ const getBlogsSlice = createSlice({
       })
       .addCase(getBlogsThunk.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.blogs = action.payload.returnData as GetBlog[];
+        state.blogs = action.payload.returnData;
       })
       .addCase(getBlogsThunk.rejected, (state) => {
         state.isLoading = false;
