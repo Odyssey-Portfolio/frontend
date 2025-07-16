@@ -5,3 +5,7 @@ export interface GetBlog {
   content: string;
   description: string;
 }
+
+export interface GetBlogAdmin extends GetBlog {
+  isDeleted: boolean;
+}

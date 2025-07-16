@@ -27,6 +27,7 @@ export default function WorkExprienceCard(props: WorkExperienceCardProps) {
   const workExperienceCardRef = useRef(null);
   const [screenWidth, setScreenWidth] = useState(0);
   const [screenHeight, setScreenHeight] = useState(0);
+  const [backgroundColor, setBackgroundColor] = useState<string>();
   const isMediumScreen = useIsMediumScreen();
   const cardScale = useTransform(props.progress, props.range, [
     1,
@@ -36,12 +37,23 @@ export default function WorkExprienceCard(props: WorkExperienceCardProps) {
                                         overflow-hidden shadow-lg mb-24`;
   const overlayTextClassname = `absolute inset-0 flex items-center p-5
                                 justify-center bg-black bg-opacity-0 opacity-0
-                                 bg-opacity-70
+                                 bg-opacity-65
                                 opacity-100`;
+  const imageWrapperClassname = `absolute flex flex-row justify-center w-full h-full`;
   useEffect(() => {
     setScreenWidth(window.innerWidth);
     setScreenHeight(window.innerHeight);
+    fillEmptySpaceWithDominantColor();
   }, []);
+
+  const fillEmptySpaceWithDominantColor = () => {
+    const DOMImage = window.Image;
+    const img = new DOMImage();
+    img.src = props.image;
+    getDominantColorFromImage(img).then((dominantColor) => {
+      setBackgroundColor(dominantColor);
+    });
+  };
   return (
     <motion.div
       ref={workExperienceCardRef}
@@ -54,7 +66,25 @@ export default function WorkExprienceCard(props: WorkExperienceCardProps) {
       }}
     >
       <>
-        <Image src={props.image} alt="avatar" fill />
+        <div
+          className={imageWrapperClassname}
+          style={{
+            backgroundColor: backgroundColor,
+          }}
+        >
+          <Image
+            src={props.image}
+            alt="avatar"
+            width={0}
+            height={0}
+            sizes="100vh"
+            style={{
+              height: "100%",
+              width: "auto",
+              borderRadius: 25,
+            }}
+          />
+        </div>
         <div className={overlayTextClassname}>
           <Description {...props} />
         </div>
@@ -78,4 +108,42 @@ function Description(props: WorkExperienceCardProps) {
       </div>
     </div>
   );
+}
+
+function getDominantColorFromImage(
+  imgElement: HTMLImageElement
+): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return reject("Canvas not supported");
+
+    imgElement.onload = () => {
+      canvas.width = imgElement.naturalWidth;
+      canvas.height = imgElement.naturalHeight;
+      ctx.drawImage(imgElement, 0, 0, canvas.width, canvas.height);
+      const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+      const colorCount: Record<string, number> = {};
+      const step = 10; // Sample every 10 pixels for performance
+
+      for (let i = 0; i < data.length; i += 4 * step) {
+        const r = data[i];
+        const g = data[i + 1];
+        const b = data[i + 2];
+
+        const color = `${r},${g},${b}`;
+        colorCount[color] = (colorCount[color] || 0) + 1;
+      }
+
+      const dominantColor = Object.entries(colorCount).sort(
+        (a, b) => b[1] - a[1]
+      )[0][0];
+      resolve(`rgb(${dominantColor})`);
+    };
+
+    if (imgElement.complete) {
+      imgElement.onload?.(new Event("load"));
+    }
+  });
 }

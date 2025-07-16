@@ -2,19 +2,27 @@ import * as yup from "yup";
 
 export const createBlogSchema = yup.object({
   userId: yup.string().optional(),
+  isUpdateMode: yup.boolean(),
   image: yup
     .mixed<File>()
     .required("Image is required")
-    .test(
-      "fileSize",
-      "Image is too large",
-      (file) => (file ? file.size <= 5 * 1024 * 1024 : false) // max 5MB
-    )
-    .test("fileType", "Unsupported file type", (file) =>
-      file
-        ? ["image/jpeg", "image/png", "image/jpg"].includes(file.type)
-        : false
-    ),
+    .when("isUpdateMode", {
+      is: false,
+      then: () =>
+        yup
+          .mixed<File>()
+          .test(
+            "fileSize",
+            "Image is too large",
+            (file) => (file ? file.size <= 5 * 1024 * 1024 : false) // max 5MB
+          )
+          .test("fileType", "Unsupported file type", (file) =>
+            file
+              ? ["image/jpeg", "image/png", "image/jpg"].includes(file.type)
+              : false
+          ),
+    }),
+
   title: yup
     .string()
     .required("Title is required")

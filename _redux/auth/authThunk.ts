@@ -44,8 +44,8 @@ export const logoutThunk = createAsyncThunk(
       const response = await logout();
       return response.data;
     } catch (error) {
+      // Type-guard AxiosError
       if (axios.isAxiosError(error))
-        // Type-guard AxiosError
         return thunkAPI.rejectWithValue(
           error.response?.data || "Something went wrong"
         );

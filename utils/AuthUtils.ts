@@ -7,3 +7,14 @@ export function getLoggedInUser() {
   if (!loggedInUserFromSessionStorage) return;
   return deserialize<LoggedInUser>(loggedInUserFromSessionStorage);
 }
+
+export function getUserId(): string {
+  const loggedInUserFromSessionStorage = sessionStorage.getItem(LOGGED_IN_USER);
+  if (loggedInUserFromSessionStorage) {
+    const loggedInUser = deserialize<LoggedInUser>(
+      loggedInUserFromSessionStorage
+    );
+    return loggedInUser.id;
+  }
+  return "";
+}

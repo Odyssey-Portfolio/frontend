@@ -49,24 +49,26 @@ function WorkExperienceSection() {
     offset: ["start end", "end end"],
   });
   return (
-    <div ref={containerRef} className={workExperienceContainerClassname}>
-      {CONTENT_WORKEXPERIENCE.map((exp, key) => {
-        const scale = 1 - (CONTENT_WORKEXPERIENCE.length - key) * 0.03;
-        const prog = [key * 0.25, 1];
-        return (
-          <WorkExperienceCard
-            key={key}
-            progress={scrollYProgress}
-            range={prog}
-            targetScale={scale}
-            index={key}
-            companyName={exp.companyName}
-            image={exp.image}
-            jobTitle={exp.jobTitle}
-            years={exp.years}
-          />
-        );
-      })}
-    </div>
+    <FM_Reveal className={workExperienceContainerClassname}>
+      <>
+        {CONTENT_WORKEXPERIENCE.map((exp, key) => {
+          const scale = 1 - (CONTENT_WORKEXPERIENCE.length - key) * 0.03;
+          const prog = [key * 0.25, 1];
+          return (
+            <WorkExperienceCard
+              key={key}
+              progress={scrollYProgress}
+              range={prog}
+              targetScale={scale}
+              index={key}
+              companyName={exp.companyName}
+              image={exp.image}
+              jobTitle={exp.jobTitle}
+              years={exp.years}
+            />
+          );
+        })}
+      </>
+    </FM_Reveal>
   );
 }

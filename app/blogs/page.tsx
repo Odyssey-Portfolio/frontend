@@ -2,7 +2,7 @@
 import Spinner from "@/_components/AtomicComponents/Spinner";
 import Authorizer from "@/_components/Authorizer";
 import BlogCard from "@/_components/BlogCard";
-import CreateBlogModal from "@/_components/CreateBlogModal";
+import BlogModal from "@/_components/BlogModal";
 import EmptyList from "@/_components/EmptyList";
 import ExpandOnFocusButton from "@/_components/ExpandOnFocusButton";
 import FM_Reveal from "@/_components/FramerMotion/FM_Reveal";
@@ -24,8 +24,11 @@ import { useDebounce } from "@/_hooks/useDebounce";
 import {
   selectIsLoading as selectIsCreatingBlog,
   selectVisiblity,
-} from "@/_redux/createBlogModal/createBlogModalSelector";
-import { setVisibility } from "@/_redux/createBlogModal/createBlogModalSlice";
+} from "@/_redux/blogModal/blogModalSelector";
+import {
+  setIsUpdateMode,
+  setVisibility,
+} from "@/_redux/blogModal/blogModalSlice";
 import {
   selectBlogs,
   selectIsLoading as selectIsGettingBlogs,
@@ -36,15 +39,18 @@ import { AppDispatch } from "@/_redux/store";
 import { InformationCircleIcon, PencilIcon } from "@heroicons/react/16/solid";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import ParagraphRenderer from "../../_components/ParagraphRenderer";
 
 export default function BlogsPage() {
   const blogPageClassname = `flex flex-col mt-32 mx-12 md:mx-24 mb-12   
                                 items-center justify-between space-y-20`;
+  const blogModalVisibility = useSelector(selectVisiblity);
   return (
     <div className={blogPageClassname}>
       <HeadingText />
       <BlogPageActions />
       <BlogList />
+      {blogModalVisibility && <BlogModal />}
     </div>
   );
 }
@@ -70,7 +76,6 @@ function HeadingText() {
 function BlogPageActions() {
   const blogListClassname = `flex flex-col items-center md:flex-row md:justify-center w-full gap-5`;
   const buttonGrids = `flex flex-row items-center gap-5 relative h-full`;
-  const createBlogModalVisibility = useSelector(selectVisiblity);
   const [aboutBlogPageModalVisibility, setAboutBlogPageModalVisibility] =
     useState<boolean>();
   const dispatch = useDispatch<AppDispatch>();
@@ -83,7 +88,10 @@ function BlogPageActions() {
     {
       icon: <PencilIcon />,
       label: "New Post",
-      action: () => dispatch(setVisibility(true)),
+      action: () => {
+        dispatch(setIsUpdateMode(false));
+        dispatch(setVisibility(true));
+      },
       authorize: true,
     },
     {
@@ -121,13 +129,14 @@ function BlogPageActions() {
             );
           })}
         </div>
-        {createBlogModalVisibility && <CreateBlogModal />}
+
         {aboutBlogPageModalVisibility && (
           <Modal
             title={CONTENT_BLOG_ABOUT_TITLE}
-            htmlContent={CONTENT_BLOG_ABOUT_CONTENT}
             closeAction={() => setAboutBlogPageModalVisibility(false)}
-          />
+          >
+            <ParagraphRenderer isHtml paragraph={CONTENT_BLOG_ABOUT_CONTENT} />
+          </Modal>
         )}
       </>
     </FM_Reveal>

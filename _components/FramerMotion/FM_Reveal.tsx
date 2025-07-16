@@ -18,6 +18,7 @@ export default function FM_Reveal(props: FMRevealProps) {
       mainControls.start("hidden");
     }
   }, [isInView]);
+
   return (
     <div ref={ref}>
       <motion.div

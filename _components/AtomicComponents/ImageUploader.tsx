@@ -4,17 +4,21 @@ import Image from "next/image";
 import { useState } from "react";
 
 interface ImageUploaderProps {
+  defaultImage?: string | null;
+  viewMode?: boolean;
   label?: string;
   onChange?: (imageString: File | null) => void;
   error?: string;
 }
 
 export default function ImageUploader({
+  viewMode,
+  defaultImage,
   label,
   onChange,
   error,
 }: ImageUploaderProps) {
-  const [image, setImage] = useState<string | null>(null);
+  const [image, setImage] = useState(defaultImage);
   const errorClassname = `text-red-500 text-sm font-bold`;
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,6 +38,7 @@ export default function ImageUploader({
   return (
     <div className="flex flex-col gap-2">
       {label && <label className="text-gray-700 font-medium">{label}</label>}
+      {error && <div className={errorClassname}>{error}</div>}
 
       <div className="relative flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 hover:border-blue-500 transition-all duration-200">
         {image ? (
@@ -44,12 +49,14 @@ export default function ImageUploader({
               fill
               className="object-cover rounded-lg"
             />
-            <button
-              onClick={handleRemoveImage}
-              className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full shadow-md hover:bg-red-600 transition-all"
-            >
-              Remove
-            </button>
+            {!viewMode && (
+              <button
+                onClick={handleRemoveImage}
+                className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full shadow-md hover:bg-red-600 transition-all"
+              >
+                Remove
+              </button>
+            )}
           </div>
         ) : (
           <>
@@ -59,11 +66,7 @@ export default function ImageUploader({
               className="absolute w-full h-full opacity-0 cursor-pointer"
               onChange={handleImageUpload}
             />
-            {!error ? (
-              <p className="text-gray-500 text-sm">Click to upload an image</p>
-            ) : (
-              <div className={errorClassname}>{error}</div>
-            )}
+            <p className="text-gray-500 text-sm">Click to upload an image</p>
           </>
         )}
       </div>
