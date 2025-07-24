@@ -61,10 +61,10 @@ export default function NavBar() {
       name: "Blogs",
       route: "/blogs",
     },
-    // {
-    //   name: "Contact Me!",
-    //   route: "/",
-    // },
+    {
+      name: "About",
+      route: "/about-portfolio",
+    },
   ];
 
   return (

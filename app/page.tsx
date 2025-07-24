@@ -36,11 +36,19 @@ export default function HomePage() {
         <>
           <WelcomeText />
           <AvatarAndBio />
-          <AboutMe />
-          <MyLifeStory />
-          <FutureGoals />
-          <Hobbies />
         </>
+      </FM_Reveal>
+      <FM_Reveal className={homepageClassname}>
+        <AboutMe />
+      </FM_Reveal>
+      <FM_Reveal className={homepageClassname}>
+        <MyLifeStory />
+      </FM_Reveal>
+      <FM_Reveal className={homepageClassname}>
+        <FutureGoals />
+      </FM_Reveal>
+      <FM_Reveal className={homepageClassname}>
+        <Hobbies />
       </FM_Reveal>
     </div>
   );
