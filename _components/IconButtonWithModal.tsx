@@ -1,58 +1,78 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { createPortal } from "react-dom";
 
 import FM_AppearOnHover from "./FramerMotion/FM_AppearOnHover";
+import { useIsMediumScreen } from "../_hooks/useIsMediumScreen";
+import { COLOR_WHITE } from "../_constants/Colors";
 
 export interface IconButtonWithModalProps {
   icon: string;
-  name: string;
-  description: string;
+  name?: string;
+  description?: string;
+  url?: string;
 }
 
 const IconButtonWithModal: React.FC<IconButtonWithModalProps> = ({
   icon,
   name,
   description,
+  url,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const buttonRef = useRef<HTMLDivElement>(null);
+  const timeout = 2000;
+  const isMediumScreen = useIsMediumScreen();
+  const showModalTimeoutRef = useRef<NodeJS.Timeout>(null);
   const [position, setPosition] = useState<{
     top: number;
     left: number;
     width: number;
   } | null>(null);
-  const wrapperClassname = `relative flex flex-col space-y-4 items-center 
+  const wrapperClassname = `relative flex flex-col space-y-4 items-center
     justify-center w-24 h-24 md:w-48 md:h-48`;
   const buttonClassname = `absolute
-    rounded-lg flex items-center justify-center
+    rounded-lg flex items-center justify-center    
     transform transition duration-500 hover:scale-110
   `;
-  const hoverStyle: React.CSSProperties = {
-    transform: isHovered ? "scale(1.1)" : "scale(1)",
-  };
   const handleMouseEnter = () => {
     setIsHovered(true);
-    if (buttonRef.current) {
-      const rect = buttonRef.current.getBoundingClientRect();
-      setPosition({
-        top: rect.top + rect.height + 2, // below the icon
-        left: rect.left, // center-ish align (adjust as needed)
-        width: rect.width,
-      });
-    }
   };
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    if (showModalTimeoutRef.current) clearTimeout(showModalTimeoutRef.current);
+  };
+  const handleClick = () => {
+    if (url) window.open(url);
+  };
+  useEffect(() => {
+    if (!isHovered && showModalTimeoutRef.current)
+      clearTimeout(showModalTimeoutRef.current);
+    showModalTimeoutRef.current = setTimeout(() => {
+      if (buttonRef.current) {
+        const rect = buttonRef.current.getBoundingClientRect();
+        setPosition({
+          top: rect.top, // below the icon
+          left: rect.left + 120, // center-ish align (adjust as needed)
+          width: rect.width,
+        });
+      }
+    }, timeout);
+  }, [isHovered]);
+
+  const shouldShowModal = isHovered && position && name && description;
 
   return (
     <div
       ref={buttonRef}
-      className={wrapperClassname}
+      className={`${wrapperClassname} ${isHovered ? "scale-up" : ""}`}
       onMouseEnter={handleMouseEnter}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseLeave={handleMouseLeave}
+      onClick={handleClick}
     >
       {/* Button with Icon */}
-      <div className={buttonClassname} style={hoverStyle}>
+      <div className={buttonClassname}>
         <Image
           src={icon}
           alt="avatar"
@@ -60,12 +80,12 @@ const IconButtonWithModal: React.FC<IconButtonWithModalProps> = ({
           height={0}
           sizes="100vh"
           style={{
-            width: "60%",
+            width: isMediumScreen ? "60%" : "50%",
           }}
         />
       </div>
 
-      {isHovered && position && (
+      {shouldShowModal && (
         <FM_AppearOnHover>
           <IconModal
             icon={icon}
@@ -88,7 +108,7 @@ interface IconModalProps extends IconButtonWithModalProps {
 }
 function IconModal(props: IconModalProps) {
   const modalClassname = `fixed p-3 rounded-md shadow-lg
-  bg-white border border-gray-200 z-10
+  bg-white border border-gray-200 z-10 cursor-default
 `;
   const modalTitleClassname = "font-semibold text-gray-800";
   const modalDescriptionClassname = "text-gray-600 text-sm mt-1";
