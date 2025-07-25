@@ -4,8 +4,9 @@ import Image from "next/image";
 import { createPortal } from "react-dom";
 
 import FM_AppearOnHover from "./FramerMotion/FM_AppearOnHover";
+import Modal from "./Modal";
+import Button, { ButtonVariants } from "./AtomicComponents/Button";
 import { useIsMediumScreen } from "../_hooks/useIsMediumScreen";
-import { COLOR_WHITE } from "../_constants/Colors";
 
 export interface IconButtonWithModalProps {
   icon: string;
@@ -23,7 +24,6 @@ const IconButtonWithModal: React.FC<IconButtonWithModalProps> = ({
   const [isHovered, setIsHovered] = useState(false);
   const buttonRef = useRef<HTMLDivElement>(null);
   const timeout = 2000;
-  const isMediumScreen = useIsMediumScreen();
   const showModalTimeoutRef = useRef<NodeJS.Timeout>(null);
   const [position, setPosition] = useState<{
     top: number;
@@ -32,10 +32,12 @@ const IconButtonWithModal: React.FC<IconButtonWithModalProps> = ({
   } | null>(null);
   const wrapperClassname = `relative flex flex-col space-y-4 items-center
     justify-center w-24 h-24 md:w-48 md:h-48`;
-  const buttonClassname = `absolute
+  const buttonClassname = `absolute w-full
     rounded-lg flex items-center justify-center    
     transform transition duration-500 hover:scale-110
   `;
+  const [isClickModalOpen, setIsClickModalOpen] = useState(false);
+  const isMediumScreen = useIsMediumScreen();
   const handleMouseEnter = () => {
     setIsHovered(true);
   };
@@ -44,7 +46,10 @@ const IconButtonWithModal: React.FC<IconButtonWithModalProps> = ({
     if (showModalTimeoutRef.current) clearTimeout(showModalTimeoutRef.current);
   };
   const handleClick = () => {
-    if (url) window.open(url);
+    if (url && isMediumScreen) window.open(url);
+    else {
+      setIsClickModalOpen(true);
+    }
   };
   useEffect(() => {
     if (!isHovered && showModalTimeoutRef.current)
@@ -61,52 +66,65 @@ const IconButtonWithModal: React.FC<IconButtonWithModalProps> = ({
     }, timeout);
   }, [isHovered]);
 
-  const shouldShowModal = isHovered && position && name && description;
+  const shouldShowHoverModal =
+    isHovered && isMediumScreen && position && name && description;
 
   return (
-    <div
-      ref={buttonRef}
-      className={`${wrapperClassname} ${isHovered ? "scale-up" : ""}`}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      onClick={handleClick}
-    >
-      {/* Button with Icon */}
-      <div className={buttonClassname}>
-        <Image
-          src={icon}
-          alt="avatar"
-          width={0}
-          height={0}
-          sizes="100vh"
-          style={{
-            width: isMediumScreen ? "60%" : "50%",
-          }}
-        />
+    <>
+      <div
+        ref={buttonRef}
+        className={`${wrapperClassname} ${isHovered ? "scale-up" : ""}`}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        onClick={handleClick}
+      >
+        {/* Button with Icon */}
+        <div className={buttonClassname}>
+          <Image
+            src={icon}
+            alt="avatar"
+            width={0}
+            height={0}
+            sizes="100vh"
+            style={{
+              width: "50%",
+            }}
+          />
+        </div>
       </div>
 
-      {shouldShowModal && (
+      {shouldShowHoverModal && (
         <FM_AppearOnHover>
-          <IconModal
+          <HoverModal
             icon={icon}
             name={name}
             description={description}
+            url={url}
             top={position.top}
             left={position.left}
             width={position.width}
           />
         </FM_AppearOnHover>
       )}
-    </div>
+
+      {isClickModalOpen && (
+        <ClickModal
+          name={name}
+          description={description}
+          url={url}
+          setShowModal={setIsClickModalOpen}
+        />
+      )}
+    </>
   );
 };
 
-interface IconModalProps extends IconButtonWithModalProps {
+interface HoverModalProps extends IconButtonWithModalProps {
   top: number;
   left: number;
   width: number;
 }
-function IconModal(props: IconModalProps) {
+function HoverModal(props: HoverModalProps) {
   const modalClassname = `fixed p-3 rounded-md shadow-lg
   bg-white border border-gray-200 z-10 cursor-default
 `;
@@ -126,6 +144,34 @@ function IconModal(props: IconModalProps) {
       <div className={modalDescriptionClassname}>{props.description}</div>
     </div>,
     document.body
+  );
+}
+
+type ClickModalType = Omit<IconButtonWithModalProps, "icon">;
+interface ClickModalProps extends ClickModalType {
+  setShowModal: (value: boolean) => void;
+}
+
+function ClickModal(props: ClickModalProps) {
+  const bottomActions = [
+    <Button
+      key="goto"
+      label="Go to Website"
+      variant={ButtonVariants.PRIMARY}
+      onClick={() => window.open(props.url)}
+    />,
+  ];
+  const handleClose = () => {
+    props.setShowModal(false);
+  };
+  return (
+    <Modal
+      closeAction={handleClose}
+      title={props.name as string}
+      bottomActions={bottomActions}
+    >
+      <>{props.description as string}</>
+    </Modal>
   );
 }
 export default IconButtonWithModal;

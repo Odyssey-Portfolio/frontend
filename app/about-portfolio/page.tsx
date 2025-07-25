@@ -1,21 +1,24 @@
+"use client";
 import FM_Reveal from "../../_components/FramerMotion/FM_Reveal";
 import IconButtonWithModal from "../../_components/IconButtonWithModal";
-import { COLOR_PRIMARY } from "../../_constants/Colors";
+import { COLOR_PRIMARY, COLOR_SECONDARY } from "../../_constants/Colors";
 import {
   FONT_LEXEND,
   FONT_POPPINS,
   FONTSTYLE_HEADING1,
   FONTSTYLE_SUBTEXT1,
+  FONTSTYLE_SUBTEXT2,
 } from "../../_constants/Fonts";
 import {
   ABOUT_PORTFOLIO_FLATICON,
   ABOUT_PORTFOLIO_GITHUB,
   ABOUT_PORTFOLIO_TECH_STACKS,
 } from "../../_contents/AboutPortfolio";
+import { useIsMediumScreen } from "../../_hooks/useIsMediumScreen";
 
 const headingTextClassname = `${FONTSTYLE_SUBTEXT1} ${FONT_POPPINS.className}`;
 export default function AboutPortfolioPage() {
-  const aboutPortfolioPageClassname = `flex flex-col mt-32 md:mx-24 mb-12   
+  const aboutPortfolioPageClassname = `flex flex-col mt-32 mx-5 md:mx-24 mb-12  
                                 items-center justify-between space-y-12`;
   return (
     <div>
@@ -33,34 +36,42 @@ export default function AboutPortfolioPage() {
 }
 
 function HeadingText() {
+  const wrapperClassname = `text-center flex flex-col space-y-3`;
   const h1Classname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING1}`;
-  //const h2Classname = `${FONT_LEXEND.className} ${FONTSTYLE_SUBTEXT2}`;
+  const h2Classname = `${FONT_LEXEND.className} ${FONTSTYLE_SUBTEXT2}`;
   return (
-    <FM_Reveal>
-      <h1 className={h1Classname} style={{ color: COLOR_PRIMARY }}>
-        About Portfolio
-      </h1>
+    <FM_Reveal className={wrapperClassname}>
+      <>
+        <h1 className={h1Classname} style={{ color: COLOR_PRIMARY }}>
+          My Portfolio
+        </h1>
+        <h6 className={h2Classname} style={{ color: COLOR_SECONDARY }}>
+          Made with ❤️ and ✨
+        </h6>
+      </>
     </FM_Reveal>
   );
 }
 
 function TechStackSection() {
-  const techStackSectionWrapperClassname = `flex flex-col space-y-5 items-center`;
-  const techStackContainerClassname = `flex flex-row justify-center
-  space-x-3 w-full md:space-x-12 overflow-x-auto`;
+  const techStackSectionWrapperClassname = `flex flex-col space-y-5 items-center w-full`;
+  const techStackContainerClassname = `grid grid-cols-3 justify-center
+  w-full`;
+  const iconButtonWithModalWrapperClassname = `col-span-1 align-center flex flex-row justify-center`;
   return (
     <div className={techStackSectionWrapperClassname}>
       <div className={headingTextClassname}>Tech Stack</div>
       <div className={techStackContainerClassname}>
         {ABOUT_PORTFOLIO_TECH_STACKS.map((item, key) => {
           return (
-            <IconButtonWithModal
-              key={key}
-              icon={item.icon}
-              name={item.name}
-              description={item.description}
-              url={item.url}
-            />
+            <div className={iconButtonWithModalWrapperClassname} key={key}>
+              <IconButtonWithModal
+                icon={item.icon}
+                name={item.name}
+                description={item.description}
+                url={item.url}
+              />
+            </div>
           );
         })}
       </div>
@@ -68,7 +79,9 @@ function TechStackSection() {
   );
 }
 function ExtraInfoSection() {
-  const extraInfoSectionWrapper = `columns-2 w-full`;
+  const isMediumScreen = useIsMediumScreen();
+  const extraInfoSectionWrapper = `w-full 
+  ${isMediumScreen ? `columns-2` : `flex flex-col space-y-12 md:columns-2`}`;
   return (
     <div className={extraInfoSectionWrapper}>
       <ResourcesSection />

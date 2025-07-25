@@ -29,6 +29,13 @@ export const ABOUT_PORTFOLIO_TECH_STACKS: IconButtonWithModalProps[] = [
     name: "Docker",
     url: "https://www.docker.com",
   },
+  {
+    icon: "/neon-database.svg",
+    description:
+      "A serverless Postgres platform allowing teams to ship scalable apps faster than ever before.",
+    name: "Neon Postgres Database",
+    url: "https://neon.com",
+  },
 ];
 
 export const ABOUT_PORTFOLIO_FLATICON: IconButtonWithModalProps = {
