@@ -10,7 +10,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useIsMediumScreen } from "../../../_hooks/useIsMediumScreen";
 import { useParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { getBlogByIdThunk } from "../../../_redux/blogDetailsPage/blogDetailsPageThunk";
 import { AppDispatch } from "../../../_redux/store";
 import Spinner from "../../../_components/AtomicComponents/Spinner";
@@ -20,6 +20,7 @@ import {
   selectIsLoading,
 } from "../../../_redux/blogDetailsPage/blogDetailsPageSelector";
 import EmptyList from "../../../_components/EmptyList";
+import { toggleWavyBackground } from "../../../_redux/wavyBackground/wavyBackgroundActions";
 
 export default function BlogDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -38,7 +39,18 @@ export default function BlogDetailsPage() {
       behavior: "smooth", // Smooth scroll to top
     });
   }, []);
+  /*Hides the background right before 
+      browser paints the rendered React DOM on the screen*/
+  useLayoutEffect(() => {
+    dispatch(toggleWavyBackground(false));
+  }, []);
 
+  /*Enables the background again on exit */
+  useEffect(() => {
+    return () => {
+      dispatch(toggleWavyBackground(true));
+    };
+  }, []);
   return (
     <FM_Reveal className={blogDetailsPageClassname}>
       <>

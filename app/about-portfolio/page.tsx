@@ -91,25 +91,22 @@ function ExtraInfoSection() {
 }
 
 function ResourcesSection() {
-  const techStackSectionWrapperClassname = `flex flex-col space-y-5 items-center`;
-  const techStackContainerClassname = `flex flex-col md:flex-row justify-center md:space-x-12`;
+  const techStackSectionWrapperClassname = `flex flex-col space-y-5 items-center w-full h-full`;
   return (
     <div className={techStackSectionWrapperClassname}>
       <div className={headingTextClassname}>Resources</div>
-      <div className={techStackContainerClassname}>
-        <IconButtonWithModal
-          icon={ABOUT_PORTFOLIO_FLATICON.icon}
-          name={ABOUT_PORTFOLIO_FLATICON.name}
-          description={ABOUT_PORTFOLIO_FLATICON.description}
-          url={ABOUT_PORTFOLIO_FLATICON.url}
-        />
-      </div>
+      <IconButtonWithModal
+        icon={ABOUT_PORTFOLIO_FLATICON.icon}
+        name={ABOUT_PORTFOLIO_FLATICON.name}
+        description={ABOUT_PORTFOLIO_FLATICON.description}
+        url={ABOUT_PORTFOLIO_FLATICON.url}
+      />
     </div>
   );
 }
 
 function PortfolioRepositorySection() {
-  const gitHubSectionWrapperClassname = `flex flex-col space-y-5 items-center w-full`;
+  const gitHubSectionWrapperClassname = `flex flex-col space-y-5 items-center w-full h-full`;
   return (
     <div className={gitHubSectionWrapperClassname}>
       <div className={headingTextClassname}>Repository</div>

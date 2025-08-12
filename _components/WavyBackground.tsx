@@ -1,14 +1,20 @@
 "use client";
 import { useIsMediumScreen } from "@/_hooks/useIsMediumScreen";
+import { useSelector } from "react-redux";
+import { selectWavyBackgroundEnabled } from "../_redux/wavyBackground/wavyBackgroundSelector";
+import FM_FadeIn from "./FramerMotion/FM_FadeIn";
 
 interface WavyBackgroundProps {
   children: React.ReactNode;
 }
 export default function WavyBackground(props: WavyBackgroundProps) {
+  const backgroundEnabled = useSelector(selectWavyBackgroundEnabled);
   return (
     <>
       <div className="w-full min-h-screen">
-        <Background />
+        <FM_FadeIn showChildren={backgroundEnabled} duration={0.5}>
+          <Background />
+        </FM_FadeIn>
         {/* Page content */}
         <div className="relative">{props.children}</div>
       </div>

@@ -4,6 +4,7 @@ import blogDetailsPageReducer from "./blogDetailsPage/blogDetailsPageSlice";
 import blogModalReducer from "./blogModal/blogModalSlice";
 import getBlogsReducer from "./getBlogs/getBlogsSlice";
 import snackbarReducer from "./snackbar/snackbarSlice";
+import wavyBackgroundReducer from "./wavyBackground/wavyBackgroundSlice";
 export const store = configureStore({
   reducer: {
     blogModal: blogModalReducer,
@@ -11,6 +12,7 @@ export const store = configureStore({
     blogDetailsPage: blogDetailsPageReducer,
     auth: authReducer,
     snackbar: snackbarReducer,
+    wavyBackground: wavyBackgroundReducer,
   },
 });
 

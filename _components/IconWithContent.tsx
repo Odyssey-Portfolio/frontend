@@ -13,7 +13,7 @@ export interface IconWithContentProps {
 }
 export default function IconWithContent(props: IconWithContentProps) {
   const iconWithContentClassname =
-    "flex flex-col space-y-5 items-center md:flex-row md:space-x-8";
+    "flex flex-col space-y-5 md:flex-row md:space-x-8 md:space-y-0 items-center";
   const contentClassname = `${FONT_POPPINS.className} ${FONTSTYLE_SUBTEXT1} 
                             text-center md:text-left md:col-span-1`;
   return (

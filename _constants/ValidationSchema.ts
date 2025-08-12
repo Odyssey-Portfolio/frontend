@@ -31,10 +31,11 @@ export const createBlogSchema = yup.object({
     .string()
     .required("Description is required")
     .max(300, "Description can't exceed 300 characters"),
-  content: yup
-    .string()
-    .required("Content is required")
-    .min(20, "Content must be at least 20 characters"),
+  //TODO: Apply validation on description state variable, instead of here.
+  //content: yup
+  //  .string()
+  //  .required("Content is required")
+  //  .min(20, "Content must be at least 20 characters"),
 });
 
 export const registerSchema = yup.object({
