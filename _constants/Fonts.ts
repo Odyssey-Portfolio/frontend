@@ -1,9 +1,17 @@
 import { Lexend, Poppins } from "next/font/google";
 
 /*Custom fonts here */
-export const FONT_LEXEND = Lexend({ subsets: ["latin"] });
-export const FONT_POPPINS = Poppins({ weight: "400", subsets: ["latin"] });
-export const FONT_POPPINS2 = Poppins({ weight: "800", subsets: ["latin"] });
+export const FONT_LEXEND = Lexend({ subsets: ["latin"], display: "swap" });
+export const FONT_POPPINS = Poppins({
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
+});
+export const FONT_POPPINS2 = Poppins({
+  weight: "800",
+  subsets: ["latin"],
+  display: "swap",
+});
 
 /*Custom font styles here */
 export const FONTSTYLE_HEADING1 = `font-bold text-6xl`;

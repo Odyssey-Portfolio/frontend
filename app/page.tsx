@@ -1,3 +1,4 @@
+"use client";
 import RoundedImage from "@/_components/RoundedImage";
 
 import IconWithContent, {
@@ -27,6 +28,9 @@ import {
   FONTSTYLE_HEADING2,
   FONTSTYLE_SUBTEXT2,
 } from "../_constants/Fonts";
+import Button from "../_components/AtomicComponents/Button";
+import CVCarousel from "../_components/CVCarousel";
+import { useState } from "react";
 
 export default function HomePage() {
   const homepageClassname = `flex flex-col mt-32 md:mx-12 mb-12 items-center justify-between space-y-20`;
@@ -88,7 +92,9 @@ function AvatarAndBio() {
 function AboutMe() {
   const aboutMeClassname = `flex flex-col w-4/5 items-center space-y-3`;
   const headingClassname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING2} text-center`;
+  const viewCvClassname = ``;
   const iconWithContentClassname = `space-y-2`;
+  const [showCvModal, setShowCvModal] = useState<boolean>(false);
   const information: IconWithContentType[] = [
     { icon: <UserIcon />, content: "Đào Việt Anh (Andy)" },
     { icon: <CalendarDaysIcon />, content: "March 06, 2003" },
@@ -113,6 +119,12 @@ function AboutMe() {
             />
           );
         })}
+      </div>
+      <div className={viewCvClassname}>
+        <Button label="View my CVs" onClick={() => setShowCvModal(true)} />
+        {showCvModal && (
+          <CVCarousel closeAction={() => setShowCvModal(false)} />
+        )}
       </div>
     </div>
   );
