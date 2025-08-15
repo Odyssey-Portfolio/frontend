@@ -14,7 +14,10 @@ export default function FM_FadeIn(props: FMFadeInProps) {
   const duration = props.duration;
   const delay = props.delay;
   const mainControls = useAnimation();
-
+  const visibilityClassname = props.showChildren
+    ? ``
+    : `invisible pointer-events-none`;
+  const fmFadeInClassname = `${visibilityClassname} ${props.className}`;
   useEffect(() => {
     if (props.showChildren) mainControls.start("visible");
     else mainControls.start("hidden");
@@ -28,7 +31,7 @@ export default function FM_FadeIn(props: FMFadeInProps) {
         }}
         initial="hidden"
         animate={mainControls}
-        className={props.className}
+        className={fmFadeInClassname}
         transition={{ duration: duration, delay: delay }}
       >
         {props.children}

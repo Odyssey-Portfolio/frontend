@@ -24,15 +24,21 @@ import {
   useRef,
   useState,
 } from "react";
+import FM_FadeIn from "./FramerMotion/FM_FadeIn";
+import FM_Scale from "./FramerMotion/FM_Scale";
 
 interface CVCarouselProps {
   closeAction: () => void;
+  showCarousel?: boolean;
 }
 export default function CVCarousel(props: CVCarouselProps) {
   return createPortal(
-    <Backdrop closeAction={props.closeAction}>
-      <CVHorizontalScrollWrapper />
-    </Backdrop>,
+    <FM_FadeIn showChildren={props.showCarousel || false}>
+      <Backdrop closeAction={props.closeAction}>
+        <CVHorizontalScrollWrapper />
+      </Backdrop>
+    </FM_FadeIn>,
+
     document.body
   );
 }
@@ -41,7 +47,7 @@ interface BackdropProps extends CVCarouselProps {
   children: JSX.Element;
 }
 function Backdrop(props: BackdropProps) {
-  const backdropClassname = `fixed inset-0 bg-gray-500/50 flex flex-row items-center justify-center`;
+  const backdropClassname = `fixed inset-0 bg-gray-500/50 flex flex-row items-center justify-center z-30`;
   const xButtonClassname = `absolute top-0 right-0 p-2`;
   return (
     <div className={backdropClassname}>
@@ -58,7 +64,7 @@ function Backdrop(props: BackdropProps) {
 }
 
 function CVHorizontalScrollWrapper() {
-  const cvHorizontalScrollWrapperClassname = `flex flex-row space-x-12 items-center justify-center`;
+  const cvHorizontalScrollWrapperClassname = `flex flex-row items-center justify-center`;
   const cvHorizontalScrollRef = useRef<CVHorizontalScrollRef>(null);
   return (
     <div className={cvHorizontalScrollWrapperClassname}>
@@ -82,7 +88,7 @@ interface CVHorizontalScrollRef {
 
 const CVHorizontalScroll = forwardRef(
   (_: unknown, ref: Ref<CVHorizontalScrollRef>) => {
-    const cvHorizontalScrollClassname = `flex flex-row space-x-5 w-3/5
+    const cvHorizontalScrollClassname = `flex flex-row space-x-1 w-3/5
     overflow-hidden scroll-smooth items-center rounded-lg`;
     const indexes = [0, 1, 2];
     const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -155,30 +161,32 @@ function CVCard({ index, image, isActive, onClick }: CVCardProps) {
     setScreenHeight(window.innerHeight);
   }, []);
   return (
-    <div
-      className={cvCardClassname}
-      style={{
-        backgroundColor: COLOR_WHITE,
-        width: isActive ? screenWidth * 0.4 : screenWidth * 0.21,
-        height: isActive ? screenHeight * 0.85 : screenWidth * 0.25,
-      }}
-      onClick={() => onClick(index)}
-    >
-      <div className={cvThumbnailClassname}>
-        <Image src={image} alt="avatar" width={500} height={100} />
+    <FM_Scale shouldScale={isActive || false} fromScale={0.6} toScale={0.8}>
+      <div
+        className={cvCardClassname}
+        style={{
+          backgroundColor: COLOR_WHITE,
+          height: screenHeight * 0.85,
+          width: screenWidth * 0.4,
+        }}
+        onClick={() => onClick(index)}
+      >
+        <div className={cvThumbnailClassname}>
+          <Image src={image} alt="avatar" width={500} height={100} />
+        </div>
+        {isActive && (
+          <>
+            <div className={cvNameClassname}>My CV</div>
+            <div className={cvDescriptionClassname}>
+              {DUMMYTEXT_LOREMIPSUMSHORT}
+            </div>
+            <div className={downloadIconClassname}>
+              <DownloadButton />
+            </div>
+          </>
+        )}
       </div>
-      {isActive && (
-        <>
-          <div className={cvNameClassname}>My CV</div>
-          <div className={cvDescriptionClassname}>
-            {DUMMYTEXT_LOREMIPSUMSHORT}
-          </div>
-          <div className={downloadIconClassname}>
-            <DownloadButton />
-          </div>
-        </>
-      )}
-    </div>
+    </FM_Scale>
   );
 }
 

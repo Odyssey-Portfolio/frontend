@@ -14,13 +14,11 @@ export interface ModalProps {
   closeAction: () => void;
 }
 export default function Modal(props: ModalProps) {
-  if (typeof window === "undefined") return null; // SSR-safe
   const modalRoot = document.body;
   if (!modalRoot) return null;
-  // "Collapses" the modal on first load, to leave space for users to click on.
-  const modalHeightClassname = props.show ? `h-full` : `h-0`;
+  if (typeof window === "undefined") return null; // SSR-safe
   return createPortal(
-    <FM_FadeIn showChildren={props.show} className={modalHeightClassname}>
+    <FM_FadeIn showChildren={props.show}>
       <ModalBackdrop {...props}>
         <>
           <ModalBody {...props}>{props.children}</ModalBody>

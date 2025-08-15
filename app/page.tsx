@@ -94,7 +94,7 @@ function AboutMe() {
   const headingClassname = `${FONT_LEXEND.className} ${FONTSTYLE_HEADING2} text-center`;
   const viewCvClassname = ``;
   const iconWithContentClassname = `space-y-2`;
-  const [showCvModal, setShowCvModal] = useState<boolean>(false);
+  const [showCarousel, setShowCarousel] = useState<boolean>(false);
   const information: IconWithContentType[] = [
     { icon: <UserIcon />, content: "Đào Việt Anh (Andy)" },
     { icon: <CalendarDaysIcon />, content: "March 06, 2003" },
@@ -121,10 +121,11 @@ function AboutMe() {
         })}
       </div>
       <div className={viewCvClassname}>
-        <Button label="View my CVs" onClick={() => setShowCvModal(true)} />
-        {showCvModal && (
-          <CVCarousel closeAction={() => setShowCvModal(false)} />
-        )}
+        <Button label="View my CVs" onClick={() => setShowCarousel(true)} />
+        <CVCarousel
+          closeAction={() => setShowCarousel(false)}
+          showCarousel={showCarousel}
+        />
       </div>
     </div>
   );
