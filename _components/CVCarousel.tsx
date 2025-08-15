@@ -4,9 +4,9 @@ import Image from "next/image";
 import { createPortal } from "react-dom";
 import {
   XCircleIcon,
-  ArrowBigRight,
-  ArrowBigLeft,
   DownloadIcon,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import {
   FONTSTYLE_PARAGRAPH2,
@@ -16,7 +16,14 @@ import {
   FONT_POPPINS,
 } from "../_constants/Fonts";
 import { DUMMYTEXT_LOREMIPSUMSHORT } from "../_constants/DummyText";
-import { useEffect, useRef, useState } from "react";
+import {
+  Ref,
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 
 interface CVCarouselProps {
   closeAction: () => void;
@@ -24,7 +31,7 @@ interface CVCarouselProps {
 export default function CVCarousel(props: CVCarouselProps) {
   return createPortal(
     <Backdrop closeAction={props.closeAction}>
-      <CVHorizontalScroll />
+      <CVHorizontalScrollWrapper />
     </Backdrop>,
     document.body
   );
@@ -50,35 +57,57 @@ function Backdrop(props: BackdropProps) {
   );
 }
 
-//interface CVHorizontalScrollProps {}
-function CVHorizontalScroll() {
-  const cvHorizontalScrollClassname = `flex flex-row gap-5 w-5/6
-    overflow-hidden scroll-smooth items-center`;
-  const indexes = [0, 1, 2];
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const [activeCard, setActiveCard] = useState(0);
-  const goToNextCard = () => {
-    if (activeCard < indexes.length - 1) setActiveCard(activeCard + 1);
-  };
-  const goToPrevCard = () => {
-    if (activeCard > 0) setActiveCard(activeCard - 1);
-  };
-  useEffect(() => {
-    if (cardRefs.current[activeCard]) {
-      cardRefs.current[activeCard]?.scrollIntoView({
-        behavior: "smooth",
-        inline: "center",
-        block: "nearest",
-      });
-    }
-  }, [activeCard]);
+function CVHorizontalScrollWrapper() {
+  const cvHorizontalScrollWrapperClassname = `flex flex-row space-x-12 items-center justify-center`;
+  const cvHorizontalScrollRef = useRef<CVHorizontalScrollRef>(null);
   return (
-    <>
-      <ArrowBigLeft
-        onClick={goToPrevCard}
-        className="w-12 h-12"
-        style={{ color: COLOR_RED }}
+    <div className={cvHorizontalScrollWrapperClassname}>
+      <NavigationButton
+        variant="left"
+        goToPrevCard={() => cvHorizontalScrollRef.current?.goToPrevCard()}
       />
+      <CVHorizontalScroll ref={cvHorizontalScrollRef} />
+      <NavigationButton
+        variant="right"
+        goToNextCard={() => cvHorizontalScrollRef.current?.goToNextCard()}
+      />
+    </div>
+  );
+}
+
+interface CVHorizontalScrollRef {
+  goToPrevCard: () => void;
+  goToNextCard: () => void;
+}
+
+const CVHorizontalScroll = forwardRef(
+  (_: unknown, ref: Ref<CVHorizontalScrollRef>) => {
+    const cvHorizontalScrollClassname = `flex flex-row space-x-5 w-3/5
+    overflow-hidden scroll-smooth items-center rounded-lg`;
+    const indexes = [0, 1, 2];
+    const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+    const [activeCard, setActiveCard] = useState(0);
+    useImperativeHandle(ref, () => {
+      return {
+        goToPrevCard() {
+          if (activeCard > 0) setActiveCard(activeCard - 1);
+        },
+        goToNextCard() {
+          if (activeCard < indexes.length - 1) setActiveCard(activeCard + 1);
+        },
+      };
+    });
+
+    useEffect(() => {
+      if (cardRefs.current[activeCard]) {
+        cardRefs.current[activeCard]?.scrollIntoView({
+          behavior: "smooth",
+          inline: "center",
+          block: "nearest",
+        });
+      }
+    }, [activeCard]);
+    return (
       <div className={cvHorizontalScrollClassname}>
         {indexes.map((index, key) => {
           const isActive = index === activeCard;
@@ -99,15 +128,10 @@ function CVHorizontalScroll() {
           );
         })}
       </div>
-      <ArrowBigRight
-        onClick={goToNextCard}
-        className="w-12 h-12"
-        style={{ color: COLOR_RED }}
-      />
-    </>
-  );
-}
-
+    );
+  }
+);
+CVHorizontalScroll.displayName = "CVHorizontalScroll";
 interface CVCardProps {
   index: number;
   image: string;
@@ -180,5 +204,46 @@ function DownloadButton() {
         Download
       </div>
     </div>
+  );
+}
+
+interface NavigationButtonProps {
+  variant: "left" | "right";
+  goToPrevCard?: () => void | undefined;
+  goToNextCard?: () => void | undefined;
+}
+function NavigationButton({
+  variant,
+  goToPrevCard,
+  goToNextCard,
+}: NavigationButtonProps) {
+  const [clicked, setClicked] = useState(false);
+  const buttonSizeClassname = "w-24 h-24";
+  const handleClick = () => {
+    setClicked(true); // set clicked state
+    setTimeout(() => setClicked(false), 100); // reset after 200ms
+
+    // Trigger the correct action
+    if (variant === "left" && goToPrevCard) goToPrevCard();
+    if (variant === "right" && goToNextCard) goToNextCard();
+  };
+
+  const iconColor = clicked ? COLOR_PRIMARY : COLOR_WHITE;
+  return (
+    <>
+      {variant === "left" ? (
+        <ChevronLeft
+          onClick={handleClick}
+          className={buttonSizeClassname}
+          style={{ color: iconColor }}
+        />
+      ) : (
+        <ChevronRight
+          onClick={handleClick}
+          className={buttonSizeClassname}
+          style={{ color: iconColor }}
+        />
+      )}
+    </>
   );
 }

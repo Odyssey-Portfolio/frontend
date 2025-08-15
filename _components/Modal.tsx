@@ -4,10 +4,12 @@ import { XCircleIcon } from "@heroicons/react/16/solid";
 import { createPortal } from "react-dom";
 import { COLOR_RED } from "../_constants/Colors";
 import { JSX } from "react";
+import FM_FadeIn from "./FramerMotion/FM_FadeIn";
 
 export interface ModalProps {
   title: string;
   children: JSX.Element;
+  show: boolean;
   bottomActions?: JSX.Element[];
   closeAction: () => void;
 }
@@ -15,14 +17,17 @@ export default function Modal(props: ModalProps) {
   if (typeof window === "undefined") return null; // SSR-safe
   const modalRoot = document.body;
   if (!modalRoot) return null;
-
+  // "Collapses" the modal on first load, to leave space for users to click on.
+  const modalHeightClassname = props.show ? `h-full` : `h-0`;
   return createPortal(
-    <ModalBackdrop {...props}>
-      <>
-        <ModalBody {...props}>{props.children}</ModalBody>
-        <ModalBottomActions {...props} />
-      </>
-    </ModalBackdrop>,
+    <FM_FadeIn showChildren={props.show} className={modalHeightClassname}>
+      <ModalBackdrop {...props}>
+        <>
+          <ModalBody {...props}>{props.children}</ModalBody>
+          <ModalBottomActions {...props} />
+        </>
+      </ModalBackdrop>
+    </FM_FadeIn>,
     modalRoot
   );
 }

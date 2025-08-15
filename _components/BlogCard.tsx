@@ -177,15 +177,14 @@ function ConfirmDeleteBlogModal(props: ConfirmDeleteBlogModalProps) {
   ];
   return (
     <>
-      {props.showModal && (
-        <Modal
-          title="Confirm Delete"
-          bottomActions={bottomActions}
-          closeAction={() => props.setShowModal(false)}
-        >
-          <>Do you really want to soft delete this blog?</>
-        </Modal>
-      )}
+      <Modal
+        title="Confirm Delete"
+        bottomActions={bottomActions}
+        closeAction={() => props.setShowModal(false)}
+        show={props.showModal}
+      >
+        <>Do you really want to soft delete this blog?</>
+      </Modal>
     </>
   );
 }

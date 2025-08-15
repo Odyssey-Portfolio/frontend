@@ -107,14 +107,13 @@ const IconButtonWithModal: React.FC<IconButtonWithModalProps> = ({
         </FM_AppearOnHover>
       )}
 
-      {isClickModalOpen && (
-        <ClickModal
-          name={name}
-          description={description}
-          url={url}
-          setShowModal={setIsClickModalOpen}
-        />
-      )}
+      <ClickModal
+        name={name}
+        description={description}
+        url={url}
+        setShowModal={setIsClickModalOpen}
+        showModal={isClickModalOpen}
+      />
     </>
   );
 };
@@ -149,6 +148,7 @@ function HoverModal(props: HoverModalProps) {
 
 type ClickModalType = Omit<IconButtonWithModalProps, "icon">;
 interface ClickModalProps extends ClickModalType {
+  showModal: boolean;
   setShowModal: (value: boolean) => void;
 }
 
@@ -169,6 +169,7 @@ function ClickModal(props: ClickModalProps) {
       closeAction={handleClose}
       title={props.name as string}
       bottomActions={bottomActions}
+      show={props.showModal}
     >
       <>{props.description as string}</>
     </Modal>

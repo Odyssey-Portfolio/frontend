@@ -36,16 +36,16 @@ export default function ImageButtonWithModal(props: ImageButtonWithModalProps) {
           </span>
         </div>
       </div>
-      {isModalOpen && (
-        <Modal
-          title={props.title}
-          closeAction={() => {
-            setIsModalOpen(false);
-          }}
-        >
-          <ParagraphRenderer isHtml paragraph={props.htmlContent} />
-        </Modal>
-      )}
+
+      <Modal
+        title={props.title}
+        show={isModalOpen || false}
+        closeAction={() => {
+          setIsModalOpen(false);
+        }}
+      >
+        <ParagraphRenderer isHtml paragraph={props.htmlContent} />
+      </Modal>
     </div>
   );
 }
