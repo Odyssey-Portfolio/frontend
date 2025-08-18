@@ -130,14 +130,13 @@ function BlogPageActions() {
           })}
         </div>
 
-        {aboutBlogPageModalVisibility && (
-          <Modal
-            title={CONTENT_BLOG_ABOUT_TITLE}
-            closeAction={() => setAboutBlogPageModalVisibility(false)}
-          >
-            <ParagraphRenderer isHtml paragraph={CONTENT_BLOG_ABOUT_CONTENT} />
-          </Modal>
-        )}
+        <Modal
+          title={CONTENT_BLOG_ABOUT_TITLE}
+          show={aboutBlogPageModalVisibility || false}
+          closeAction={() => setAboutBlogPageModalVisibility(false)}
+        >
+          <ParagraphRenderer isHtml paragraph={CONTENT_BLOG_ABOUT_CONTENT} />
+        </Modal>
       </>
     </FM_Reveal>
   );

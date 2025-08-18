@@ -1,29 +1,48 @@
-import { promises as fs } from "fs";
-import pdf from "pdf-thumbnail";
+import * as pdfjsLib from "pdfjs-dist";
 
-export interface ThumbnailFromPdfProps {
-  pdfPath: string;
-  width?: number;
-  height?: number;
+interface GeneratePdfThumbnailProps {
+  pdfUrl: string;
+  thumbnailWidth?: number;
+  thumbnailHeight?: number;
 }
-export async function thumbnailFromPdf({
-  pdfPath,
-  width,
-  height,
-}: ThumbnailFromPdfProps) {
-  const pdfBuffer = await fs.readFile(pdfPath);
-
+export async function generatePdfThumbnail({
+  pdfUrl,
+  thumbnailWidth = 300,
+  thumbnailHeight = 200,
+}: GeneratePdfThumbnailProps): Promise<string> {
   try {
-    const data = await pdf(pdfBuffer, {
-      resize: {
-        width: width || 200, // default
-        height: height || 200, // default
-      },
-    });
-    const base64 = `data:image/png;base64,${data.toString()}`;
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      window.location.origin + "/pdf.worker.min.mjs";
+    const loadingTask = pdfjsLib.getDocument(pdfUrl);
+    const pdfDocument = await loadingTask.promise;
+    const page = await pdfDocument.getPage(1); // Get the first page
 
-    return base64;
-  } catch (err) {
-    console.error(err);
+    const viewport = page.getViewport({ scale: 1 });
+    const scale = Math.min(
+      thumbnailWidth / viewport.width,
+      thumbnailHeight / viewport.height
+    );
+
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+
+    if (!canvas || !context) return "";
+    canvas.width = thumbnailWidth;
+    canvas.height = thumbnailHeight;
+
+    const renderContext = {
+      canvas: canvas,
+      canvasContext: context,
+      viewport: page.getViewport({ scale: scale }),
+    };
+
+    await page.render(renderContext).promise;
+
+    // Get the thumbnail image data as a Data URL
+    const thumbnailDataUrl = canvas.toDataURL("image/jpeg");
+    return thumbnailDataUrl;
+  } catch (error) {
+    console.error("Error generating PDF thumbnail:", error);
+    return "";
   }
 }
