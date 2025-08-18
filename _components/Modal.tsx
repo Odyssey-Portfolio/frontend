@@ -14,9 +14,9 @@ export interface ModalProps {
   closeAction: () => void;
 }
 export default function Modal(props: ModalProps) {
+  if (typeof window === "undefined") return null; // SSR-safe
   const modalRoot = document.body;
   if (!modalRoot) return null;
-  if (typeof window === "undefined") return null; // SSR-safe
   return createPortal(
     <FM_FadeIn showChildren={props.show}>
       <ModalBackdrop {...props}>

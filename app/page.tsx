@@ -29,8 +29,9 @@ import {
   FONTSTYLE_SUBTEXT2,
 } from "../_constants/Fonts";
 import Button from "../_components/AtomicComponents/Button";
-import CVCarousel from "../_components/CVCarousel";
+
 import { useState } from "react";
+import CVCarousel from "../_components/CVCarousel/CVCarousel";
 
 export default function HomePage() {
   const homepageClassname = `flex flex-col mt-32 md:mx-12 mb-12 items-center justify-between space-y-20`;
@@ -119,9 +120,17 @@ function AboutMe() {
             />
           );
         })}
+        <Button
+          label="My CVs"
+          onClick={() => setShowCarousel(true)}
+          extraCss={{
+            borderRadius: "2rem",
+            marginTop: "2rem",
+            fontSize: "1.2rem",
+          }}
+        />
       </div>
       <div className={viewCvClassname}>
-        <Button label="View my CVs" onClick={() => setShowCarousel(true)} />
         <CVCarousel
           closeAction={() => setShowCarousel(false)}
           showCarousel={showCarousel}
