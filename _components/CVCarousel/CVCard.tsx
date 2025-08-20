@@ -26,7 +26,7 @@ export default function CVCard({
   const thumbnail = usePdfThumbnail({
     pdfUrl: item.pdfPath,
     thumbnailHeight: screenHeight * 0.85,
-    thumbnailWidth: screenWidth * 0.3,
+    thumbnailWidth: screenWidth * 0.31,
   });
   const cardHeight = screenHeight * 0.85;
   const cardWidth = screenWidth * 0.4;
@@ -36,9 +36,11 @@ export default function CVCard({
   const cvCardClassname = `relative rounded-lg grid grid-flow-col grid-rows-12 justify-center`;
   const cvThumbnailClassname = `row-span-12
     flex flex-row justify-center align-center select-none`;
-  const cvDescriptionWrapperClassname = `absolute rounded-b-lg bg-white z-30 row-span-5 grid-rows-5 bottom-0`;
+  const cvDescriptionWrapperClassname = `absolute rounded-b-lg bg-white z-30 row-span-6 grid-rows-6 bottom-0 w-full`;
   const cvNameClassname = `${cvContentClassname} ${FONTSTYLE_SUBTEXT1} 
     ${FONT_LEXEND.className} row-span-1 select-none`;
+  const cvPeriodClassname = `${cvContentClassname} ${FONTSTYLE_SUBTEXT2} 
+    ${FONT_POPPINS.className} row-span-1 select-none`;
   const cvDescriptionClassname = `${cvContentClassname} ${FONTSTYLE_PARAGRAPH2} 
     ${FONT_POPPINS.className} row-span-2 select-none`;
   const downloadIconClassname = `row-span-2 select-none`;
@@ -70,6 +72,7 @@ export default function CVCard({
         {isActive && (
           <div className={cvDescriptionWrapperClassname}>
             <div className={cvNameClassname}>{item.title}</div>
+            <div className={cvPeriodClassname}>{item.period}</div>
             <div className={cvDescriptionClassname}>{item.description}</div>
             <div className={downloadIconClassname}>
               <DownloadButton item={item} />

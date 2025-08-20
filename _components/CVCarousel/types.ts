@@ -18,6 +18,7 @@ export interface CVCardProps {
 
 export interface CVCardItem {
   title: string;
+  period: string;
   description: string;
   pdfPath: string;
 }
