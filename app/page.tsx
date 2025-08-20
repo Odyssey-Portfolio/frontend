@@ -32,6 +32,7 @@ import Button from "../_components/AtomicComponents/Button";
 
 import { useState } from "react";
 import CVCarousel from "../_components/CVCarousel/CVCarousel";
+import { NotebookText } from "lucide-react";
 
 export default function HomePage() {
   const homepageClassname = `flex flex-col mt-32 md:mx-12 mb-12 items-center justify-between space-y-20`;
@@ -123,10 +124,12 @@ function AboutMe() {
         <Button
           label="My CVs"
           onClick={() => setShowCarousel(true)}
+          icon={<NotebookText />}
           extraCss={{
             borderRadius: "2rem",
             marginTop: "2rem",
-            fontSize: "1.2rem",
+            fontSize: window.innerHeight * 0.03,
+            height: window.innerHeight * 0.08,
           }}
         />
       </div>

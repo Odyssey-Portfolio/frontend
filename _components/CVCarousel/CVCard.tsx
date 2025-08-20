@@ -1,3 +1,4 @@
+"use client";
 import { DownloadIcon } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
@@ -12,7 +13,7 @@ import {
 import FM_Scale from "../FramerMotion/FM_Scale";
 import { CVCardItem, CVCardProps } from "./types";
 import Image from "next/image";
-import { generatePdfThumbnail } from "../../utils/PdfUtils";
+import { usePdfThumbnail } from "../../_hooks/usePdfThumbnail/usePdfThumbnail";
 
 export default function CVCard({
   index,
@@ -22,37 +23,31 @@ export default function CVCard({
 }: CVCardProps) {
   const [screenWidth, setScreenWidth] = useState(0);
   const [screenHeight, setScreenHeight] = useState(0);
-  const [thumbnail, setThumbnail] = useState<string>();
-
+  const thumbnail = usePdfThumbnail({
+    pdfUrl: item.pdfPath,
+    thumbnailHeight: screenHeight * 0.85,
+    thumbnailWidth: screenWidth * 0.3,
+  });
   const cardHeight = screenHeight * 0.85;
   const cardWidth = screenWidth * 0.4;
   const fallbackImagePath = "/question-mark.png";
 
   const cvContentClassname = "p-3";
-  const cvCardClassname = `rounded-lg grid grid-flow-col grid-rows-12 justify-center`;
-  const cvThumbnailClassname = `${isActive ? "row-span-7" : "row-span-12"} 
+  const cvCardClassname = `relative rounded-lg grid grid-flow-col grid-rows-12 justify-center`;
+  const cvThumbnailClassname = `row-span-12
     flex flex-row justify-center align-center select-none`;
-  const cvDescriptionWrapperClassname = `bg-white z-30 row-span-5 grid-rows-6 `;
+  const cvDescriptionWrapperClassname = `absolute rounded-b-lg bg-white z-30 row-span-5 grid-rows-5 bottom-0`;
   const cvNameClassname = `${cvContentClassname} ${FONTSTYLE_SUBTEXT1} 
-    ${FONT_LEXEND.className} row-span-2 select-none`;
+    ${FONT_LEXEND.className} row-span-1 select-none`;
   const cvDescriptionClassname = `${cvContentClassname} ${FONTSTYLE_PARAGRAPH2} 
-    ${FONT_POPPINS.className} row-span-3 select-none`;
-  const downloadIconClassname = `row-span-1 select-none`;
+    ${FONT_POPPINS.className} row-span-2 select-none`;
+  const downloadIconClassname = `row-span-2 select-none`;
 
-  const updateThumbnail = async () => {
-    const res = await generatePdfThumbnail({
-      pdfUrl: item.pdfPath,
-      thumbnailWidth: 500,
-      thumbnailHeight: 200,
-    });
-    setThumbnail(res);
-  };
   useEffect(() => {
     setScreenWidth(window.innerWidth);
     setScreenHeight(window.innerHeight);
-    updateThumbnail();
   }, [item]);
-
+  if (typeof window === "undefined") return null; // SSR-safe
   return (
     <FM_Scale shouldScale={isActive || false} fromScale={0.65} toScale={0.88}>
       <div
@@ -65,7 +60,12 @@ export default function CVCard({
         onClick={() => onClick(index)}
       >
         <div className={cvThumbnailClassname}>
-          <Image src={thumbnail || fallbackImagePath} alt="avatar" fill />
+          <Image
+            src={thumbnail || fallbackImagePath}
+            alt="avatar"
+            fill
+            className="rounded-lg"
+          />
         </div>
         {isActive && (
           <div className={cvDescriptionWrapperClassname}>

@@ -1,5 +1,6 @@
 import { COLOR_PRIMARY, COLOR_RED } from "@/_constants/Colors";
 import { FONT_POPPINS } from "../../_constants/Fonts";
+import { JSX } from "react";
 
 export enum ButtonVariants {
   PRIMARY,
@@ -8,6 +9,7 @@ export enum ButtonVariants {
 interface ButtonProps {
   label: string;
   variant?: ButtonVariants;
+  icon?: JSX.Element;
   isLoading?: boolean;
   onClick?: () => void;
   extraCss?: React.CSSProperties;
@@ -15,6 +17,7 @@ interface ButtonProps {
 export default function Button(props: ButtonProps) {
   const buttonClassname = `${FONT_POPPINS.className} w-full h-full justify-center rounded-md px-3 
     py-2 text-sm text-white shadow-xs`;
+  const buttonIconTextClassname = `flex flex-row justify-center items-center gap-3 `;
   const variantStyles: Record<ButtonVariants, React.CSSProperties> = {
     [ButtonVariants.PRIMARY]: { backgroundColor: COLOR_PRIMARY },
     [ButtonVariants.DANGER]: { backgroundColor: COLOR_RED },
@@ -30,7 +33,13 @@ export default function Button(props: ButtonProps) {
       style={combinedStyles}
       onClick={props.onClick}
     >
-      {props.isLoading ? <Spinner /> : <>{props.label}</>}
+      {props.isLoading ? (
+        <Spinner />
+      ) : (
+        <div className={buttonIconTextClassname}>
+          <div>{props.icon}</div> <div>{props.label}</div>
+        </div>
+      )}
     </button>
   );
 }
