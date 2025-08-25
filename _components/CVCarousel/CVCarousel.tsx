@@ -82,8 +82,8 @@ interface CVHorizontalScrollRef {
 
 const CVHorizontalScroll = forwardRef(
   (_: unknown, ref: Ref<CVHorizontalScrollRef>) => {
-    const cvHorizontalScrollClassname = `flex flex-row w-96 h-96 md:w-3/5 
-    overflow-hidden scroll-smooth items-center rounded-lg`;
+    const cvHorizontalScrollClassname = `flex flex-row w-4/5 h-96 md:h-full
+    overflow-x-scroll scroll-smooth items-center rounded-lg`;
     const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
     const [activeCard, setActiveCard] = useState(0);
     useImperativeHandle(ref, () => {
