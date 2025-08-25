@@ -106,6 +106,7 @@ function AboutMe() {
     },
     { icon: <MapPinIcon />, content: "Ho Chi Minh City, Vietnam" },
   ];
+  if (typeof window === "undefined") return null; // SSR-safe
   return (
     <div className={aboutMeClassname}>
       <h1 className={headingClassname} style={{ color: COLOR_PRIMARY }}>

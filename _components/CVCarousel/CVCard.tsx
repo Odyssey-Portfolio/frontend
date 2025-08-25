@@ -1,7 +1,7 @@
 "use client";
 import { DownloadIcon } from "lucide-react";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { forwardRef, Ref } from "react";
 import { COLOR_WHITE, COLOR_PRIMARY } from "../../_constants/Colors";
 import {
   FONTSTYLE_SUBTEXT1,
@@ -14,54 +14,51 @@ import FM_Scale from "../FramerMotion/FM_Scale";
 import { CVCardItem, CVCardProps } from "./types";
 import Image from "next/image";
 import { usePdfThumbnail } from "../../_hooks/usePdfThumbnail/usePdfThumbnail";
+import { useIsMediumScreen } from "../../_hooks/useIsMediumScreen";
 
-export default function CVCard({
-  index,
-  isActive,
-  onClick,
-  item,
-}: CVCardProps) {
-  const [screenWidth, setScreenWidth] = useState(0);
-  const [screenHeight, setScreenHeight] = useState(0);
-  const thumbnail = usePdfThumbnail({
-    pdfUrl: item.pdfPath,
-    thumbnailHeight: screenHeight * 0.85,
-    thumbnailWidth: screenWidth * 0.31,
-  });
-  const cardHeight = screenHeight * 0.85;
-  const cardWidth = screenWidth * 0.4;
-  const fallbackImagePath = "/question-mark.png";
-
-  const cvContentClassname = "p-3";
-  const cvCardClassname = `relative rounded-lg grid grid-flow-col grid-rows-12 justify-center`;
-  const cvThumbnailClassname = `row-span-12
-    flex flex-row justify-center align-center select-none`;
-  const cvDescriptionWrapperClassname = `absolute rounded-b-lg bg-white z-30 row-span-6 grid-rows-6 bottom-0 w-full`;
-  const cvNameClassname = `${cvContentClassname} ${FONTSTYLE_SUBTEXT1} 
+export const CVCard = forwardRef<HTMLDivElement, CVCardProps>(
+  (
+    { index, isActive, onClick, item }: CVCardProps,
+    ref: Ref<HTMLDivElement>
+  ) => {
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+    const isMediumScreen = useIsMediumScreen();
+    const thumbnail = usePdfThumbnail({
+      pdfUrl: item.pdfPath,
+      thumbnailHeight: isMediumScreen
+        ? screenHeight * 0.72
+        : screenHeight * 0.8,
+      thumbnailWidth: isMediumScreen ? screenWidth * 0.28 : screenWidth * 0.9,
+    });
+    //const cardHeight = isMediumScreen
+    //  ? screenHeight * 0.75
+    //  : screenHeight * 0.9;
+    //const cardWidth = isMediumScreen ? screenWidth * 0.34 : "w-full";
+    const fallbackImagePath = "/question-mark.png";
+    const shouldFillScreen = isActive && !isMediumScreen;
+    const cvContentClassname = "p-3";
+    const cvCardClassname = `relative ${isActive && "w-full h-full"} rounded-lg justify-center`;
+    //const cvThumbnailClassname = `row-span-12
+    //flex flex-row justify-center align-center select-none`;
+    const cvDescriptionWrapperClassname = `${shouldFillScreen && "h-48 overflow-y-scroll"} absolute rounded-b-lg bg-white z-30 row-span-3 grid-rows-3 bottom-0 `;
+    const cvNameClassname = `${cvContentClassname} ${FONTSTYLE_SUBTEXT1} 
     ${FONT_LEXEND.className} row-span-1 select-none`;
-  const cvPeriodClassname = `${cvContentClassname} ${FONTSTYLE_SUBTEXT2} 
+    const cvPeriodClassname = `${cvContentClassname} ${FONTSTYLE_SUBTEXT2} 
     ${FONT_POPPINS.className} row-span-1 select-none`;
-  const cvDescriptionClassname = `${cvContentClassname} ${FONTSTYLE_PARAGRAPH2} 
+    const cvDescriptionClassname = `${cvContentClassname} ${FONTSTYLE_PARAGRAPH2} 
     ${FONT_POPPINS.className} row-span-2 select-none`;
-  const downloadIconClassname = `row-span-2 select-none`;
+    const downloadIconClassname = `row-span-2 select-none`;
 
-  useEffect(() => {
-    setScreenWidth(window.innerWidth);
-    setScreenHeight(window.innerHeight);
-  }, [item]);
-  if (typeof window === "undefined") return null; // SSR-safe
-  return (
-    <FM_Scale shouldScale={isActive || false} fromScale={0.65} toScale={0.88}>
-      <div
+    if (typeof window === "undefined") return null; // SSR-safe
+    return (
+      <FM_Scale
+        shouldScale={isActive || false}
+        fromScale={0.65}
+        toScale={0.88}
         className={cvCardClassname}
-        style={{
-          backgroundColor: COLOR_WHITE,
-          height: cardHeight,
-          width: cardWidth,
-        }}
-        onClick={() => onClick(index)}
       >
-        <div className={cvThumbnailClassname}>
+        <div onClick={() => onClick(index)} ref={ref}>
           <Image
             src={thumbnail || fallbackImagePath}
             alt="avatar"
@@ -79,11 +76,12 @@ export default function CVCard({
             </div>
           </div>
         )}
-      </div>
-    </FM_Scale>
-  );
-}
+      </FM_Scale>
+    );
+  }
+);
 
+CVCard.displayName = `CVCard`;
 interface DownloadButtonProps {
   item: CVCardItem;
 }

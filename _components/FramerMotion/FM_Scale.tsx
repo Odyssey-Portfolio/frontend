@@ -1,10 +1,11 @@
 "use client";
 import { motion, useAnimation } from "motion/react";
-import { JSX, useEffect } from "react";
+import { CSSProperties, JSX, useEffect } from "react";
 
 interface FMScaleProps {
   children: JSX.Element;
   className?: string;
+  style?: CSSProperties;
   duration?: number;
   delay?: number;
   shouldScale: boolean;
@@ -26,18 +27,17 @@ export default function FM_Scale(props: FMScaleProps) {
   }, [props.shouldScale]);
 
   return (
-    <div>
-      <motion.div
-        variants={{
-          initial: { scale: fromScale },
-          scaled: { scale: toScale },
-        }}
-        animate={mainControls}
-        className={props.className}
-        transition={{ duration, delay }}
-      >
-        {props.children}
-      </motion.div>
-    </div>
+    <motion.div
+      variants={{
+        initial: { scale: fromScale },
+        scaled: { scale: toScale },
+      }}
+      animate={mainControls}
+      className={props.className}
+      transition={{ duration, delay }}
+      style={props.style}
+    >
+      {props.children}
+    </motion.div>
   );
 }
