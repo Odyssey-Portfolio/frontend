@@ -27,7 +27,7 @@ export function usePdfThumbnail({
         const page = await pdfDocument.getPage(1); // first page
 
         const viewport = page.getViewport({ scale: 1 });
-        const scale = Math.min(
+        const scale = Math.max(
           thumbnailWidth / viewport.width,
           thumbnailHeight / viewport.height
         );
@@ -38,7 +38,6 @@ export function usePdfThumbnail({
         if (!canvas || !context) return;
         canvas.width = thumbnailWidth;
         canvas.height = thumbnailHeight;
-
         const renderContext = {
           canvas: canvas,
           canvasContext: context,

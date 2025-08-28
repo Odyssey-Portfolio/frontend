@@ -1,7 +1,7 @@
 "use client";
 import { DownloadIcon } from "lucide-react";
 import Link from "next/link";
-import { forwardRef, Ref, useMemo } from "react";
+import { forwardRef, Ref } from "react";
 import { COLOR_WHITE, COLOR_PRIMARY } from "../../_constants/Colors";
 import {
   FONTSTYLE_SUBTEXT1,
@@ -15,6 +15,7 @@ import { CVCardItem, CVCardProps } from "./types";
 import Image from "next/image";
 import { usePdfThumbnail } from "../../_hooks/usePdfThumbnail/usePdfThumbnail";
 import { useIsMediumScreen } from "../../_hooks/useIsMediumScreen";
+import FM_FadeIn from "../FramerMotion/FM_FadeIn";
 
 export const CVCard = forwardRef<HTMLDivElement, CVCardProps>(
   (
@@ -28,7 +29,7 @@ export const CVCard = forwardRef<HTMLDivElement, CVCardProps>(
     const fallbackImagePath = "/question-mark.png";
     const shouldFillScreen = isActive && !isMediumScreen;
     const cvContentClassname = "p-3";
-    const cvCardClassname = `flex-shrink-0 rounded-lg justify-center`;
+    const cvCardClassname = `flex-shrink-0 rounded-lg`;
     const cvDescriptionWrapperClassname = `${shouldFillScreen && "h-48 overflow-y-scroll"} absolute rounded-b-lg bg-white z-30 row-span-3 grid-rows-3 bottom-0 `;
     const cvNameClassname = `${cvContentClassname} ${FONTSTYLE_SUBTEXT1} 
     ${FONT_LEXEND.className} row-span-1 select-none`;
@@ -38,30 +39,50 @@ export const CVCard = forwardRef<HTMLDivElement, CVCardProps>(
     ${FONT_POPPINS.className} row-span-2 select-none`;
     const downloadIconClassname = `row-span-2 select-none`;
 
-    const calculatedWidth: string | number = useMemo(() => {
+    const calculateCardWidth = (): string | number => {
       if (!isMediumScreen && isActive) return "100%";
       if (!isMediumScreen && !isActive) return "0%";
-      if (!isActive && isMediumScreen) return screenWidth * 0.3;
-      return screenWidth * 0.5;
-    }, [screenWidth, isMediumScreen, isActive]);
+      if (!isActive && isMediumScreen) return screenWidth * 0.2;
+      return screenWidth * 0.45;
+    };
 
-    const calculatedHeight: string | number = useMemo(() => {
+    const calculateCardHeight = (): string | number => {
       if (!isMediumScreen && isActive) return "100%";
       if (!isMediumScreen && !isActive) return "0%";
       if (!isActive && isMediumScreen) return screenHeight * 0.6;
       return screenHeight * 0.75;
-    }, [screenHeight, isMediumScreen, isActive]);
+    };
+    const calculatedCardWidth = calculateCardWidth();
+    const calculatedCardHeight = calculateCardHeight();
+    const calculateThumbnailWidth = () => {
+      //below-medium screen
+      if (typeof calculatedCardWidth === "string" && !isActive)
+        return screenWidth * 0;
+      if (typeof calculatedCardWidth === "string" && isActive)
+        return screenWidth * 1;
+      //medium-or-above screen
+      if (typeof calculatedCardWidth === "number" && !isActive)
+        return calculatedCardWidth * 1;
+      if (typeof calculatedCardWidth === "number" && isActive)
+        return calculatedCardWidth;
+    };
+    const calculateThumbnailHeight = () => {
+      //below-medium screen
+      if (typeof calculatedCardHeight === "string" && !isActive)
+        return screenHeight * 0;
+      if (typeof calculatedCardHeight === "string" && isActive)
+        return screenHeight * 0.8;
+      //medium-or-above screen
+      if (typeof calculatedCardHeight === "number" && !isActive)
+        return calculatedCardHeight * 1;
+      if (typeof calculatedCardHeight === "number" && isActive)
+        return calculatedCardHeight;
+    };
 
     const thumbnail = usePdfThumbnail({
       pdfUrl: item.pdfPath,
-      thumbnailWidth:
-        typeof calculatedWidth === "number"
-          ? calculatedWidth * 0.1
-          : screenWidth * 0.5,
-      thumbnailHeight:
-        typeof calculatedHeight === "number"
-          ? calculatedHeight * 0.1
-          : screenHeight * 0.5,
+      thumbnailWidth: calculateThumbnailWidth(),
+      thumbnailHeight: calculateThumbnailHeight(),
     });
 
     if (typeof window === "undefined") return null; // SSR-safe
@@ -72,8 +93,8 @@ export const CVCard = forwardRef<HTMLDivElement, CVCardProps>(
         toScale={0.88}
         className={cvCardClassname}
         style={{
-          width: calculatedWidth,
-          height: calculatedHeight,
+          width: calculatedCardWidth,
+          height: calculatedCardHeight,
         }}
       >
         <div onClick={() => onClick(index)} ref={ref}>
@@ -83,16 +104,20 @@ export const CVCard = forwardRef<HTMLDivElement, CVCardProps>(
             fill
             className="rounded-lg select-none"
           />
-          {isActive && (
-            <div className={cvDescriptionWrapperClassname}>
+
+          <FM_FadeIn
+            className={cvDescriptionWrapperClassname}
+            showChildren={isActive || false}
+          >
+            <>
               <div className={cvNameClassname}>{item.title}</div>
               <div className={cvPeriodClassname}>{item.period}</div>
               <div className={cvDescriptionClassname}>{item.description}</div>
               <div className={downloadIconClassname}>
                 <DownloadButton item={item} />
               </div>
-            </div>
-          )}
+            </>
+          </FM_FadeIn>
         </div>
       </FM_Scale>
     );
