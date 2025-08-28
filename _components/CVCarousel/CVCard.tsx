@@ -1,7 +1,7 @@
 "use client";
 import { DownloadIcon } from "lucide-react";
 import Link from "next/link";
-import { forwardRef, Ref } from "react";
+import { forwardRef, Ref, useMemo } from "react";
 import { COLOR_WHITE, COLOR_PRIMARY } from "../../_constants/Colors";
 import {
   FONTSTYLE_SUBTEXT1,
@@ -38,23 +38,30 @@ export const CVCard = forwardRef<HTMLDivElement, CVCardProps>(
     ${FONT_POPPINS.className} row-span-2 select-none`;
     const downloadIconClassname = `row-span-2 select-none`;
 
-    const calculateWidth = (): string | number => {
+    const calculatedWidth: string | number = useMemo(() => {
       if (!isMediumScreen && isActive) return "100%";
       if (!isMediumScreen && !isActive) return "0%";
-      if (!isActive && isMediumScreen) return screenWidth * 0.6;
-      return screenWidth * 0.9;
-    };
-    const calculateHeight = (): string | number => {
+      if (!isActive && isMediumScreen) return screenWidth * 0.3;
+      return screenWidth * 0.5;
+    }, [screenWidth, isMediumScreen, isActive]);
+
+    const calculatedHeight: string | number = useMemo(() => {
       if (!isMediumScreen && isActive) return "100%";
       if (!isMediumScreen && !isActive) return "0%";
       if (!isActive && isMediumScreen) return screenHeight * 0.6;
       return screenHeight * 0.75;
-    };
+    }, [screenHeight, isMediumScreen, isActive]);
 
     const thumbnail = usePdfThumbnail({
       pdfUrl: item.pdfPath,
-      thumbnailHeight: isMediumScreen ? screenHeight * 0.8 : screenHeight * 0.8,
-      thumbnailWidth: isMediumScreen ? screenWidth * 0.28 : screenWidth * 0.9,
+      thumbnailWidth:
+        typeof calculatedWidth === "number"
+          ? calculatedWidth * 0.1
+          : screenWidth * 0.5,
+      thumbnailHeight:
+        typeof calculatedHeight === "number"
+          ? calculatedHeight * 0.1
+          : screenHeight * 0.5,
     });
 
     if (typeof window === "undefined") return null; // SSR-safe
@@ -65,8 +72,8 @@ export const CVCard = forwardRef<HTMLDivElement, CVCardProps>(
         toScale={0.88}
         className={cvCardClassname}
         style={{
-          width: calculateWidth(),
-          height: calculateHeight(),
+          width: calculatedWidth,
+          height: calculatedHeight,
         }}
       >
         <div onClick={() => onClick(index)} ref={ref}>
