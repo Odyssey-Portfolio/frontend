@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { FONTSTYLE_PARAGRAPH2, FONT_POPPINS } from "../../_constants/Fonts";
+import { FONTSTYLE_PARAGRAPH2, FONT_LEXEND } from "../../_constants/Fonts";
 import { Heart, Pin } from "lucide-react";
 import { GetCommentDto } from "../../_models/comment/GetCommentDto";
 
@@ -7,7 +7,7 @@ interface CommentProps {
   comment: GetCommentDto;
 }
 export default function Comment(props: CommentProps) {
-  const commentContainerClassname = `w-full div flex flex-row space-x-5`;
+  const commentContainerClassname = `w-full flex flex-row space-x-5`;
   return (
     <div className={commentContainerClassname}>
       <AvatarSection />
@@ -31,7 +31,7 @@ function AvatarSection() {
   );
 }
 function DetailsSection(props: CommentProps) {
-  const detailsSectionClassname = `flex flex-col justify-between align-center space-y-3`;
+  const detailsSectionClassname = `w-full flex flex-col align-center space-y-3`;
   return (
     <div className={detailsSectionClassname}>
       <MainSection {...props} />
@@ -41,8 +41,8 @@ function DetailsSection(props: CommentProps) {
   );
 }
 function MainSection(props: CommentProps) {
-  const headerSectionClassname = `flex flex-col md:flex-row md:items-center md:justify-between`;
-  const userNameClassname = `${FONT_POPPINS.className} ${FONTSTYLE_PARAGRAPH2} `;
+  const headerSectionClassname = `flex flex-col md:flex-row md:items-center md:space-x-3`;
+  const userNameClassname = `${FONT_LEXEND.className} ${FONTSTYLE_PARAGRAPH2} `;
   const lastUploadedClassname = `text-right flex flex-row align-center`;
   return (
     <div className={headerSectionClassname}>

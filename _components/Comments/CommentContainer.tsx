@@ -20,7 +20,7 @@ interface CommentContainerProps {
   blogDetails: GetBlogByIdDto;
 }
 export default function CommentContainer(props: CommentContainerProps) {
-  const commentContainerClassname = `w-full md:w-4/5 flex flex-col space-y-12 `;
+  const commentContainerClassname = `w-full flex flex-col space-y-12 `;
   return (
     <div className={commentContainerClassname}>
       <HeaderSection />
@@ -34,26 +34,26 @@ function HeaderSection() {
   return (
     <div className={headerSectionClassname}>
       <div className={commentTextClassname}>Comments</div>
-      <FilterCommentsButton />
+      {/*<FilterCommentsButton />*/}
     </div>
   );
 }
 
-function FilterCommentsButton() {
-  const filterCommentsButtonClassname = `flex flex-row items-center space-x-2`;
-  const filterTextClassname = `${FONT_POPPINS.className} ${FONTSTYLE_SUBTEXT2}`;
-  return (
-    <div className={filterCommentsButtonClassname}>
-      <Funnel />
-      <div className={filterTextClassname}>Filter</div>
-    </div>
-  );
-}
+//function FilterCommentsButton() {
+//  const filterCommentsButtonClassname = `flex flex-row items-center space-x-2`;
+//  const filterTextClassname = `${FONT_POPPINS.className} ${FONTSTYLE_SUBTEXT2}`;
+//  return (
+//    <div className={filterCommentsButtonClassname}>
+//      <Funnel />
+//      <div className={filterTextClassname}>Filter</div>
+//    </div>
+//  );
+//}
 
 function CommentsSection(props: CommentContainerProps) {
   const comments = useSelector(selectComments);
   const isFetchingComments = useSelector(selectIsFetchingComments);
-  const commentsSectionClassname = `w-full flex flex-col space-y-12 items-center`;
+  const commentsSectionClassname = `w-full flex flex-col space-y-12`;
   const commentSpaceClassname = `flex flex-col`;
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
@@ -64,7 +64,7 @@ function CommentsSection(props: CommentContainerProps) {
         pageSize: 5,
       })
     );
-  }, [props.blogDetails]);
+  }, [dispatch, props.blogDetails]);
 
   return (
     <div className={commentsSectionClassname}>

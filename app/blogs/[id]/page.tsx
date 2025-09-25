@@ -29,7 +29,7 @@ export default function BlogDetailsPage() {
   const blogDetails = useSelector(selectBlogDetails);
   const isLoading = useSelector(selectIsLoading);
   const spinnerClassname = `col-span-3 flex flex-row justify-center`;
-  const blogDetailsPageClassname = `flex flex-col mt-32 mb-12 space-y-20 items-center px-8`;
+  const blogDetailsPageClassname = `flex flex-col mt-32 mb-12 space-y-20 items-center px-8 md:px-56`;
   useEffect(() => {
     dispatch(getBlogByIdThunk(id));
   }, [dispatch, id]);
@@ -92,7 +92,7 @@ function HeadingText(props: BlogDetailsProps) {
 }
 
 function ParagraphRendererWrapper(props: BlogDetailsProps) {
-  const paragraphRendererWrapperClassname = `w-full md:px-56`;
+  const paragraphRendererWrapperClassname = `w-full`;
   return (
     <div className={paragraphRendererWrapperClassname}>
       <ParagraphRenderer isHtml paragraph={props.blogDetails?.content} />
