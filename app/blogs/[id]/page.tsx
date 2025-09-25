@@ -66,7 +66,7 @@ export default function BlogDetailsPage() {
           <>
             <HeadingText blogDetails={blogDetails} />
             <ParagraphRendererWrapper blogDetails={blogDetails} />
-            <CommentContainer />
+            <CommentContainer blogDetails={blogDetails} />
           </>
         )}
       </>

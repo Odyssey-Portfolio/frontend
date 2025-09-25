@@ -1,13 +1,17 @@
 import Image from "next/image";
 import { FONTSTYLE_PARAGRAPH2, FONT_POPPINS } from "../../_constants/Fonts";
-import { DUMMYTEXT_LOREMIPSUMSHORT } from "../../_constants/DummyText";
 import { Heart, Pin } from "lucide-react";
-export default function Comment() {
+import { GetCommentDto } from "../../_models/comment/GetCommentDto";
+
+interface CommentProps {
+  comment: GetCommentDto;
+}
+export default function Comment(props: CommentProps) {
   const commentContainerClassname = `w-full div flex flex-row space-x-5`;
   return (
     <div className={commentContainerClassname}>
       <AvatarSection />
-      <DetailsSection />
+      <DetailsSection {...props} />
     </div>
   );
 }
@@ -26,33 +30,31 @@ function AvatarSection() {
     </div>
   );
 }
-function DetailsSection() {
+function DetailsSection(props: CommentProps) {
   const detailsSectionClassname = `flex flex-col justify-between align-center space-y-3`;
   return (
     <div className={detailsSectionClassname}>
-      <HeaderSection />
-      <CommentTextSection />
+      <MainSection {...props} />
+      <CommentTextSection {...props} />
       <InteractionButtons />
     </div>
   );
 }
-function HeaderSection() {
-  const headerSectionClassname = `flex flex-col md:flex-row`;
+function MainSection(props: CommentProps) {
+  const headerSectionClassname = `flex flex-col md:flex-row md:items-center md:justify-between`;
   const userNameClassname = `${FONT_POPPINS.className} ${FONTSTYLE_PARAGRAPH2} `;
   const lastUploadedClassname = `text-right flex flex-row align-center`;
   return (
     <div className={headerSectionClassname}>
-      <div className={userNameClassname}>Dummy Username</div>
-      <div className={lastUploadedClassname}>3 minutes ago</div>
+      <div className={userNameClassname}>{props.comment.userName}</div>
+      <div className={lastUploadedClassname}>{props.comment.elapsedTime}</div>
     </div>
   );
 }
 
-function CommentTextSection() {
+function CommentTextSection(props: CommentProps) {
   const detailsSectionContainer = ``;
-  return (
-    <div className={detailsSectionContainer}>{DUMMYTEXT_LOREMIPSUMSHORT}</div>
-  );
+  return <div className={detailsSectionContainer}>{props.comment.content}</div>;
 }
 
 function InteractionButtons() {

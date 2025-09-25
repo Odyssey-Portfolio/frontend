@@ -17,6 +17,7 @@ export const DEPLOYED_SERVER_URL =
   "https://eminent-terminally-satyr.ngrok-free.app";
 
 export const BLOG_ENDPOINT = `/blog`;
+export const COMMENT_ENDPOINT = `/comment`;
 
 /*AUTHENTICATION ENDPOINTS*/
 export const LOGIN_ENDPOINT = `/user/login`;
