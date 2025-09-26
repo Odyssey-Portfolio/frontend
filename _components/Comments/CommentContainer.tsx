@@ -9,22 +9,23 @@ import {
   selectIsFetchingComments,
 } from "../../_redux/comment/commentSelector";
 import Comment from "./Comment";
-import { Funnel } from "lucide-react";
 import Spinner from "../AtomicComponents/Spinner";
 import EmptyList from "../EmptyList";
 import { useEffect } from "react";
 import { AppDispatch } from "../../_redux/store";
 import { getCommentThunk } from "../../_redux/comment/commentThunk";
 import { GetBlogByIdDto } from "../../_models/GetBlogByIdDto";
+import CommentBox from "./CommentBox";
 interface CommentContainerProps {
   blogDetails: GetBlogByIdDto;
 }
 export default function CommentContainer(props: CommentContainerProps) {
-  const commentContainerClassname = `w-full flex flex-col space-y-12 `;
+  const commentContainerClassname = `w-full flex flex-col space-y-5 `;
   return (
     <div className={commentContainerClassname}>
+      <CommentBox {...props} />
       <HeaderSection />
-      <CommentsSection {...props} />
+      <CommentsSection blogDetails={props.blogDetails} />
     </div>
   );
 }

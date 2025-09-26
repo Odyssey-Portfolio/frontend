@@ -7,7 +7,7 @@ export enum ButtonVariants {
   DANGER,
 }
 interface ButtonProps {
-  label: string;
+  label?: string;
   variant?: ButtonVariants;
   icon?: JSX.Element;
   isLoading?: boolean;
@@ -37,7 +37,8 @@ export default function Button(props: ButtonProps) {
         <Spinner />
       ) : (
         <div className={buttonIconTextClassname}>
-          <div>{props.icon}</div> <div>{props.label}</div>
+          {props.icon && <div>{props.icon}</div>}
+          {props.label && <div>{props.label}</div>}
         </div>
       )}
     </button>

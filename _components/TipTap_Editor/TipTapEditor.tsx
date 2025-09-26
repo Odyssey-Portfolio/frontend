@@ -30,6 +30,7 @@ import {
   MinusCircleIcon,
   ImageIcon,
   Text,
+  CircleCheck,
 } from "lucide-react";
 import Image from "@tiptap/extension-image";
 import ImageResize from "tiptap-extension-resize-image";
@@ -39,9 +40,16 @@ import "./TipTapEditor.css";
 
 import { useFormContext } from "react-hook-form";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import Button from "../AtomicComponents/Button";
+import { useIsMediumScreen } from "../../_hooks/useIsMediumScreen";
 
 interface TipTapEditorProps {
   htmlContentPropName: string;
+  excludedMenuOptions?: string[];
+  /* (Optional) A function to trigger React Hook Form submission from the 
+  TipTapEditor instead of its parent component.*/
+  isSubmitting?: boolean;
+  submitCallback?: () => void;
   updateMode?: boolean;
 }
 export interface TipTapEditorRef {
@@ -49,7 +57,10 @@ export interface TipTapEditorRef {
 }
 
 const TipTapEditor = forwardRef<TipTapEditorRef, TipTapEditorProps>(
-  ({ htmlContentPropName, updateMode }, ref) => {
+  (
+    { htmlContentPropName, excludedMenuOptions, submitCallback, updateMode },
+    ref
+  ) => {
     const editorWrapperClassname = `flex flex-col space-y-2`;
     const editorClassname = `h-80 border rounded-md bg-slate-50 py-2 px-3 overflow-y-scroll max-w-none`;
     const editorTextClassname = `${FONT_POPPINS.className} ${FONTSTYLE_PARAGRAPH2}`;
@@ -149,7 +160,11 @@ const TipTapEditor = forwardRef<TipTapEditorRef, TipTapEditorProps>(
             {errors[htmlContentPropName]?.message as string | undefined}
           </div>
         )}
-        <MenuBar editor={editor} />
+        <MenuBar
+          editor={editor}
+          excludedMenuOptions={excludedMenuOptions}
+          submitCallback={submitCallback}
+        />
         <EditorContent editor={editor} />
       </div>
     );
@@ -159,85 +174,103 @@ const TipTapEditor = forwardRef<TipTapEditorRef, TipTapEditorProps>(
 TipTapEditor.displayName = "TipTapEditor";
 export default TipTapEditor;
 
-interface MenuBarProps {
+type MenuBarType = Omit<
+  TipTapEditorProps,
+  "htmlContentPropName" | "updateMode"
+>;
+interface MenuBarProps extends MenuBarType {
   editor: Editor | null;
 }
 function MenuBar(props: MenuBarProps) {
   const editor = props.editor;
+  const isMediumScreen = useIsMediumScreen();
   if (!editor) {
     return null;
   }
-
   const menuBarOptions = [
     {
       icon: <Heading1 className="w-6 h-6" />,
       onClick: () => editor.chain().focus().toggleHeading({ level: 1 }).run(),
       pressed: editor.isActive("heading", { level: 1 }),
+      key: "heading1",
     },
     {
       icon: <Heading2 className="w-6 h-6" />,
       onClick: () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
       pressed: editor.isActive("heading", { level: 2 }),
+      key: "heading2",
     },
     {
       icon: <Heading3 className="w-6 h-6" />,
       onClick: () => editor.chain().focus().toggleHeading({ level: 3 }).run(),
       pressed: editor.isActive("heading", { level: 3 }),
-    },
-    {
-      icon: <Text className="w-6 h-6" />,
-      onClick: () => editor.chain().focus().setParagraph().run(),
-      pressed: editor.isActive("paragraph"),
+      key: "heading3",
     },
     {
       icon: <Bold className="w-6 h-6" />,
       onClick: () => editor.chain().focus().toggleBold().run(),
       pressed: editor.isActive("bold"),
+      key: "bold",
     },
     {
       icon: <Italic className="w-6 h-6" />,
       onClick: () => editor.chain().focus().toggleItalic().run(),
       pressed: editor.isActive("italic"),
+      key: "italic",
     },
     {
       icon: <Strikethrough className="w-6 h-6" />,
       onClick: () => editor.chain().focus().toggleStrike().run(),
       pressed: editor.isActive("strike"),
+      key: "strikethrough",
     },
     {
       icon: <Highlighter className="w-6 h-6" />,
       onClick: () => editor.chain().focus().toggleHighlight().run(),
       pressed: editor.isActive("highlight"),
+      key: "highlighter",
+    },
+    {
+      icon: <Text className="w-6 h-6" />,
+      onClick: () => editor.chain().focus().setParagraph().run(),
+      pressed: editor.isActive("paragraph"),
+      key: "paragraph",
     },
     {
       icon: <AlignLeft className="w-6 h-6" />,
       onClick: () => editor.chain().focus().setTextAlign("left").run(),
       pressed: editor.isActive({ textAlign: "left" }),
+      key: "alignLeft",
     },
     {
       icon: <AlignCenter className="w-6 h-6" />,
       onClick: () => editor.chain().focus().setTextAlign("center").run(),
       pressed: editor.isActive({ textAlign: "center" }),
+      key: "alignCenter",
     },
     {
       icon: <AlignRight className="w-6 h-6" />,
       onClick: () => editor.chain().focus().setTextAlign("right").run(),
       pressed: editor.isActive({ textAlign: "right" }),
+      key: "alignRight",
     },
     {
       icon: <AlignJustify className="w-6 h-6" />,
       onClick: () => editor.chain().focus().setTextAlign("justify").run(),
       pressed: editor.isActive({ textAlign: "justify" }),
+      key: "alignJustify",
     },
     {
       icon: <List className="w-6 h-6" />,
       onClick: () => editor.chain().focus().toggleBulletList().run(),
       pressed: editor.isActive("bulletList"),
+      key: "list",
     },
     {
       icon: <ListOrdered className="w-6 h-6" />,
       onClick: () => editor.chain().focus().toggleOrderedList().run(),
       pressed: editor.isActive("orderedList"),
+      key: "listOrdered",
     },
     {
       icon: <TableIcon className="w-6 h-6" />,
@@ -249,6 +282,7 @@ function MenuBar(props: MenuBarProps) {
           .run();
       },
       pressed: editor.isActive("table"),
+      key: "addTable",
     },
     {
       icon: <PlusCircleIcon className="w-6 h-6" />,
@@ -256,6 +290,7 @@ function MenuBar(props: MenuBarProps) {
         editor.chain().focus().addRowAfter().run();
       },
       pressed: editor.isActive("table"),
+      key: "addTableRow",
     },
     {
       icon: <MinusCircleIcon className="w-6 h-6" />,
@@ -263,6 +298,7 @@ function MenuBar(props: MenuBarProps) {
         editor.chain().focus().deleteRow().run();
       },
       pressed: editor.isActive("table"),
+      key: "removeTableRow",
     },
     {
       icon: <ImageIcon className="w-6 h-6" />,
@@ -288,24 +324,41 @@ function MenuBar(props: MenuBarProps) {
         input.click();
       },
       pressed: editor.isActive("table"),
+      key: "addImage",
     },
   ];
-
-  const menuBarClassname = `flex flex-row items-center border rounded-lg space-x-3 p-2`;
-
+  const menuBarClassname = `grid grid-cols-12 border rounded-lg`;
+  const menuOptionsClassname = `col-span-10 flex flex-row items-center p-2 space-x-3`;
+  const submitButtonClassname = `col-span-2 flex justify-end`;
   return (
     <div className={menuBarClassname}>
-      {menuBarOptions.map((option, key) => {
-        return (
-          <Toggle
-            key={key}
-            pressed={option.pressed}
-            onPressedChange={option.onClick}
-          >
-            {option.icon}
-          </Toggle>
-        );
-      })}
+      <div className={menuOptionsClassname}>
+        {menuBarOptions.map((option, key) => {
+          if (!props.excludedMenuOptions?.includes(option.key))
+            return (
+              <Toggle
+                key={key}
+                pressed={option.pressed}
+                onPressedChange={option.onClick}
+              >
+                {option.icon}
+              </Toggle>
+            );
+        })}
+      </div>
+      {props.submitCallback && (
+        <div className={submitButtonClassname}>
+          <Button
+            label={isMediumScreen ? "Submit" : ""}
+            icon={<CircleCheck />}
+            isLoading={props.isSubmitting}
+            onClick={props.submitCallback}
+            extraCss={{
+              fontSize: window.innerHeight * 0.025,
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 }

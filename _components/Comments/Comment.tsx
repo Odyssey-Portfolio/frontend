@@ -2,6 +2,7 @@ import Image from "next/image";
 import { FONTSTYLE_PARAGRAPH2, FONT_LEXEND } from "../../_constants/Fonts";
 import { Heart, Pin } from "lucide-react";
 import { GetCommentDto } from "../../_models/comment/GetCommentDto";
+import ParagraphRenderer from "../ParagraphRenderer";
 
 interface CommentProps {
   comment: GetCommentDto;
@@ -10,13 +11,13 @@ export default function Comment(props: CommentProps) {
   const commentContainerClassname = `w-full flex flex-row space-x-5`;
   return (
     <div className={commentContainerClassname}>
-      <AvatarSection />
+      <Avatar />
       <DetailsSection {...props} />
     </div>
   );
 }
 
-function AvatarSection() {
+function Avatar() {
   const avatarSectionClassname = `flex flex-col`;
   const avatarBorderClassname = `relative w-full rounded-2xl`;
   return (
@@ -34,13 +35,13 @@ function DetailsSection(props: CommentProps) {
   const detailsSectionClassname = `w-full flex flex-col align-center space-y-3`;
   return (
     <div className={detailsSectionClassname}>
-      <MainSection {...props} />
-      <CommentTextSection {...props} />
+      <HeaderSection {...props} />
+      <ParagraphRenderer paragraph={props.comment.content} isHtml />
       <InteractionButtons />
     </div>
   );
 }
-function MainSection(props: CommentProps) {
+function HeaderSection(props: CommentProps) {
   const headerSectionClassname = `flex flex-col md:flex-row md:items-center md:space-x-3`;
   const userNameClassname = `${FONT_LEXEND.className} ${FONTSTYLE_PARAGRAPH2} `;
   const lastUploadedClassname = `text-right flex flex-row align-center`;
@@ -50,11 +51,6 @@ function MainSection(props: CommentProps) {
       <div className={lastUploadedClassname}>{props.comment.elapsedTime}</div>
     </div>
   );
-}
-
-function CommentTextSection(props: CommentProps) {
-  const detailsSectionContainer = ``;
-  return <div className={detailsSectionContainer}>{props.comment.content}</div>;
 }
 
 function InteractionButtons() {
