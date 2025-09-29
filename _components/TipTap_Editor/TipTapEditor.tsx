@@ -58,7 +58,13 @@ export interface TipTapEditorRef {
 
 const TipTapEditor = forwardRef<TipTapEditorRef, TipTapEditorProps>(
   (
-    { htmlContentPropName, excludedMenuOptions, submitCallback, updateMode },
+    {
+      htmlContentPropName,
+      excludedMenuOptions,
+      submitCallback,
+      updateMode,
+      isSubmitting,
+    },
     ref
   ) => {
     const editorWrapperClassname = `flex flex-col space-y-2`;
@@ -163,6 +169,7 @@ const TipTapEditor = forwardRef<TipTapEditorRef, TipTapEditorProps>(
         <MenuBar
           editor={editor}
           excludedMenuOptions={excludedMenuOptions}
+          isSubmitting={isSubmitting}
           submitCallback={submitCallback}
         />
         <EditorContent editor={editor} />

@@ -34,7 +34,11 @@ const commentsSlice = createSlice({
       .addCase(getCommentThunk.fulfilled, (state, action) => {
         state.isFetchingComments = false;
         const apiResponse = action.payload as ApiResponse;
-        state.comments = apiResponse.returnData;
+        if (!state.comments) {
+          state.comments = apiResponse.returnData;
+          return;
+        }
+        state.comments.push(...apiResponse.returnData);
       })
       .addCase(getCommentThunk.rejected, (state) => {
         state.isFetchingComments = false;
@@ -46,11 +50,11 @@ const commentsSlice = createSlice({
         state.isCreatingComment = false;
         state.createCommentResponse = action.payload as ApiResponse;
       })
-      .addCase(createCommentThunk.rejected, (state) => {
+      .addCase(createCommentThunk.rejected, (state, action) => {
         state.isCreatingComment = false;
+        state.createCommentResponse = action.payload as ApiResponse;
       });
   },
 });
 
-//export const {} = commentsSlice.actions;
 export default commentsSlice.reducer;

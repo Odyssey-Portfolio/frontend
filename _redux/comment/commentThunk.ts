@@ -4,6 +4,8 @@ import axios from "axios";
 import { createComment, getComments } from "../../api/comments";
 import { GetCommentParams } from "../../_models/comment/GetCommentParams";
 import { CreateComment } from "../../_models/comment/CreateComment";
+import { ApiResponse } from "../../_models/ApiResponse";
+import { UNAUTHORIZED } from "../../_constants/ResponseCodes";
 
 export const getCommentThunk = createAsyncThunk(
   "comment/get",
@@ -23,15 +25,19 @@ export const getCommentThunk = createAsyncThunk(
 );
 export const createCommentThunk = createAsyncThunk(
   "comment/create",
-  async (params: CreateComment, thunkAPI) => {
+  async (params: CreateComment, { rejectWithValue }) => {
     try {
       const response = await createComment(params);
       return response.data;
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        return thunkAPI.rejectWithValue(
-          error.response?.data || "Something went wrong"
-        );
+      if (axios.isAxiosError(error) && error.status === UNAUTHORIZED) {
+        // Type-guard AxiosError
+        const apiResponse: ApiResponse = {
+          statusCode: error.status,
+          message: "I'm sorry but have you tried logging in again?",
+          returnData: "",
+        };
+        return rejectWithValue(apiResponse);
       }
       console.log(error);
     }
