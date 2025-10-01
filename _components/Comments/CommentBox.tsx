@@ -1,13 +1,10 @@
 import { FormProvider, useForm } from "react-hook-form";
 import TipTapEditor, { TipTapEditorRef } from "../TipTap_Editor/TipTapEditor";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectIsCreatingComment } from "../../_redux/comment/commentSelector";
 import { AppDispatch } from "../../_redux/store";
-import {
-  createCommentThunk,
-  getCommentThunk,
-} from "../../_redux/comment/commentThunk";
+import { createCommentThunk } from "../../_redux/comment/commentThunk";
 import { GetBlogByIdDto } from "../../_models/GetBlogByIdDto";
 interface CommentBoxProps {
   blogDetails: GetBlogByIdDto;
@@ -47,17 +44,6 @@ export default function CommentBox(props: CommentBoxProps) {
       })
     );
   };
-
-  useEffect(() => {
-    if (!isCreatingComment && props?.blogDetails?.id)
-      dispatch(
-        getCommentThunk({
-          blogId: props.blogDetails.id,
-          pageNumber: 1,
-          pageSize: 5,
-        })
-      );
-  }, [dispatch, isCreatingComment, props.blogDetails]);
   return (
     <div>
       <FormProvider {...methods}>
