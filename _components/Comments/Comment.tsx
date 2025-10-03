@@ -3,6 +3,7 @@ import { FONTSTYLE_PARAGRAPH2, FONT_LEXEND } from "../../_constants/Fonts";
 import { Heart, Pin } from "lucide-react";
 import { GetCommentDto } from "../../_models/comment/GetCommentDto";
 import ParagraphRenderer from "../ParagraphRenderer";
+import { CommentLikeButton } from "./CommentLikeButton";
 
 interface CommentProps {
   comment: GetCommentDto;
@@ -57,8 +58,7 @@ function InteractionButtons() {
   const interactionButtonsClassname = `flex flex-row space-x-3`;
   return (
     <div className={interactionButtonsClassname}>
-      <Heart />
-      <Pin />
+      <CommentLikeButton/>
     </div>
   );
 }
