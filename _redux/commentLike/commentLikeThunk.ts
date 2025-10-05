@@ -6,52 +6,77 @@ import { addCommentLike, removeCommentLike } from "@/api/commentLike";
 import { getComments } from "@/api/comments";
 import { createAsyncThunk, createListenerMiddleware } from "@reduxjs/toolkit";
 import axios from "axios";
-import { addToCommentLikeQueue, finalizeCommentLikeQueueItem } from "./commentLikeSlice";
+import {
+  addToCommentLikeQueue,
+  finalizeCommentLikeQueueItem,
+} from "./commentLikeSlice";
 import { AddCommentLikeResponse } from "@/_models/commentLike/AddCommentLikeResponse";
-
+import { editCommentLikeQueueItem } from "./commentLikeActions";
 
 // Create the middleware instance and methods
-export const commentLikeListenerMiddleware = createListenerMiddleware()
+export const commentLikeListenerMiddleware = createListenerMiddleware();
 
 // Add one or more listener entries that look for specific actions.
 // They may contain any sync or async logic, similar to thunks.
 commentLikeListenerMiddleware.startListening({
   actionCreator: addToCommentLikeQueue,
   effect: async (action, listenerApi) => {
-    // Run whatever additional side-effect-y logic you want here
-    const commentLikeQueueItem = action.payload
+    //Deep clone the commentLikeQueueItem for further modification down below
+    let clonedQueueItem: CommentLikeQueueItem = JSON.parse(
+      JSON.stringify(action.payload)
+    );
     // const response = await addCommentLike(commentLikeQueueItem.addCommentLikeRequest);
     // commentLikeQueueItem.addCommentLikeResponse = response.data as AddCommentLikeResponse
-    commentLikeQueueItem['addCommentLikeResponse'] = {
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    clonedQueueItem.addCommentLikeResponse = {
       liked: true,
-      likes: 501
-    }
-    listenerApi.dispatch(finalizeCommentLikeQueueItem(commentLikeQueueItem))
-  }
-})
+      likes: 501,
+    };
+    clonedQueueItem.isProcessing = false;
+    listenerApi.dispatch(finalizeCommentLikeQueueItem(clonedQueueItem));
+  },
+});
 
+commentLikeListenerMiddleware.startListening({
+  actionCreator: editCommentLikeQueueItem,
+  effect: async (action, listenerApi) => {
+    //Deep clone the commentLikeQueueItem for further modification down below
+    let clonedQueueItem: CommentLikeQueueItem = JSON.parse(
+      JSON.stringify(action.payload)
+    );
+    // const response = await addCommentLike(commentLikeQueueItem.addCommentLikeRequest);
+    // commentLikeQueueItem.addCommentLikeResponse = response.data as AddCommentLikeResponse
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    clonedQueueItem.addCommentLikeResponse = {
+      liked: false,
+      likes: 500,
+    };
+    clonedQueueItem.isProcessing = false;
+    listenerApi.dispatch(finalizeCommentLikeQueueItem(clonedQueueItem));
+  },
+});
 
-export const addCommentLikeThunk = createAsyncThunk(
-  "commentLike/add",
-  async (queueItem: CommentLikeQueueItem, thunkAPI) => {
-    try {
-      const response = await addCommentLike(queueItem.addCommentLikeRequest);
-      // queueItem.addCommentLikeResponse = response.data;
-      queueItem.addCommentLikeResponse = {
-        liked: true,
-        likes: 501,
-      }
-      return queueItem;
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        return thunkAPI.rejectWithValue(
-          error.response?.data || "Something went wrong"
-        );
-      }
-      console.log(error);
-    }
-  }
-);
+// export const addCommentLikeThunk = createAsyncThunk(
+//   "commentLike/add",
+//   async (queueItem: CommentLikeQueueItem, thunkAPI) => {
+//     try {
+//       // const response = await addCommentLike(queueItem.addCommentLikeRequest);
+//       // queueItem.addCommentLikeResponse = response.data;
+//       queueItem.addCommentLikeResponse = {
+//         liked: true,
+//         likes: 501,
+//       };
+//       return queueItem;
+//     } catch (error) {
+//       if (axios.isAxiosError(error)) {
+//         return thunkAPI.rejectWithValue(
+//           error.response?.data || "Something went wrong"
+//         );
+//       }
+//       console.log(error);
+//     }
+//   }
+// );
 
 export const removeCommentLikeThunk = createAsyncThunk(
   "commentLike/remove",
@@ -69,6 +94,3 @@ export const removeCommentLikeThunk = createAsyncThunk(
     }
   }
 );
-
-
-

@@ -2,11 +2,9 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CommentLikeQueueItem } from "@/_models/commentLike/CommentLikeQueueItem";
 import { AddCommentLikeResponse } from "@/_models/commentLike/AddCommentLikeResponse";
 
-
-
 interface CommentLikeState {
   // isProcessing: boolean;
-  commentLikeQueue: CommentLikeQueueItem[]
+  commentLikeQueue: CommentLikeQueueItem[];
   // commentLikeResponse: ApiResponse | undefined;
 }
 const initialState: CommentLikeState = {
@@ -19,21 +17,53 @@ const commentLikeSlice = createSlice({
   name: "commentLike",
   initialState,
   reducers: {
-    addToCommentLikeQueue: (state, action: PayloadAction<CommentLikeQueueItem>) => {
-       const existingItem = state.commentLikeQueue.find(
+    addToCommentLikeQueue: (
+      state,
+      action: PayloadAction<CommentLikeQueueItem>
+    ) => {
+      const existingItemIndex = state.commentLikeQueue.findIndex(
         (like) => like.commentLikeId === action.payload.commentLikeId
       );
-      if (!existingItem) state.commentLikeQueue.push(action.payload);
+      if (existingItemIndex === -1) state.commentLikeQueue.push(action.payload);
+      state.commentLikeQueue = [
+        ...state.commentLikeQueue.slice(0, existingItemIndex),
+        action.payload as CommentLikeQueueItem,
+        ...state.commentLikeQueue.slice(existingItemIndex + 1),
+      ];
     },
-    finalizeCommentLikeQueueItem:(state, action: PayloadAction<CommentLikeQueueItem>) => {
-      const existingItem = state.commentLikeQueue.find(
+    editCommentLikeQueueItem: (
+      state,
+      action: PayloadAction<CommentLikeQueueItem>
+    ) => {
+      const existingItemIndex = state.commentLikeQueue.findIndex(
         (like) => like.commentLikeId === action.payload.commentLikeId
       );
-      if(!existingItem) return;      
-      existingItem.addCommentLikeResponse = action.payload.addCommentLikeResponse as AddCommentLikeResponse
-      state.commentLikeQueue.push(action.payload);
+      if (existingItemIndex === -1) return;
+      state.commentLikeQueue = [
+        ...state.commentLikeQueue.slice(0, existingItemIndex),
+        action.payload as CommentLikeQueueItem,
+        ...state.commentLikeQueue.slice(existingItemIndex + 1),
+      ];
+    },
+    finalizeCommentLikeQueueItem: (
+      state,
+      action: PayloadAction<CommentLikeQueueItem>
+    ) => {
+      const existingItemIndex = state.commentLikeQueue.findIndex(
+        (like) => like.commentLikeId === action.payload.commentLikeId
+      );
+      if (existingItemIndex === -1) return;
+      // Clone the item and update its field
+
+      // Clone the array with updated item
+      state.commentLikeQueue = [
+        ...state.commentLikeQueue.slice(0, existingItemIndex),
+        action.payload as CommentLikeQueueItem,
+        ...state.commentLikeQueue.slice(existingItemIndex + 1),
+      ];
     },
   },
 });
-export const { addToCommentLikeQueue, finalizeCommentLikeQueueItem } = commentLikeSlice.actions;
+export const { addToCommentLikeQueue, finalizeCommentLikeQueueItem } =
+  commentLikeSlice.actions;
 export default commentLikeSlice.reducer;

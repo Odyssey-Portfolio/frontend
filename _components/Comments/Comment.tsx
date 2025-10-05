@@ -4,7 +4,7 @@ import { Heart, Pin } from "lucide-react";
 import { GetCommentDto } from "../../_models/comment/GetCommentDto";
 import ParagraphRenderer from "../ParagraphRenderer";
 import { CommentLikeButton } from "./CommentLikeButton";
-
+import { v4 as uuidv4 } from 'uuid';
 interface CommentProps {
   comment: GetCommentDto;
 }
@@ -58,7 +58,9 @@ function InteractionButtons(props: CommentProps) {
   const interactionButtonsClassname = `flex flex-row space-x-3`;
   return (
     <div className={interactionButtonsClassname}>
-      <CommentLikeButton commentId={props.comment.commentId} />
+      <CommentLikeButton commentId={props.comment.commentId}
+      commentLikeId={uuidv4()}
+       />
     </div>
   );
 }
