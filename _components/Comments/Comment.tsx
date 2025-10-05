@@ -38,7 +38,7 @@ function DetailsSection(props: CommentProps) {
     <div className={detailsSectionClassname}>
       <HeaderSection {...props} />
       <ParagraphRenderer paragraph={props.comment.content} isHtml />
-      <InteractionButtons />
+      <InteractionButtons {...props}/>
     </div>
   );
 }
@@ -54,11 +54,11 @@ function HeaderSection(props: CommentProps) {
   );
 }
 
-function InteractionButtons() {
+function InteractionButtons(props: CommentProps) {
   const interactionButtonsClassname = `flex flex-row space-x-3`;
   return (
     <div className={interactionButtonsClassname}>
-      <CommentLikeButton/>
+      <CommentLikeButton commentId={props.comment.commentId} />
     </div>
   );
 }

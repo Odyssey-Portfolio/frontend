@@ -18,6 +18,7 @@ export const DEPLOYED_SERVER_URL =
 
 export const BLOG_ENDPOINT = `/blog`;
 export const COMMENT_ENDPOINT = `/comment`;
+export const COMMENT_LIKE_ENDPOINT = `/commentlike`;
 
 /*AUTHENTICATION ENDPOINTS*/
 export const LOGIN_ENDPOINT = `/user/login`;
