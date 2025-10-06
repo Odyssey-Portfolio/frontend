@@ -7,7 +7,7 @@ import snackbarReducer from "./snackbar/snackbarSlice";
 import commentReducer from "./comment/commentSlice";
 import commentLikeReducer from "./commentLike/commentLikeSlice"
 import wavyBackgroundReducer from "./wavyBackground/wavyBackgroundSlice";
-import { commentLikeListenerMiddleware } from "./commentLike/commentLikeThunk";
+import { commentLikeListenerMiddleware } from "./commentLike/commentLikeListener";
 export const store = configureStore({
   reducer: {
     blogModal: blogModalReducer,

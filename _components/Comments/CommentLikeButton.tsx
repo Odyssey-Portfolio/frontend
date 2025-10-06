@@ -1,56 +1,63 @@
 import { FONT_POPPINS, FONTSTYLE_PARAGRAPH2 } from "@/_constants/Fonts";
-import { HeartIcon as HeartOutline} from "@heroicons/react/24/outline";
-import { HeartIcon as HeartSolid} from "@heroicons/react/24/solid";
+import { HeartIcon as HeartOutline } from "@heroicons/react/24/outline";
+import { HeartIcon as HeartSolid } from "@heroicons/react/24/solid";
 import { useMemo } from "react";
 import Spinner from "../AtomicComponents/Spinner";
 import { useDispatch, useSelector } from "react-redux";
 import { selectCommentLikeQueue } from "@/_redux/commentLike/commentLikeSelector";
 import { AppDispatch } from "@/_redux/store";
-import { addToCommentLikeQueue, editCommentLikeQueueItem } from "@/_redux/commentLike/commentLikeActions";
+import { AddCommentLikeRequest } from "@/_models/commentLike/AddCommentLikeRequest";
+import { RemoveCommentLikeRequest } from "@/_models/commentLike/RemoveCommentLikeRequest";
+import { handleCommentLikeQueueItem } from "@/_redux/commentLike/commentLikeSlice";
 
-interface CommentLikeButtonProps{
+interface CommentLikeButtonProps {
   commentId: string;
   commentLikeId: string;
 }
-export function CommentLikeButton({ commentId, commentLikeId }: CommentLikeButtonProps) {
+export function CommentLikeButton({
+  commentId,
+  commentLikeId,
+}: CommentLikeButtonProps) {
   const commentLikeWrapperClassname = `flex flex-row space-x-2 items-center`;
   const numberOfLikesClassname = `${FONT_POPPINS.className} ${FONTSTYLE_PARAGRAPH2}`;
   const commentLikeButtonClassname = `w-8 h-8`;
 
   const dispatch = useDispatch<AppDispatch>();
-  
+
   const commentLikeQueue = useSelector(selectCommentLikeQueue);
-  const commentLikeItem = useMemo(()=> {
+  const commentLikeItem = useMemo(() => {
     return commentLikeQueue.find(
       (item) => item.commentLikeId === commentLikeId
     );
-  },[commentLikeQueue])
-  
-  const toggleLike = ()=>{
-    if(!commentLikeItem?.addCommentLikeResponse?.liked)
-    dispatch(
-       addToCommentLikeQueue({
-         commentLikeId: commentLikeId,
-         isProcessing: true,
-         addCommentLikeRequest: {
-           commentId: commentId,
-           userId: "",
-         },
-       })
-     );
-     else{
+  }, [commentLikeQueue]);
+
+  const toggleLike = () => {
+    if (commentLikeItem && commentLikeItem?.commentLikeResponse?.liked)
       dispatch(
-       editCommentLikeQueueItem({
-         commentLikeId: commentLikeId,
-         isProcessing: true,
-         addCommentLikeRequest: {
-           commentId: commentId,
-           userId: "",
-         },
-       })
-     );
-     }
-  }
+        handleCommentLikeQueueItem({
+          commentLikeId: commentLikeId,
+          dislike: true,
+          isProcessing: true,
+          commentLikeRequest: {
+            commentLikeId: commentLikeItem.commentLikeId, //TODO: MAKE BACKEND REMOVE COMMENT LIKE BY COMMENTID AND USERID
+            userId: "",
+          } as RemoveCommentLikeRequest,
+        })
+      );
+    else {
+      dispatch(
+        handleCommentLikeQueueItem({
+          commentLikeId: commentLikeId,
+          dislike: false,
+          isProcessing: true,
+          commentLikeRequest: {
+            commentId: commentId,
+            userId: "",
+          } as AddCommentLikeRequest,
+        })
+      );
+    }
+  };
 
   return (
     <>
@@ -59,14 +66,14 @@ export function CommentLikeButton({ commentId, commentLikeId }: CommentLikeButto
       ) : (
         <div className={commentLikeWrapperClassname}>
           <div className={commentLikeButtonClassname} onClick={toggleLike}>
-            {commentLikeItem?.addCommentLikeResponse?.liked ? (
+            {commentLikeItem?.commentLikeResponse?.liked ? (
               <HeartSolid className="text-red-500" />
             ) : (
               <HeartOutline />
             )}
           </div>
           <div className={numberOfLikesClassname}>
-            {commentLikeItem?.addCommentLikeResponse?.likes}
+            {commentLikeItem?.commentLikeResponse?.likes}
           </div>
         </div>
       )}

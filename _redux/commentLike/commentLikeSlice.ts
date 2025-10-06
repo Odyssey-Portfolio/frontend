@@ -17,7 +17,7 @@ const commentLikeSlice = createSlice({
   name: "commentLike",
   initialState,
   reducers: {
-    addToCommentLikeQueue: (
+    handleCommentLikeQueueItem: (
       state,
       action: PayloadAction<CommentLikeQueueItem>
     ) => {
@@ -25,20 +25,6 @@ const commentLikeSlice = createSlice({
         (like) => like.commentLikeId === action.payload.commentLikeId
       );
       if (existingItemIndex === -1) state.commentLikeQueue.push(action.payload);
-      state.commentLikeQueue = [
-        ...state.commentLikeQueue.slice(0, existingItemIndex),
-        action.payload as CommentLikeQueueItem,
-        ...state.commentLikeQueue.slice(existingItemIndex + 1),
-      ];
-    },
-    editCommentLikeQueueItem: (
-      state,
-      action: PayloadAction<CommentLikeQueueItem>
-    ) => {
-      const existingItemIndex = state.commentLikeQueue.findIndex(
-        (like) => like.commentLikeId === action.payload.commentLikeId
-      );
-      if (existingItemIndex === -1) return;
       state.commentLikeQueue = [
         ...state.commentLikeQueue.slice(0, existingItemIndex),
         action.payload as CommentLikeQueueItem,
@@ -64,6 +50,6 @@ const commentLikeSlice = createSlice({
     },
   },
 });
-export const { addToCommentLikeQueue, finalizeCommentLikeQueueItem } =
+export const { handleCommentLikeQueueItem, finalizeCommentLikeQueueItem } =
   commentLikeSlice.actions;
 export default commentLikeSlice.reducer;
