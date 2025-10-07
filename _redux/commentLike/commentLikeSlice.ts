@@ -1,16 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CommentLikeQueueItem } from "@/_models/commentLike/CommentLikeQueueItem";
-import { AddCommentLikeResponse } from "@/_models/commentLike/AddCommentLikeResponse";
 
 interface CommentLikeState {
-  // isProcessing: boolean;
   commentLikeQueue: CommentLikeQueueItem[];
-  // commentLikeResponse: ApiResponse | undefined;
 }
 const initialState: CommentLikeState = {
-  // isProcessing: false,
   commentLikeQueue: [],
-  // commentLikeResponse: undefined,
 };
 
 const commentLikeSlice = createSlice({
@@ -24,7 +19,10 @@ const commentLikeSlice = createSlice({
       const existingItemIndex = state.commentLikeQueue.findIndex(
         (like) => like.commentLikeId === action.payload.commentLikeId
       );
-      if (existingItemIndex === -1) state.commentLikeQueue.push(action.payload);
+      if (existingItemIndex === -1) {
+        state.commentLikeQueue.push(action.payload);
+        return;
+      }
       state.commentLikeQueue = [
         ...state.commentLikeQueue.slice(0, existingItemIndex),
         action.payload as CommentLikeQueueItem,
@@ -38,10 +36,6 @@ const commentLikeSlice = createSlice({
       const existingItemIndex = state.commentLikeQueue.findIndex(
         (like) => like.commentLikeId === action.payload.commentLikeId
       );
-      if (existingItemIndex === -1) return;
-      // Clone the item and update its field
-
-      // Clone the array with updated item
       state.commentLikeQueue = [
         ...state.commentLikeQueue.slice(0, existingItemIndex),
         action.payload as CommentLikeQueueItem,

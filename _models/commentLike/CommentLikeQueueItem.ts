@@ -1,12 +1,10 @@
-import { ApiResponse } from "../ApiResponse";
-import { AddCommentLikeRequest } from "./AddCommentLikeRequest";
-import { AddCommentLikeResponse } from "./AddCommentLikeResponse";
-import { RemoveCommentLikeRequest } from "./RemoveCommentLikeRequest";
+import { CommentLikeRequest } from "./CommentLikeRequest";
+import { CommentLikeResponse } from "./CommentLikeResponse";
 
 export interface CommentLikeQueueItem {
   commentLikeId: string;
-  dislike: boolean;
+  dislike?: boolean;
   isProcessing?: boolean;
-  commentLikeRequest: AddCommentLikeRequest | RemoveCommentLikeRequest;
-  commentLikeResponse?: AddCommentLikeResponse;
+  commentLikeRequest?: CommentLikeRequest;
+  commentLikeResponse?: CommentLikeResponse;
 }

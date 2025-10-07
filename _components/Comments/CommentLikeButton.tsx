@@ -1,21 +1,21 @@
 import { FONT_POPPINS, FONTSTYLE_PARAGRAPH2 } from "@/_constants/Fonts";
 import { HeartIcon as HeartOutline } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartSolid } from "@heroicons/react/24/solid";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import Spinner from "../AtomicComponents/Spinner";
 import { useDispatch, useSelector } from "react-redux";
 import { selectCommentLikeQueue } from "@/_redux/commentLike/commentLikeSelector";
 import { AppDispatch } from "@/_redux/store";
-import { AddCommentLikeRequest } from "@/_models/commentLike/AddCommentLikeRequest";
-import { RemoveCommentLikeRequest } from "@/_models/commentLike/RemoveCommentLikeRequest";
+import { CommentLikeRequest } from "@/_models/commentLike/CommentLikeRequest";
 import { handleCommentLikeQueueItem } from "@/_redux/commentLike/commentLikeSlice";
+import { GetCommentDto } from "../../_models/comment/GetCommentDto";
 
 interface CommentLikeButtonProps {
-  commentId: string;
+  comment: GetCommentDto;
   commentLikeId: string;
 }
 export function CommentLikeButton({
-  commentId,
+  comment,
   commentLikeId,
 }: CommentLikeButtonProps) {
   const commentLikeWrapperClassname = `flex flex-row space-x-2 items-center`;
@@ -31,32 +31,35 @@ export function CommentLikeButton({
     );
   }, [commentLikeQueue]);
 
+  //Preloads like data on first load only.
+  useEffect(() => {
+    if (comment)
+      dispatch(
+        handleCommentLikeQueueItem({
+          commentLikeId: commentLikeId,
+          commentLikeResponse: {
+            liked: comment.commentLikeDto.liked,
+            likes: comment.commentLikeDto.likes,
+          },
+        })
+      );
+  }, [dispatch, comment]);
+
   const toggleLike = () => {
-    if (commentLikeItem && commentLikeItem?.commentLikeResponse?.liked)
-      dispatch(
-        handleCommentLikeQueueItem({
-          commentLikeId: commentLikeId,
-          dislike: true,
-          isProcessing: true,
-          commentLikeRequest: {
-            commentLikeId: commentLikeItem.commentLikeId, //TODO: MAKE BACKEND REMOVE COMMENT LIKE BY COMMENTID AND USERID
-            userId: "",
-          } as RemoveCommentLikeRequest,
-        })
-      );
-    else {
-      dispatch(
-        handleCommentLikeQueueItem({
-          commentLikeId: commentLikeId,
-          dislike: false,
-          isProcessing: true,
-          commentLikeRequest: {
-            commentId: commentId,
-            userId: "",
-          } as AddCommentLikeRequest,
-        })
-      );
-    }
+    dispatch(
+      handleCommentLikeQueueItem({
+        commentLikeId: commentLikeId,
+        dislike:
+          commentLikeItem && commentLikeItem?.commentLikeResponse?.liked
+            ? true
+            : false,
+        isProcessing: true,
+        commentLikeRequest: {
+          commentId: comment.commentId,
+          userId: "",
+        } as CommentLikeRequest,
+      })
+    );
   };
 
   return (

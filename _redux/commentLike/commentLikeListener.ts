@@ -1,21 +1,19 @@
-import { GetCommentParams } from "@/_models/comment/GetCommentParams";
-import { AddCommentLikeRequest } from "@/_models/commentLike/AddCommentLikeRequest";
 import { CommentLikeQueueItem } from "@/_models/commentLike/CommentLikeQueueItem";
-import { RemoveCommentLikeRequest } from "@/_models/commentLike/RemoveCommentLikeRequest";
-import { addCommentLike, removeCommentLike } from "@/api/commentLike";
-import { getComments } from "@/api/comments";
-import { createAsyncThunk, createListenerMiddleware } from "@reduxjs/toolkit";
-import axios, { AxiosResponse } from "axios";
+import { createListenerMiddleware } from "@reduxjs/toolkit";
 import {
   finalizeCommentLikeQueueItem,
   handleCommentLikeQueueItem,
 } from "./commentLikeSlice";
+import { addCommentLike, removeCommentLike } from "../../api/commentLike";
+import { CommentLikeRequest } from "../../_models/commentLike/CommentLikeRequest";
+import { CommentLikeResponse } from "../../_models/commentLike/CommentLikeResponse";
 
 export const commentLikeListenerMiddleware = createListenerMiddleware();
 
 commentLikeListenerMiddleware.startListening({
   actionCreator: handleCommentLikeQueueItem,
   effect: async (action, listenerApi) => {
+    if (!action.payload.commentLikeRequest) return;
     let enhancedQueueItem: CommentLikeQueueItem | undefined;
     if (action.payload.dislike)
       enhancedQueueItem = await removeCommentLikeHandler(action.payload);
@@ -26,34 +24,28 @@ commentLikeListenerMiddleware.startListening({
 
 async function addCommentLikeHandler(item: CommentLikeQueueItem) {
   //Deep clone the commentLikeQueueItem for further modification down below
-  let enhancedQueueItem: CommentLikeQueueItem = JSON.parse(
+  const enhancedQueueItem: CommentLikeQueueItem = JSON.parse(
     JSON.stringify(item)
   );
-  // const response = await addCommentLike(enhancedQueueItem.commentLikeRequest as AddCommentLikeRequest);
-  // enhancedQueueItem.commentLikeResponse = response.data as AddCommentLikeResponse;
-  await new Promise((resolve) => setTimeout(resolve, 3000));
-  enhancedQueueItem.commentLikeResponse = {
-    liked: true,
-    likes: 501,
-  };
+  const response = await addCommentLike(
+    enhancedQueueItem.commentLikeRequest as CommentLikeRequest
+  );
+  enhancedQueueItem.commentLikeResponse = response.data
+    .returnData as CommentLikeResponse;
   enhancedQueueItem.isProcessing = false;
   return enhancedQueueItem;
 }
 
 async function removeCommentLikeHandler(item: CommentLikeQueueItem) {
-  let enhancedQueueItem: CommentLikeQueueItem = JSON.parse(
+  const enhancedQueueItem: CommentLikeQueueItem = JSON.parse(
     JSON.stringify(item)
   );
-  // const response = await removeCommentLike(
-  //   enhancedQueueItem.commentLikeRequest as RemoveCommentLikeRequest
-  // );
-  // enhancedQueueItem.commentLikeResponse =
-  //   response.data as AddCommentLikeResponse;
-  await new Promise((resolve) => setTimeout(resolve, 3000));
-  enhancedQueueItem.commentLikeResponse = {
-    liked: false,
-    likes: 500,
-  };
+  const response = await removeCommentLike(
+    enhancedQueueItem.commentLikeRequest as CommentLikeRequest
+  );
+  enhancedQueueItem.commentLikeResponse = response.data
+    .returnData as CommentLikeResponse;
+
   enhancedQueueItem.isProcessing = false;
   return enhancedQueueItem;
 }
