@@ -7,3 +7,5 @@ export const selectIsCreatingComment = (state: RootState) =>
   state.comment.isCreatingComment;
 export const selectCreateCommentResponse = (state: RootState) =>
   state.comment.createCommentResponse;
+export const selectGetCommentPagination = (state: RootState) =>
+  state.comment.getCommentPagination;
