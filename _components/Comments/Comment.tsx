@@ -1,9 +1,9 @@
 import Image from "next/image";
 import { FONTSTYLE_PARAGRAPH2, FONT_LEXEND } from "../../_constants/Fonts";
-import { Heart, Pin } from "lucide-react";
 import { GetCommentDto } from "../../_models/comment/GetCommentDto";
 import ParagraphRenderer from "../ParagraphRenderer";
-
+import { CommentLikeButton } from "./CommentLikeButton";
+import { v4 as uuidv4 } from "uuid";
 interface CommentProps {
   comment: GetCommentDto;
 }
@@ -37,7 +37,7 @@ function DetailsSection(props: CommentProps) {
     <div className={detailsSectionClassname}>
       <HeaderSection {...props} />
       <ParagraphRenderer paragraph={props.comment.content} isHtml />
-      <InteractionButtons />
+      <InteractionButtons {...props} />
     </div>
   );
 }
@@ -53,12 +53,11 @@ function HeaderSection(props: CommentProps) {
   );
 }
 
-function InteractionButtons() {
+function InteractionButtons(props: CommentProps) {
   const interactionButtonsClassname = `flex flex-row space-x-3`;
   return (
     <div className={interactionButtonsClassname}>
-      <Heart />
-      <Pin />
+      <CommentLikeButton comment={props.comment} commentLikeId={uuidv4()} />
     </div>
   );
 }

@@ -89,6 +89,7 @@ function CommentsSection(props: CommentContainerProps) {
         blogId: blogId,
         pageNumber: getCommentPagination.pageNumber,
         pageSize: getCommentPagination.pageSize,
+        userId: "dummy",
       })
     );
   }, [dispatch, blogId, getCommentPagination.pageNumber]);
