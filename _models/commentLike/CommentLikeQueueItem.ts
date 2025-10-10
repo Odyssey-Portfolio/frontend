@@ -1,3 +1,4 @@
+import { ApiResponse } from "../ApiResponse";
 import { CommentLikeRequest } from "./CommentLikeRequest";
 import { CommentLikeResponse } from "./CommentLikeResponse";
 
@@ -7,4 +8,5 @@ export interface CommentLikeQueueItem {
   isProcessing?: boolean;
   commentLikeRequest?: CommentLikeRequest;
   commentLikeResponse?: CommentLikeResponse;
+  apiResponse?: ApiResponse;
 }

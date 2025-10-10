@@ -64,6 +64,7 @@ function CommentsSection(props: CommentContainerProps) {
   const isFetchingComments = useSelector(selectIsFetchingComments);
   const getCommentPagination = useSelector(selectGetCommentPagination);
   const commentsSectionClassname = `w-full flex flex-col space-y-12`;
+  const spinnerClassname = `w-full flex flex-row justify-center`;
   const commentSpaceClassname = `flex flex-col`;
   const dispatch = useDispatch<AppDispatch>();
 
@@ -122,7 +123,11 @@ function CommentsSection(props: CommentContainerProps) {
 
   return (
     <div className={commentsSectionClassname}>
-      {isFetchingComments && !comments && <Spinner />}
+      {isFetchingComments && !comments && (
+        <div className={spinnerClassname}>
+          <Spinner />
+        </div>
+      )}
       {!isFetchingComments && !comments && <EmptyList />}
       {!isFetchingComments &&
         comments &&

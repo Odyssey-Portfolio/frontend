@@ -1,5 +1,10 @@
 import { CommentLikeQueueItem } from "@/_models/commentLike/CommentLikeQueueItem";
-import { createListenerMiddleware } from "@reduxjs/toolkit";
+import {
+  ListenerEffectAPI,
+  ThunkDispatch,
+  UnknownAction,
+  createListenerMiddleware,
+} from "@reduxjs/toolkit";
 import {
   finalizeCommentLikeQueueItem,
   handleCommentLikeQueueItem,
@@ -7,45 +12,87 @@ import {
 import { addCommentLike, removeCommentLike } from "../../api/commentLike";
 import { CommentLikeRequest } from "../../_models/commentLike/CommentLikeRequest";
 import { CommentLikeResponse } from "../../_models/commentLike/CommentLikeResponse";
+import { UNAUTHORIZED } from "../../_constants/ResponseCodes";
+
+import axios from "axios";
 
 export const commentLikeListenerMiddleware = createListenerMiddleware();
+
+type ListenerApiType = ListenerEffectAPI<
+  unknown,
+  ThunkDispatch<unknown, unknown, UnknownAction>,
+  unknown
+>;
 
 commentLikeListenerMiddleware.startListening({
   actionCreator: handleCommentLikeQueueItem,
   effect: async (action, listenerApi) => {
     if (!action.payload.commentLikeRequest) return;
-    let enhancedQueueItem: CommentLikeQueueItem | undefined;
     if (action.payload.dislike)
-      enhancedQueueItem = await removeCommentLikeHandler(action.payload);
-    else enhancedQueueItem = await addCommentLikeHandler(action.payload);
-    listenerApi.dispatch(finalizeCommentLikeQueueItem(enhancedQueueItem));
+      await removeCommentLikeHandler(action.payload, listenerApi);
+    else await addCommentLikeHandler(action.payload, listenerApi);
   },
 });
 
-async function addCommentLikeHandler(item: CommentLikeQueueItem) {
-  //Deep clone the commentLikeQueueItem for further modification down below
-  const enhancedQueueItem: CommentLikeQueueItem = JSON.parse(
-    JSON.stringify(item)
-  );
-  const response = await addCommentLike(
-    enhancedQueueItem.commentLikeRequest as CommentLikeRequest
-  );
-  enhancedQueueItem.commentLikeResponse = response.data
-    .returnData as CommentLikeResponse;
-  enhancedQueueItem.isProcessing = false;
-  return enhancedQueueItem;
+async function addCommentLikeHandler(
+  item: CommentLikeQueueItem,
+  listenerApi: ListenerApiType
+) {
+  try {
+    //Deep clone the commentLikeQueueItem for further modification down below
+    const enhancedQueueItem: CommentLikeQueueItem = JSON.parse(
+      JSON.stringify(item)
+    );
+    const response = await addCommentLike(
+      enhancedQueueItem.commentLikeRequest as CommentLikeRequest
+    );
+    enhancedQueueItem.commentLikeResponse = response.data
+      .returnData as CommentLikeResponse;
+    enhancedQueueItem.isProcessing = false;
+    listenerApi.dispatch(finalizeCommentLikeQueueItem(enhancedQueueItem));
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.status === UNAUTHORIZED)
+      handleUnauthorizedResponse(item, listenerApi);
+    console.log(error);
+  }
 }
 
-async function removeCommentLikeHandler(item: CommentLikeQueueItem) {
-  const enhancedQueueItem: CommentLikeQueueItem = JSON.parse(
-    JSON.stringify(item)
-  );
-  const response = await removeCommentLike(
-    enhancedQueueItem.commentLikeRequest as CommentLikeRequest
-  );
-  enhancedQueueItem.commentLikeResponse = response.data
-    .returnData as CommentLikeResponse;
+async function removeCommentLikeHandler(
+  item: CommentLikeQueueItem,
+  listenerApi: ListenerApiType
+) {
+  try {
+    const enhancedQueueItem: CommentLikeQueueItem = JSON.parse(
+      JSON.stringify(item)
+    );
+    const response = await removeCommentLike(
+      enhancedQueueItem.commentLikeRequest as CommentLikeRequest
+    );
+    enhancedQueueItem.commentLikeResponse = response.data
+      .returnData as CommentLikeResponse;
 
+    enhancedQueueItem.isProcessing = false;
+    listenerApi.dispatch(finalizeCommentLikeQueueItem(enhancedQueueItem));
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.status === UNAUTHORIZED)
+      handleUnauthorizedResponse(item, listenerApi);
+
+    console.log(error);
+  }
+}
+
+function handleUnauthorizedResponse(
+  queueItem: CommentLikeQueueItem,
+  listenerApi: ListenerApiType
+) {
+  const enhancedQueueItem: CommentLikeQueueItem = JSON.parse(
+    JSON.stringify(queueItem)
+  );
+  enhancedQueueItem.apiResponse = {
+    statusCode: UNAUTHORIZED,
+    message: "I'm sorry but have you tried logging in again?",
+    returnData: "",
+  };
   enhancedQueueItem.isProcessing = false;
-  return enhancedQueueItem;
+  listenerApi.dispatch(finalizeCommentLikeQueueItem(enhancedQueueItem));
 }

@@ -6,6 +6,9 @@ import { selectIsCreatingComment } from "../../_redux/comment/commentSelector";
 import { AppDispatch } from "../../_redux/store";
 import { createCommentThunk } from "../../_redux/comment/commentThunk";
 import { GetBlogByIdDto } from "../../_models/GetBlogByIdDto";
+import { nanoid } from "@reduxjs/toolkit";
+import { setSnackbarMessage } from "../../_redux/snackbar/snackbarActions";
+
 interface CommentBoxProps {
   blogDetails: GetBlogByIdDto;
 }
@@ -29,13 +32,31 @@ export default function CommentBox(props: CommentBoxProps) {
     "removeTableRow",
   ];
   const tiptapEditorRef = useRef<TipTapEditorRef>(null);
+  const COMMENT_TEXT_EXTRACTION_REGEX = /<p[^>]*>(.*?)<\/p>/i;
   const methods = useForm<{ comment: string }>({
     defaultValues: {
       comment: "",
     },
   });
+  const extractCommentTextFromCommentHtml = (commentHtml: string) => {
+    if (!commentHtml) return "";
+    const match = commentHtml.match(COMMENT_TEXT_EXTRACTION_REGEX);
+    return match && match[1].trim();
+  };
   const onSubmit = () => {
     tiptapEditorRef.current?.setEditorBufferContentToFormContext();
+    const commentHtml = methods.getValues("comment");
+    const commentText = extractCommentTextFromCommentHtml(commentHtml);
+    if (!commentText) {
+      dispatch(
+        setSnackbarMessage({
+          id: nanoid(),
+          message: "Comment is a required field.",
+          type: "error",
+        })
+      );
+      return;
+    }
     dispatch(
       createCommentThunk({
         content: methods.getValues("comment"),

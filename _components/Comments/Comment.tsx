@@ -26,7 +26,7 @@ function Avatar() {
         className={avatarBorderClassname}
         style={{ borderRadius: 25, width: 50, height: 50 }}
       >
-        <Image src={"/docker.png"} alt="avatar" fill className="absolute" />
+        <Image src={"/airplane.png"} alt="avatar" fill className="absolute" />
       </div>
     </div>
   );

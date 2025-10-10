@@ -9,6 +9,9 @@ import { AppDispatch } from "@/_redux/store";
 import { CommentLikeRequest } from "@/_models/commentLike/CommentLikeRequest";
 import { handleCommentLikeQueueItem } from "@/_redux/commentLike/commentLikeSlice";
 import { GetCommentDto } from "../../_models/comment/GetCommentDto";
+import { nanoid } from "@reduxjs/toolkit";
+import { UNAUTHORIZED } from "../../_constants/ResponseCodes";
+import { setSnackbarMessage } from "../../_redux/snackbar/snackbarActions";
 
 interface CommentLikeButtonProps {
   comment: GetCommentDto;
@@ -21,15 +24,14 @@ export function CommentLikeButton({
   const commentLikeWrapperClassname = `flex flex-row space-x-2 items-center`;
   const numberOfLikesClassname = `${FONT_POPPINS.className} ${FONTSTYLE_PARAGRAPH2}`;
   const commentLikeButtonClassname = `w-8 h-8`;
-
   const dispatch = useDispatch<AppDispatch>();
-
   const commentLikeQueue = useSelector(selectCommentLikeQueue);
   const commentLikeItem = useMemo(() => {
     return commentLikeQueue.find(
       (item) => item.commentLikeId === commentLikeId
     );
-  }, [commentLikeQueue]);
+  }, [commentLikeQueue, commentLikeId]);
+  const apiResponse = commentLikeItem?.apiResponse;
 
   //Preloads like data on first load only.
   useEffect(() => {
@@ -43,7 +45,19 @@ export function CommentLikeButton({
           },
         })
       );
-  }, [dispatch, comment]);
+  }, [dispatch, comment, commentLikeId]);
+
+  //Displays API response message
+  useEffect(() => {
+    if (apiResponse && apiResponse.statusCode === UNAUTHORIZED)
+      dispatch(
+        setSnackbarMessage({
+          id: nanoid(),
+          message: apiResponse.message,
+          type: "error",
+        })
+      );
+  }, [dispatch, apiResponse]);
 
   const toggleLike = () => {
     dispatch(
@@ -58,6 +72,11 @@ export function CommentLikeButton({
           commentId: comment.commentId,
           userId: "",
         } as CommentLikeRequest,
+        commentLikeResponse: {
+          //Persists the like number and status on screen if comment like API call fails
+          liked: comment.commentLikeDto.liked,
+          likes: comment.commentLikeDto.likes,
+        },
       })
     );
   };
