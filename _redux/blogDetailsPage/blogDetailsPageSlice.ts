@@ -21,6 +21,9 @@ const blogDetailsPageSlice = createSlice({
     setBlogDetails: (state, action: PayloadAction<GetBlog>) => {
       state.blogDetails = action.payload;
     },
+    clearBlogDetails: (state) => {
+      state.blogDetails = initialState.blogDetails;
+    },
   },
 
   extraReducers: (builder) => {
@@ -39,5 +42,6 @@ const blogDetailsPageSlice = createSlice({
   },
 });
 
-export const { setBlogDetails } = blogDetailsPageSlice.actions;
+export const { setBlogDetails, clearBlogDetails } =
+  blogDetailsPageSlice.actions;
 export default blogDetailsPageSlice.reducer;

@@ -23,6 +23,7 @@ import EmptyList from "../../../_components/EmptyList";
 import { toggleWavyBackground } from "../../../_redux/wavyBackground/wavyBackgroundActions";
 import CommentContainer from "../../../_components/Comments/CommentContainer";
 import HorizontalLine from "../../../_components/AtomicComponents/HorizontalLine";
+import { clearBlogDetails } from "../../../_redux/blogDetailsPage/blogDetailsPageActions";
 
 export default function BlogDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -33,6 +34,9 @@ export default function BlogDetailsPage() {
   const blogDetailsPageClassname = `flex flex-col mt-32 mb-12 space-y-12 items-center px-8 md:px-56`;
   useEffect(() => {
     dispatch(getBlogByIdThunk(id));
+    return () => {
+      dispatch(clearBlogDetails());
+    };
   }, [dispatch, id]);
 
   useEffect(() => {

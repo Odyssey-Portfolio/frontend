@@ -27,6 +27,12 @@ interface CommentContainerProps {
 }
 export default function CommentContainer(props: CommentContainerProps) {
   const commentContainerClassname = `w-full flex flex-col space-y-5 `;
+  const dispatch = useDispatch<AppDispatch>();
+  useEffect(() => {
+  return () => {
+    dispatch(clearComments());
+    }
+  }, [])
   return (
     <div className={commentContainerClassname}>
       <CommentBox {...props} />
@@ -67,15 +73,17 @@ function CommentsSection(props: CommentContainerProps) {
   const spinnerClassname = `w-full flex flex-row justify-center`;
   const commentSpaceClassname = `flex flex-col`;
   const dispatch = useDispatch<AppDispatch>();
+  const DEFAULT_PAGE_NUMBER = 1;
 
   const shouldFetchMore = () => {
     const pageNumber = getCommentPagination.pageNumber;
     const totalPages = getCommentPagination.totalPages;
     const pageNumberWithinPageSize = pageNumber < totalPages;
-    const firstFetchCondition = !comments?.length;
-    const consecutiveFetchesCondition =
-      !isFetchingComments && pageNumberWithinPageSize;
-    return firstFetchCondition || consecutiveFetchesCondition;
+    const hasComments = comments?.length;
+    const firstFetchCondition =
+      !hasComments && !isFetchingComments && pageNumberWithinPageSize;
+    const secondFetchCondition = hasComments && !isFetchingComments && pageNumberWithinPageSize;
+    return firstFetchCondition || secondFetchCondition;
   };
   const fetchMoreCallback = () => {
     if (shouldFetchMore()) dispatch(bumpPageNumber());
@@ -115,10 +123,16 @@ function CommentsSection(props: CommentContainerProps) {
           type: "success",
         })
       );
-    }
-    return () => {
       dispatch(clearComments());
-    };
+      dispatch(
+        getCommentThunk({
+          blogId: blogId,
+          pageNumber: DEFAULT_PAGE_NUMBER,
+          pageSize: getCommentPagination.pageSize,
+          userId: "dummy",
+        })
+      );
+    }
   }, [dispatch, apiResponse]);
 
   return (
@@ -128,7 +142,7 @@ function CommentsSection(props: CommentContainerProps) {
           <Spinner />
         </div>
       )}
-      {!isFetchingComments && !comments && <EmptyList />}
+      {!isFetchingComments && (!comments || comments.length === 0) && <EmptyList />}
       {!isFetchingComments &&
         comments &&
         comments.map((comment, key) => {

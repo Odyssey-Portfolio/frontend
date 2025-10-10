@@ -34,6 +34,7 @@ const commentsSlice = createSlice({
     },
     clearComments: (state) => {
       state.comments = initialState.comments;
+      state.getCommentPagination = initialState.getCommentPagination;
     },
   },
 
