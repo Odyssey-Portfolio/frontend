@@ -1,23 +1,44 @@
-// components/AvatarWithDropdown.tsx
 "use client";
 
-import { LogOut } from "lucide-react";
+import { LogOut, UserPen } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
-
+import { JSX, useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+import { logoutThunk } from "../_redux/auth/authThunk";
+import { AppDispatch } from "../_redux/store";
+import { useRouter } from "next/navigation";
 interface AvatarDropdownProps {
   avatarUrl: string;
   name?: string;
-  onLogout: () => void;
 }
 
 export default function AvatarWithDropdown({
   avatarUrl,
   name,
-  onLogout,
 }: AvatarDropdownProps) {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const menuContainerClassname = `absolute right-0 z-50 mt-2 w-40 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5`;
+  const userAvatarClassname =
+    "rounded-full border object-cover shadow transition hover:shadow-md";
+  const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
+  const actions: Omit<DropdownMenuItemProps, "toggleDropdown">[] = [
+    {
+      action: () => {
+        router.push("my-profile");
+      },
+      icon: <UserPen className="w-4 h-4" />,
+      label: "My Profile",
+    },
+    {
+      action: () => {
+        dispatch(logoutThunk());
+      },
+      icon: <LogOut className="w-4 h-4" />,
+      label: "Logout",
+    },
+  ];
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -41,24 +62,45 @@ export default function AvatarWithDropdown({
           alt={name || "User Avatar"}
           width={40}
           height={40}
-          className="rounded-full border object-cover shadow transition hover:shadow-md"
+          className={userAvatarClassname}
         />
       </button>
 
       {open && (
-        <div className="absolute right-0 z-50 mt-2 w-40 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
-          <button
-            onClick={() => {
-              setOpen(false);
-              onLogout();
-            }}
-            className="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-          >
-            <LogOut className="w-4 h-4" />
-            Logout
-          </button>
+        <div className={menuContainerClassname}>
+          {actions.map((action, key) => {
+            return (
+              <DropdownMenuItem
+                key={key}
+                {...action}
+                toggleDropdown={(value) => setOpen(value)}
+              />
+            );
+          })}
         </div>
       )}
     </div>
+  );
+}
+
+interface DropdownMenuItemProps {
+  toggleDropdown: (value: boolean) => void;
+  action: () => void;
+  label: string;
+  icon: JSX.Element;
+}
+function DropdownMenuItem(props: DropdownMenuItemProps) {
+  const menuItemClassname = `flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100`;
+  return (
+    <button
+      onClick={() => {
+        props.toggleDropdown(false);
+        props.action();
+      }}
+      className={menuItemClassname}
+    >
+      {props.icon}
+      {props.label}
+    </button>
   );
 }
