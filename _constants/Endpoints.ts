@@ -24,3 +24,6 @@ export const COMMENT_LIKE_ENDPOINT = `/commentlike`;
 export const LOGIN_ENDPOINT = `/user/login`;
 export const REGISTER_ENDPOINT = `/user/register`;
 export const LOGOUT_ENDPOINT = `/user/logout`;
+
+/*USER ENDPOINTS*/
+export const UPDATE_USER_DETAILS_ENDPOINT = `/user/update`;

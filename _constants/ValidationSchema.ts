@@ -68,3 +68,24 @@ export const loginSchema = yup.object({
 
   password: yup.string().required("Password is required"),
 });
+
+export const updateUserDetailsSchema = yup.object({
+  name: yup.string().required(),
+  email: yup.string().required(),
+  userId: yup.string(),
+  oldPassword: yup.string(),
+  newPassword: yup.string().when("oldPassword", {
+    is: (oldPassword: string | undefined) => !!oldPassword, // if oldPassword exists
+    then: (schema) =>
+      schema.required("New password is required when changing password"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  confirmPassword: yup.string().when("newPassword", {
+    is: (newPassword: string | undefined) => !!newPassword, // if newPassword exists
+    then: (schema) =>
+      schema
+        .required("Please confirm your new password")
+        .oneOf([yup.ref("newPassword")], "Passwords must match"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+});

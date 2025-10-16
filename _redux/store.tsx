@@ -5,8 +5,9 @@ import blogModalReducer from "./blogModal/blogModalSlice";
 import getBlogsReducer from "./getBlogs/getBlogsSlice";
 import snackbarReducer from "./snackbar/snackbarSlice";
 import commentReducer from "./comment/commentSlice";
-import commentLikeReducer from "./commentLike/commentLikeSlice"
+import commentLikeReducer from "./commentLike/commentLikeSlice";
 import wavyBackgroundReducer from "./wavyBackground/wavyBackgroundSlice";
+import userReducer from "./user/userSlice";
 import { commentLikeListenerMiddleware } from "./commentLike/commentLikeListener";
 export const store = configureStore({
   reducer: {
@@ -17,7 +18,8 @@ export const store = configureStore({
     snackbar: snackbarReducer,
     wavyBackground: wavyBackgroundReducer,
     comment: commentReducer,
-    commentLike: commentLikeReducer
+    commentLike: commentLikeReducer,
+    user: userReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().prepend(commentLikeListenerMiddleware.middleware),
