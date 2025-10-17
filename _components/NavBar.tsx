@@ -137,9 +137,6 @@ function AvatarButton() {
         })
       );
     }
-    // return () => {
-    //   dispatch(clearAuthData());
-    // };
   }, [dispatch, router, authData]);
   return (
     <>

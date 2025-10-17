@@ -3,15 +3,10 @@ import { useEffect, useState } from "react";
 import UserDetails from "./UserDetails";
 import { Sidebar } from "./Sidebar";
 import FM_Reveal from "../../_components/FramerMotion/FM_Reveal";
-import { COLOR_PRIMARY } from "../../_constants/Colors";
-import {
-  FONT_LEXEND,
-  FONTSTYLE_HEADING1,
-  FONTSTYLE_SUBTEXT2,
-} from "../../_constants/Fonts";
 import TopSection from "./TopSection";
 import { LoggedInUser } from "../../_models/LoggedInUser";
 import { getLoggedInUser } from "../../utils/AuthUtils";
+import Spinner from "../../_components/AtomicComponents/Spinner";
 
 export default function UserProfilePage() {
   const userProfileContainerClassname = `mt-32 md:mx-12 mb-12 
@@ -28,20 +23,24 @@ export default function UserProfilePage() {
 
   return (
     <FM_Reveal className={userProfileContainerClassname}>
-      <>
-        <TopSection loggedInUser={loggedInUser || ({} as LoggedInUser)} />
-        <div className={userProfileColumnClassname}>
-          <div className={sidebarClassname}>
-            <Sidebar
-              selectedSection={selectedSection}
-              onSelectSection={(section) => setSelectedSection(section)}
-            />
+      {!loggedInUser ? (
+        <Spinner />
+      ) : (
+        <>
+          <TopSection loggedInUser={loggedInUser} />
+          <div className={userProfileColumnClassname}>
+            <div className={sidebarClassname}>
+              <Sidebar
+                selectedSection={selectedSection}
+                onSelectSection={(section) => setSelectedSection(section)}
+              />
+            </div>
+            <div className={mainSectionClassname}>
+              <UserDetails loggedInUser={loggedInUser} />
+            </div>
           </div>
-          <div className={mainSectionClassname}>
-            <UserDetails loggedInUser={loggedInUser || ({} as LoggedInUser)} />
-          </div>
-        </div>
-      </>
+        </>
+      )}
     </FM_Reveal>
   );
 }

@@ -1,4 +1,4 @@
-import { LOGGED_IN_USER } from "@/_constants/Auth";
+import { AUTH_MODES, LOGGED_IN_USER } from "@/_constants/Auth";
 import { ApiResponse } from "@/_models/ApiResponse";
 import { LoginFormFields } from "@/_models/AuthFormFields";
 import { LoggedInUser } from "@/_models/LoggedInUser";
@@ -11,6 +11,7 @@ interface AuthState {
   isLoading: boolean;
   apiResponse: ApiResponse | undefined;
   loggedInUser: LoggedInUser | undefined;
+  authMode: AUTH_MODES | undefined;
 }
 
 const initialState: AuthState = {
@@ -18,6 +19,7 @@ const initialState: AuthState = {
   isLoading: false,
   apiResponse: undefined,
   loggedInUser: undefined,
+  authMode: undefined,
 };
 
 const authSlice = createSlice({
@@ -32,6 +34,7 @@ const authSlice = createSlice({
     builder
       .addCase(loginThunk.pending, (state) => {
         state.isLoading = true;
+        state.authMode = AUTH_MODES.LOGIN;
       })
       .addCase(loginThunk.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -46,6 +49,7 @@ const authSlice = createSlice({
       })
       .addCase(registerThunk.pending, (state) => {
         state.isLoading = true;
+        state.authMode = AUTH_MODES.REGISTER;
       })
       .addCase(registerThunk.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -57,6 +61,7 @@ const authSlice = createSlice({
       })
       .addCase(logoutThunk.pending, (state) => {
         state.isLoading = true;
+        state.authMode = AUTH_MODES.LOGOUT;
       })
       .addCase(logoutThunk.fulfilled, (state, action) => {
         state.isLoading = false;

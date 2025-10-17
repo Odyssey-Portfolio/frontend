@@ -27,3 +27,4 @@ export const LOGOUT_ENDPOINT = `/user/logout`;
 
 /*USER ENDPOINTS*/
 export const UPDATE_USER_DETAILS_ENDPOINT = `/user/update`;
+export const UPDATE_USER_AVATAR_ENDPOINT = `/user/update/avatar`;

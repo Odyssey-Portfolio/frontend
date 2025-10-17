@@ -86,9 +86,12 @@ function ModalBody(props: ModalChildrenProps) {
 }
 
 function ModalBottomActions(props: ModalChildrenProps) {
+  const onlyOneButtonAction = props.bottomActions?.length === 1;
+  const bottomActionsWrapperClassname = `flex flex-row 
+    ${onlyOneButtonAction ? "w-1/3" : "w-2/3"} space-x-1 p-5`;
   return (
     <div className="flex w-full flex-row justify-end">
-      <div className="flex flex-row w-2/3 space-x-1 p-5">
+      <div className={bottomActionsWrapperClassname}>
         {props.bottomActions &&
           props.bottomActions.map((bottomAction) => {
             return bottomAction;

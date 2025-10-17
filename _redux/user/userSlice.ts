@@ -1,15 +1,16 @@
 import { ApiResponse } from "@/_models/ApiResponse";
 import { LoggedInUser } from "@/_models/LoggedInUser";
-import { serialize } from "@/utils/JsonUtils";
 import { createSlice } from "@reduxjs/toolkit";
 import { UpdateUserDetailsRequest } from "../../_models/user/UpdateUserDetailsRequest";
-import { updateUserDetailsThunk } from "./userThunk";
+import { updateUserAvatarThunk, updateUserDetailsThunk } from "./userThunk";
+import { USER_MODES } from "../../_constants/User";
 
 interface UserState {
   request: UpdateUserDetailsRequest | undefined;
   isLoading: boolean;
   apiResponse: ApiResponse | undefined;
   loggedInUser: LoggedInUser | undefined;
+  userMode: USER_MODES | undefined;
 }
 
 const initialState: UserState = {
@@ -17,6 +18,7 @@ const initialState: UserState = {
   isLoading: false,
   apiResponse: undefined,
   loggedInUser: undefined,
+  userMode: undefined,
 };
 
 const userSlice = createSlice({
@@ -38,6 +40,18 @@ const userSlice = createSlice({
         state.loggedInUser = action.payload.returnData as LoggedInUser;
       })
       .addCase(updateUserDetailsThunk.rejected, (state, action) => {
+        state.isLoading = false;
+        state.apiResponse = action.payload as ApiResponse;
+      })
+      .addCase(updateUserAvatarThunk.pending, (state) => {
+        state.isLoading = true;
+        state.userMode = USER_MODES.UPDATE_AVATAR;
+      })
+      .addCase(updateUserAvatarThunk.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.apiResponse = action.payload as ApiResponse;
+      })
+      .addCase(updateUserAvatarThunk.rejected, (state, action) => {
         state.isLoading = false;
         state.apiResponse = action.payload as ApiResponse;
       });
