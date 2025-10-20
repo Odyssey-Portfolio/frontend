@@ -11,22 +11,28 @@ export default function Comment(props: CommentProps) {
   const commentContainerClassname = `w-full flex flex-row space-x-5`;
   return (
     <div className={commentContainerClassname}>
-      <Avatar />
+      <Avatar {...props} />
       <DetailsSection {...props} />
     </div>
   );
 }
 
-function Avatar() {
+function Avatar(props: CommentProps) {
   const avatarSectionClassname = `flex flex-col`;
   const avatarBorderClassname = `relative w-full rounded-2xl`;
+  const avatar = props.comment.avatar;
   return (
     <div className={avatarSectionClassname} style={{ paddingTop: "0.5rem" }}>
       <div
         className={avatarBorderClassname}
         style={{ borderRadius: 25, width: 50, height: 50 }}
       >
-        <Image src={"/airplane.png"} alt="avatar" fill className="absolute" />
+        <Image
+          src={avatar ? decodeURIComponent(avatar) : "/airplane.png"}
+          alt="avatar"
+          fill
+          className="absolute"
+        />
       </div>
     </div>
   );

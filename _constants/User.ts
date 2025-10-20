@@ -1,3 +1,4 @@
 export enum USER_MODES {
   UPDATE_AVATAR,
+  UPDATE_PROFILE,
 }

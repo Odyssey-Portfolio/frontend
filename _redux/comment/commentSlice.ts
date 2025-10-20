@@ -75,5 +75,5 @@ const commentsSlice = createSlice({
       });
   },
 });
-
+export const { bumpPageNumber, clearComments } = commentsSlice.actions;
 export default commentsSlice.reducer;

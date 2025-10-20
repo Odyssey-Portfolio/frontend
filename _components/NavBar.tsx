@@ -112,6 +112,9 @@ function AvatarButton() {
   const dispatch = useDispatch<AppDispatch>();
   const [loggedInUser, setLoggedInUser] = useState<LoggedInUser>();
   const authData = useSelector(selectAuthData);
+  const avatarUrl = loggedInUser?.avatar
+    ? loggedInUser.avatar
+    : "/airplane.png";
 
   useEffect(() => {
     if (!loggedInUser) setLoggedInUser(getLoggedInUser());
@@ -151,7 +154,7 @@ function AvatarButton() {
           </button>
         </div>
       ) : (
-        <AvatarWithDropdown avatarUrl="/airplane.ico" />
+        <AvatarWithDropdown avatarUrl={avatarUrl} />
       )}
     </>
   );

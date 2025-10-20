@@ -21,7 +21,8 @@ import { useInfiniteScroll } from "../../_hooks/useInfiniteScroll";
 import {
   bumpPageNumber,
   clearComments,
-} from "../../_redux/comment/commentActions";
+} from "../../_redux/comment/commentSlice";
+
 interface CommentContainerProps {
   blogDetails: GetBlogByIdDto;
 }
@@ -29,10 +30,10 @@ export default function CommentContainer(props: CommentContainerProps) {
   const commentContainerClassname = `w-full flex flex-col space-y-5 `;
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
-  return () => {
-    dispatch(clearComments());
-    }
-  }, [])
+    return () => {
+      dispatch(clearComments());
+    };
+  }, []);
   return (
     <div className={commentContainerClassname}>
       <CommentBox {...props} />
@@ -82,7 +83,8 @@ function CommentsSection(props: CommentContainerProps) {
     const hasComments = comments?.length;
     const firstFetchCondition =
       !hasComments && !isFetchingComments && pageNumberWithinPageSize;
-    const secondFetchCondition = hasComments && !isFetchingComments && pageNumberWithinPageSize;
+    const secondFetchCondition =
+      hasComments && !isFetchingComments && pageNumberWithinPageSize;
     return firstFetchCondition || secondFetchCondition;
   };
   const fetchMoreCallback = () => {
@@ -142,7 +144,9 @@ function CommentsSection(props: CommentContainerProps) {
           <Spinner />
         </div>
       )}
-      {!isFetchingComments && (!comments || comments.length === 0) && <EmptyList />}
+      {!isFetchingComments && (!comments || comments.length === 0) && (
+        <EmptyList />
+      )}
       {!isFetchingComments &&
         comments &&
         comments.map((comment, key) => {

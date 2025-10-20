@@ -9,8 +9,9 @@ import { UpdateUserDetailsRequest } from "../../_models/user/UpdateUserDetailsRe
 import { updateUserDetailsSchema } from "../../_constants/ValidationSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { AppDispatch } from "@/_redux/store";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updateUserDetailsThunk } from "../../_redux/user/userThunk";
+import { selectIsLoading } from "../../_redux/user/userSelector";
 interface UserDetailsProps {
   loggedInUser: LoggedInUser;
 }
@@ -18,6 +19,7 @@ interface UpdateUserDetailsRequestExtended extends UpdateUserDetailsRequest {
   confirmPassword?: string;
 }
 export default function UserDetails(props: UserDetailsProps) {
+  const isUpdating = useSelector(selectIsLoading);
   const methods = useForm<UpdateUserDetailsRequestExtended>({
     resolver: yupResolver<UpdateUserDetailsRequestExtended>(
       updateUserDetailsSchema
@@ -45,7 +47,7 @@ export default function UserDetails(props: UserDetailsProps) {
   }, [methods, props.loggedInUser]);
 
   const containerClassname =
-    "w-full mx-auto rounded-2xl shadow-md p-6 space-y-6 bg-white space-y-4";
+    "w-full mx-auto rounded-2xl shadow-md p-6 space-y-6 bg-white:500 space-y-4";
 
   return (
     <div className={containerClassname}>
@@ -88,6 +90,7 @@ export default function UserDetails(props: UserDetailsProps) {
       )}
       <Button
         icon={<Save />}
+        isLoading={isUpdating}
         label="Save Changes"
         onClick={methods.handleSubmit(onSubmit)}
       />

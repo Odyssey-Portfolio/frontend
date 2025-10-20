@@ -1,4 +1,4 @@
-import { JSX, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { LoggedInUser } from "../../_models/LoggedInUser";
 import {
@@ -6,7 +6,7 @@ import {
   FONTSTYLE_SUBTEXT3,
   FONT_POPPINS,
 } from "../../_constants/Fonts";
-import Button, { ButtonVariants } from "./Button";
+import Button from "./Button";
 import { UploadCloudIcon, XCircleIcon } from "lucide-react";
 import ImageUploader from "./ImageUploader";
 import FM_FadeIn from "../FramerMotion/FM_FadeIn";
@@ -18,11 +18,7 @@ import {
   selectUserData,
   selectUserMode,
 } from "../../_redux/user/userSelector";
-import Modal from "../Modal";
-import { logoutThunk } from "../../_redux/auth/authThunk";
-import { selectAuthData, selectAuthMode } from "../../_redux/auth/authSelector";
 import { SUCCESS } from "../../_constants/ResponseCodes";
-import { AUTH_MODES } from "../../_constants/Auth";
 import { USER_MODES } from "../../_constants/User";
 
 interface AvatarUploaderProps {
@@ -31,7 +27,6 @@ interface AvatarUploaderProps {
 export default function AvatarUploader(props: AvatarUploaderProps) {
   const [hovered, setHovered] = useState(false);
   const [uploadDialogOpen, setUploadModalOpen] = useState(false);
-  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
   const avatar = props.loggedInUser.avatar;
   const topSectionClassname =
     "flex flex-row justify-center items-center space-x-12";
@@ -66,11 +61,6 @@ export default function AvatarUploader(props: AvatarUploaderProps) {
           avatar={avatar}
         />
       </FM_FadeIn>
-      <ConfirmLogoutModal
-        toggleViewLogoutModal={setLogoutDialogOpen}
-        toggleViewUploadModal={setUploadModalOpen}
-        showModal={logoutDialogOpen}
-      />
     </div>
   );
 }
@@ -93,6 +83,9 @@ function UploadDialog({ avatar, closeAction }: UploadDialogProps) {
   const modalRoot = document.body;
   const imageUploaderClassname = `w-full`;
 
+  const userData = useSelector(selectUserData);
+  const userMode = useSelector(selectUserMode);
+
   const uploadAvatar = () => {
     dispatch(
       updateUserAvatarThunk({
@@ -101,6 +94,16 @@ function UploadDialog({ avatar, closeAction }: UploadDialogProps) {
       })
     );
   };
+
+  useEffect(() => {
+    if (
+      userData?.statusCode === SUCCESS &&
+      userMode === USER_MODES.UPDATE_AVATAR
+    ) {
+      closeAction();
+    }
+  }, [userData, userMode]);
+
   if (typeof window === "undefined") return null;
 
   if (!modalRoot) return null;
@@ -124,56 +127,5 @@ function UploadDialog({ avatar, closeAction }: UploadDialogProps) {
         <Button icon={<XCircleIcon />} label="Cancel" onClick={closeAction} />
       </div>
     </div>
-  );
-}
-
-interface ConfirmLogoutModalProps {
-  showModal: boolean;
-  toggleViewUploadModal: (value: boolean) => void;
-  toggleViewLogoutModal: (value: boolean) => void;
-}
-function ConfirmLogoutModal(props: ConfirmLogoutModalProps) {
-  const dispatch = useDispatch<AppDispatch>();
-  const authData = useSelector(selectAuthData);
-  const authMode = useSelector(selectAuthMode);
-
-  const userData = useSelector(selectUserData);
-  const userMode = useSelector(selectUserMode);
-
-  useEffect(() => {
-    if (
-      userData?.statusCode === SUCCESS &&
-      userMode === USER_MODES.UPDATE_AVATAR
-    ) {
-      props.toggleViewLogoutModal(true);
-      props.toggleViewUploadModal(false);
-    }
-  }, [userData, userMode]);
-
-  useEffect(() => {
-    if (authData?.statusCode === SUCCESS && authMode === AUTH_MODES.LOGOUT)
-      window.location.href = "/";
-  }, [authData, authMode]);
-
-  const bottomActions: JSX.Element[] = [
-    <Button
-      key="ok"
-      label="Yep sure!"
-      variant={ButtonVariants.PRIMARY}
-      onClick={() => dispatch(logoutThunk())}
-    />,
-  ];
-  return (
-    <Modal
-      title="Confirm Logout"
-      bottomActions={bottomActions}
-      closeAction={() => props.toggleViewLogoutModal(false)}
-      show={props.showModal}
-    >
-      <>
-        As you have updated your personal information, please re-login to see
-        the latest changes!
-      </>
-    </Modal>
   );
 }

@@ -33,6 +33,7 @@ const userSlice = createSlice({
     builder
       .addCase(updateUserDetailsThunk.pending, (state) => {
         state.isLoading = true;
+        state.userMode = USER_MODES.UPDATE_PROFILE;
       })
       .addCase(updateUserDetailsThunk.fulfilled, (state, action) => {
         state.isLoading = false;

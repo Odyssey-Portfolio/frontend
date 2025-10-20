@@ -12,7 +12,6 @@ export function Sidebar({ onSelectSection, selectedSection }: SidebarProps) {
 
   const sections = [
     { key: "profile", label: "My Profile", icon: <User size={18} /> },
-    { key: "liked", label: "Liked Comments", icon: <Heart size={18} /> },
   ];
 
   return (

@@ -5,6 +5,7 @@ export interface GetCommentDto {
   elapsedTime: string;
   content: string;
   commentLikeDto: CommentLikeDto;
+  avatar: string;
 }
 
 export interface CommentLikeDto {
