@@ -16,7 +16,12 @@ import { GetBlogByIdDto } from "../../_models/GetBlogByIdDto";
 import CommentBox from "./CommentBox";
 import { setSnackbarMessage } from "../../_redux/snackbar/snackbarActions";
 import { nanoid } from "@reduxjs/toolkit";
-import { CREATED, SUCCESS, UNAUTHORIZED } from "../../_constants/ResponseCodes";
+import {
+  BAD_REQUEST,
+  CREATED,
+  SUCCESS,
+  UNAUTHORIZED,
+} from "../../_constants/ResponseCodes";
 import { useInfiniteScroll } from "../../_hooks/useInfiniteScroll";
 import {
   bumpPageNumber,
@@ -106,7 +111,10 @@ function CommentsSection(props: CommentContainerProps) {
   }, [dispatch, blogId, getCommentPagination.pageNumber]);
 
   useEffect(() => {
-    if (apiResponse && apiResponse.statusCode === UNAUTHORIZED)
+    if (
+      (apiResponse && apiResponse.statusCode === UNAUTHORIZED) ||
+      (apiResponse && apiResponse.statusCode === BAD_REQUEST)
+    )
       dispatch(
         setSnackbarMessage({
           id: nanoid(),
